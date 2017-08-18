@@ -1,0 +1,186 @@
+.barra {
+    background-color: rgb(120, 204, 240)
+}
+.barra> .titulo {
+    background-color: rgb(15, 67, 89);
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 5px 0px 0px 10px;
+}
+div.separador {
+    margin-top: 1em;
+}
+code {
+    color: rgb(162, 19, 116);
+}
+table.protocolo {
+    border: 1px solid black;
+    font-size: 30px;
+}
+table.protocolo th {
+    color: white;
+    background-color: rgb(100, 100, 100);
+}
+table.protocolo td {
+    background-color: white;
+    border: 1px solid black;
+}
+
+span.important {
+    color: rgb(0, 74, 186);
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+div.important {
+    background-color: #FFFFD0;
+}
+
+td.http_code {
+    font-family: monospace;
+    font-size: 30px;
+}
+
+.arrow_box_left {
+	position: relative;
+	background: #410066;
+  color:white;
+  font-weight: bold;
+}
+
+.arrow_box_left:after {
+	right: 99%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(65, 0, 102, 0);
+	border-right-color: #410066;
+	border-width: 10px;
+	margin-top: -10px;
+}
+
+.no_arrow_box {
+    position: relative;
+	background: #410066;
+  color:white;
+  font-weight: bold;
+}
+
+.caja_codigo {
+  font-family:'Source Sans Pro', sans-serif !important;
+  font-weight:bold !important;
+  padding:2px 10px !important ;
+  border-radius:10px !important;
+}
+
+.ingles {
+  font-style: italic !important;
+}
+
+strong {
+  color: #B71234;
+}
+
+p code {
+  font-size: 0.9em !important;
+}
+
+li code {
+  font-size: 0.9em !important;
+}
+
+iframe.example {
+  border: 2px solid #B71234;
+  width: 90%;
+}
+
+span.section {
+  color: rgb(41, 92, 168);
+  font-weight: bold;
+}
+
+span.myname {
+  color: white;
+  font-weight: bold;
+}
+
+code.black {
+  color:black;
+}
+
+th code.black {
+  color:white;
+  font-weight: normal;
+}
+
+th.noborder code.black {
+  color:black;
+  font-weight: normal;
+}
+
+#lecctabla {
+    border-collapse: collapse;
+    font-size: 23pt;
+}
+
+
+#lecctabla td {
+    border: 2px solid black;
+    background: rgb(201, 255, 208);
+}
+
+#lecctabla td.noborder {
+    border: none;
+    background: white;
+}
+
+#lecctabla th {
+    border: 2px solid black;
+    background: rgb(0, 24, 70);
+    color: white;
+}
+
+#lecctabla th.noborder {
+    border: none;
+    color: black;
+    background: white;
+    font-weight: normal;
+}
+
+.bloquetitulo {
+    background-color: #B71234;
+    color: white;
+}
+
+.bloquetitulo h3 {
+    color: white;
+}
+
+.bloquetitulo .titulo_rareza {
+    font-size: 150%;
+}
+
+span.hl {
+    background-color: lightgoldenrodyellow;
+    padding: 0px 3px;
+    border-radius: 5px;
+}
+
+table.restapi {
+    border: 2px solid black;
+    font-size: 80%
+}
+
+table.restapi th {
+    background-color: #DDF;
+}
+
+.referenciaw3c {
+    padding: 0px 20px;
+    background-color: #DFF;
+}

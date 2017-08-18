@@ -1,0 +1,1336 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Tema 1 - Introducción a las tecnologías Web. El protocolo HTTP</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0" x2="0%" y2="1">
+                <stop offset="0%" style="stop-color:rgb(100,100,100);stop-opacity:1" />
+                <stop offset="20%" style="stop-color:rgb(200,200,200);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(100,100,100);stop-opacity:1" />
+            </linearGradient>
+            <g id="arquitectura">
+                <rect x="0" y="0" width="20%" height="50" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                <text x="10%" y="35" text-anchor="middle" style="font-weight:bold">Red</text>
+                <rect x="0" y="50" width="20%" height="50" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                <text x="10%" y="85" text-anchor="middle" style="font-weight:bold">Enlace</text>
+            </g>
+            <path id="sobre" d="M 0 0 l 15 0 l 0 10 l -15 0 l 0 -10 L 7.5 6 L 15 0" fill="none" style="stroke-width:1;stroke:rgb(130,130,190);stroke-linejoin:bevel" />
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 1</div>
+                <h1>Introducción a las tecnologías web:<br/>El protocolo HTTP</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br/>
+                    Esta obra está bajo una <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px">
+                    </a>
+                </div>
+            </section>
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos">
+                  <li><a href="#/p1" class="outline fragment highlight-orange">Repaso del Modelo TCP/IP</a></li>
+                  <li><a href="#/p2" class="outline">Modelo Cliente/Servidor</a></li>
+                  <li><a href="#/p3" class="outline">Sockets y Protocolos</a></li>
+                  <li><a href="#/p4" class="outline">Protocolo HTTP</a></li>
+                  <li><a href="#/p5" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+            <section>
+                <h2>Modelo TCP/IP</h2>
+                <p>Basado en cuatro capas
+                    <br/> Cada capa representa un nivel de abstracción</p>
+                <svg width="400" height="400">
+                    <rect x="0" y="0" width="100%" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="50%" y="65" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="0" y="100" width="100%" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="50%" y="165" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                    <rect x="0" y="200" width="100%" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                    <text x="50%" y="265" text-anchor="middle" style="font-weight:bold">Red</text>
+                    <rect x="0" y="300" width="100%" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="50%" y="365" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+                </svg>
+            </section>
+            <section>
+                <p>Cada capa se comunica con su homóloga en otro nodo distinto, utilizando un <em>protocolo</em> como lenguaje. </p>
+                <svg width="900" height="500">
+                      <rect x="30%" y="445" width="40%" height="20" style="fill:url(#grad1)" />
+
+                    <rect x="0" y="100" width="30%" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="15%" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="0" y="200" width="30%" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="15%" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                    <rect x="0" y="300" width="30%" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                    <text x="15%" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                    <rect x="0" y="400" width="30%" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="15%" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+                    <rect x="70%" y="100" width="30%" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="85%" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="70%" y="200" width="30%" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="85%" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                    <rect x="70%" y="300" width="30%" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                    <text x="85%" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                    <rect x="70%" y="400" width="30%" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="85%" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+                    <line x1="35%" y1="350" x2="65%" y2="350" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="65%" y1="350" x2="35%" y2="350" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="35%" y1="250" x2="65%" y2="250" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="65%" y1="250" x2="35%" y2="250" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="35%" y1="150" x2="65%" y2="150" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="65%" y1="150" x2="35%" y2="150" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+
+                    <text x="50%" y="140" text-anchor="middle" style="font-size:30px">HTTP/FTP/...</text>
+                    <text x="50%" y="240" text-anchor="middle" style="font-size:30px">TCP/UDP</text>
+                    <text x="50%" y="340" text-anchor="middle" style="font-size:30px">IP</text>
+
+                    <image xlink:href="images/PC.png" x="10%" y="0" height="100px" width="100px" />
+                    <image xlink:href="images/PC.png" x="80%" y="0" height="100px" width="100px" />
+
+                </svg>
+            </section>
+            <section>
+                <svg width="500" height="500" style="float:left">
+
+                    <defs>
+                        <path id="sobre" d="M 0 0 l 15 0 l 0 10 l -15 0 l 0 -10 L 7.5 6 L 15 0" fill="none" style="stroke-width:1;stroke:rgb(130,130,190);stroke-linejoin:bevel" />
+                    </defs>
+
+                    <rect x="300" y="445" width="150" height="20" style="fill:url(#grad1)" />
+
+                    <rect x="0" y="100" width="300" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="150" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="0" y="200" width="300" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="150" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                    <rect x="0" y="300" width="300" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                    <text x="150" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                    <rect x="0" y="400" width="300" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="150" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+
+                    <g transform="translate(100 80)">
+                        <path d="M 200 50 A 16 20 0 1 1 215 130" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                        <path d="M 200 150 A 16 20 0 1 1 215 230" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                        <path d="M 200 250 A 16 20 0 1 1 215 330" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                        <line x1="200" y1="350" x2="250" y2="350" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                        <g class="fragment" transform="translate(0 10)">
+                            <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(250 40) scale(3.5)" />
+                        </g>
+                        <g class="fragment" transform="translate(0 10)">
+                            <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(250 140) scale(3.5)" />
+                            <rect x="260" y="170" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                        </g>
+                        <g class="fragment" transform="translate(0 10)">
+                            <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(250 240) scale(3.5)" />
+                            <rect x="260" y="270" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                            <rect x="278" y="270" width="15" height="15" style="fill:rgb(146, 217, 244);stroke:black" />
+                        </g>
+                        <g class="fragment" transform="translate(-40 10)">
+                            <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(320 300) scale(3.5)" />
+                            <rect x="330" y="330" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                            <rect x="348" y="330" width="15" height="15" style="fill:rgb(146, 217, 244);stroke:black" />
+                            <rect x="366" y="330" width="15" height="15" style="fill:rgb(231, 176, 238);stroke:black" />
+                        </g>
+                    </g>
+
+                    <image xlink:href="images/PC.png" x="25%" y="0" height="100px" width="100px" />
+
+                </svg>
+                <div style="float:left;margin-left:0px;width:40%;font-size:25px">
+                    <p>Sin embargo, la comunicación entre capas homólogas no es directa.</p>
+                    <p>Cada capa solicita a su capa inferior que se envíe el mensaje al destino.</p>
+                    <p>Cada capa extiende el mensaje a enviar con información propia que le permite realizar su cometido</p>
+                    <p>Finalmente, la capa de enlace es la que realiza el envío físico</p>
+                </div>
+                <div style="clear:left" />
+
+            </section>
+            <section>
+                <div style="width:45%;font-size:25px;margin-top:25px;margin-right:20px;float:left">
+                    <p>El nodo receptor recibe el mensaje a través de la capa de enlace.</p>
+                    <p>Cada capa interpreta la información adicional introducida por su capa homóloga durante el envío, y acaba remitiendo el mensaje original (sin esta información adicional) a la capa superior.</p>
+                    <p>Finalmente, la capa de aplicación recibe el mensaje tal y como lo envió la capa de aplicación en el origen.</p>
+                </div>
+                <svg width="500" height="550" style="float:left">
+                    <rect x="0" y="445" width="150" height="20" style="fill:url(#grad1)" />
+
+                    <rect x="150" y="100" width="350" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="325" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="150" y="200" width="350" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="325" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                    <rect x="150" y="300" width="350" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                    <text x="325" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                    <rect x="150" y="400" width="350" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="325" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+                    <g class="fragment">
+                        <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(20 480) scale(3.5)" />
+                        <rect x="25" y="500" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                        <rect x="43" y="500" width="15" height="15" style="fill:rgb(146, 217, 244);stroke:black" />
+                        <rect x="61" y="500" width="15" height="15" style="fill:rgb(231, 176, 238);stroke:black" />
+                        <line x1="0" y1="470" x2="130" y2="470" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                    </g>
+                    <g class="fragment">
+                        <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(45 350) scale(3.5)" />
+                        <rect x="50" y="370" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                        <rect x="68" y="370" width="15" height="15" style="fill:rgb(146, 217, 244);stroke:black" />
+                        <path d="M 150 450 A 20 20 0 1 1 130 375" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                    </g>
+                    <g class="fragment">
+                        <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(45 250) scale(3.5)" />
+                        <rect x="50" y="270" width="15" height="15" style="fill:rgb(252, 219, 145);stroke:black" />
+                        <path d="M 150 350 A 20 20 0 1 1 130 275" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                    </g>
+                    <g class="fragment">
+                        <use xlink:href="#sobre" x="0" y="0" width="10" height="15" transform="translate(45 150) scale(3.5)" />
+                        <path d="M 150 250 A 20 20 0 1 1 130 175" style="stroke-width:2;stroke:black" fill="none" marker-end="url(#arrow)" />
+                    </g>
+
+                    <image xlink:href="images/PC.png" x="275" y="0" height="100px" width="100px" />
+                </svg>
+                <div style="clear:left" />
+            </section>
+
+            <section data-transition="slide-in fade-out">
+                <p style="height:3em">La capa de <em>enlace de datos</em> proporciona una vía de transmisión de paquetes de datos entre dos nodos enlazados directamente</p>
+                <svg width="900" height="400">
+                    <rect x="20%" y="365" width="60%" height="20" fill="url(#grad1)" />
+                    <rect x="0" y="350" width="20%" height="50" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="10%" y="385" text-anchor="middle" style="font-weight:bold">Enlace</text>
+                    <rect x="80%" y="350" width="20%" height="50" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                    <text x="90%" y="385" text-anchor="middle" style="font-weight:bold">Enlace</text>
+                    <image xlink:href="images/PC.png" x="4%" y="250" height="100px" width="100px" />
+                    <image xlink:href="images/PC.png" x="84%" y="250" height="100px" width="100px" />
+
+                </svg>
+            </section>
+            <section data-transition="fade-in fade-out">
+                <p style="height:3em">La capa de <em>red</em> gestiona el envío de mensajes a través de múltiples nodos intermedios.
+                    <br/>
+                    <span class="fragment fade-up" data-fragment-index="1">
+						Cada nodo está identificado mediante una <em>dirección IP</em>
+					</span>
+                </p>
+                <svg width="900" height="400">
+                    <rect x="20%" y="365" width="10%" height="20" fill="url(#grad1)" />
+
+                    <rect x="40%" y="365" width="20%" height="20" fill="url(#grad1)" />
+
+                    <rect x="70%" y="365" width="10%" height="20" fill="url(#grad1)" />
+
+                    <use x="0" y="300" xlink:href="#arquitectura" />
+                    <use x="80%" y="300" xlink:href="#arquitectura" />
+
+
+                    <image xlink:href="images/PC.png" x="4%" y="200" height="100px" width="100px" />
+                    <image xlink:href="images/PC.png" x="84%" y="200" height="100px" width="100px" />
+
+                    <circle cx="35%" cy="375" r="20" fill="rgba(0, 0, 0, 0)" stroke="rgb(8, 75, 55)" stroke-width="2px" stroke-dasharray="5,4" />
+                    <circle cx="65%" cy="375" r="20" fill="rgba(0, 0, 0, 0)" stroke="rgb(8, 75, 55)" stroke-width="2px" stroke-dasharray="5,4" />
+
+                    <text x="10%" y="185" text-anchor="middle" font-family="monospace" font-size="20px" class="fragment fade-up" data-fragment-index="2">147.96.43.21</text>
+                    <text x="90%" y="185" text-anchor="middle" font-family="monospace" font-size="20px" class="fragment fade-up" data-fragment-index="2">191.32.5.120</text>
+                </svg>
+            </section>
+
+            <section data-transition="fade-in fade-out">
+                <p style="height:3em">Las capas de red de los nodos intervinientes <em>enrutan</em> los paquetes desde el origen hasta el destino</p>
+                <svg width="900" height="400">
+                    <rect x="20%" y="365" width="10%" height="20" fill="url(#grad1)" />
+                    <rect x="40%" y="365" width="20%" height="20" fill="url(#grad1)" />
+                    <rect x="70%" y="365" width="10%" height="20" fill="url(#grad1)" />
+
+                    <use x="0" y="300" xlink:href="#arquitectura" />
+                    <use x="80%" y="300" xlink:href="#arquitectura" />
+
+
+                    <image xlink:href="images/PC.png" x="4%" y="200" height="100px" width="100px" />
+                    <image xlink:href="images/PC.png" x="84%" y="200" height="100px" width="100px" />
+                    <text x="10%" y="185" text-anchor="middle" font-family="monospace" font-size="20px">147.96.43.21</text>
+                    <text x="90%" y="185" text-anchor="middle" font-family="monospace" font-size="20px">191.32.5.120</text>
+                    <use xlink:href="#arquitectura" transform="translate(270 335) scale(0.5)" />
+                    <use xlink:href="#arquitectura" transform="translate(540 335) scale(0.5)" />
+                    <text x="315" y="320" text-anchor="middle" font-family="monospace" font-size="15px">130.41.32.1</text>
+                    <text x="585" y="320" text-anchor="middle" font-family="monospace" font-size="15px">132.137.2.38</text>
+                </svg>
+            </section>
+
+            <section data-transition="fade-in slide-out">
+                <p style="height:3em">
+                    La capa de <em>transporte</em> se encarga de la transmisión sin errores desde origen a destino.
+                    <br/> Segmentación en paquetes, recepción en orden correcto...
+                </p>
+                <svg width="900" height="400">
+
+
+
+                    <use x="0" y="300" xlink:href="#arquitectura" />
+                    <rect x="0" y="250" width="20%" height="50" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="10%" y="285" text-anchor="middle" style="font-weight:bold" font-size="35px">Transporte</text>
+                    <use x="80%" y="300" xlink:href="#arquitectura" />
+                    <rect x="80%" y="250" width="20%" height="50" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                    <text x="90%" y="285" text-anchor="middle" style="font-weight:bold" font-size="35px">Transporte</text>
+
+
+                    <image xlink:href="images/PC.png" x="4%" y="150" height="100px" width="100px" />
+                    <image xlink:href="images/PC.png" x="84%" y="150" height="100px" width="100px" />
+                    <text x="10%" y="135" text-anchor="middle" font-family="monospace" font-size="20px">147.96.43.21</text>
+                    <text x="90%" y="135" text-anchor="middle" font-family="monospace" font-size="20px">191.32.5.120</text>
+                    <use xlink:href="#arquitectura" transform="translate(270 335) scale(0.5)" />
+                    <use xlink:href="#arquitectura" transform="translate(540 335) scale(0.5)" />
+                    <text x="315" y="320" text-anchor="middle" font-family="monospace" font-size="15px">130.41.32.1</text>
+                    <text x="585" y="320" text-anchor="middle" font-family="monospace" font-size="15px">132.137.2.38</text>
+
+                    <rect x="20%" y="365" width="10%" height="20" fill="url(#grad1)" />
+                    <rect x="40%" y="365" width="20%" height="20" fill="url(#grad1)" />
+                    <rect x="70%" y="365" width="10%" height="20" fill="url(#grad1)" />
+
+                </svg>
+            </section>
+
+            <section>
+                <h3>Capa de transporte</h3>
+                <div class="barra">
+                  <p class="titulo">Protocolos:</p>
+                  <ul>
+                    <li><strong>TCP</strong>: orientado a conexión, bidireccional, fiable.</li>
+                    <li><strong>UDP</strong>: no conexión, no comprobación de paquetes duplicados, extraviados, etc.</li>
+                  </ul>
+                </div>
+                <p>
+                    La capa de transporte permite varios canales de comunicación entre nodos.
+                </p>
+                <p>
+                    Cada canal está identificado por un <em>número de puerto</em>.
+                </p>
+                <p>
+                    Existen <em>puertos TCP</em> y <em>puertos UDP</em>.
+                </p>
+            </section>
+            <section>
+                <h3>Ejemplo</h3>
+                <svg width="700" height="250">
+                    <defs>
+                        <polygon id="flecha" points="0 0, 70 0, 80 15, 70 30, 0 30" style="stroke-width:2;stroke:black" />
+                    </defs>
+                    <g transform="translate(450 0)">
+                        <rect x="0" y="0" width="250" height="250" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                        <text x="125" y="85" text-anchor="middle" style="font-weight:bold" font-size="35px">Transporte</text>
+                    </g>
+                    <g transform="translate(390 30)">
+                        <use xlink:href="#flecha" style="fill:rgb(156, 23, 10)" />
+                        <text x="10" y="25" style="font-size:28px;font-weight:bold;fill:white">231</text>
+                    </g>
+                    <g transform="translate(390 70)">
+                        <use xlink:href="#flecha" style="fill:rgb(156, 23, 10)" />
+                        <text x="10" y="25" style="font-size:28px;font-weight:bold;fill:white">80</text>
+                    </g>
+                    <g class="fragment fade-in">
+                        <text x="0" y="55" style="font-size:28px">Puertos TCP</text>
+                        <line x1="145" y1="45" x2="370" y2="45" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                        <line x1="145" y1="50" x2="370" y2="80" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                    </g>
+                    <g transform="translate(390 160)">
+                        <use xlink:href="#flecha" style="fill:blue" />
+                        <text x="10" y="25" style="font-size:28px;font-weight:bold;fill:white">80</text>
+                    </g>
+                    <g transform="translate(390 200)">
+                        <use xlink:href="#flecha" style="fill:blue" />
+                        <text x="10" y="25" style="font-size:28px;font-weight:bold;fill:white">3000</text>
+                    </g>
+                    <g class="fragment fade-in">
+                        <text x="0" y="185" style="font-size:28px">Puertos UDP</text>
+                        <line x1="155" y1="175" x2="370" y2="175" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                        <line x1="155" y1="180" x2="370" y2="210" style="stroke-width:2;stroke:black" marker-end="url(#arrow)" />
+                    </g>
+                </svg>
+            </section>
+            <section>
+                <h3>Puertos TCP/UDP más comunes</h3>
+                <ul>
+                    <li><strong>Puerto 20</strong>: FTP (transmisión de archivos).</li>
+                    <li><strong>Puerto 22</strong>: SSH (transmisión de archivos segura). </li>
+                    <li><strong>Puerto 25</strong>: SMTP (envío de correo). </li>
+                    <li class="fragment highlight-blue"><strong>Puerto 80</strong>: HTTP (web). </li>
+                    <li><strong>Puerto 110</strong>: POP3 (recepción correo). </li>
+                    <li><strong>Puerto 143</strong>: IMAP (recepción correo). </li>
+                    <li><strong>Puerto 443</strong>: HTTPS (web segura). </li>
+                </ul>
+                <p class="fragment">
+                    Ver: <a href="https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers">List of TCP and UDP port numbers (Wikipedia)</a>
+                </p>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos">
+                  <li><a href="#/p1" class="outline">Repaso del Modelo TCP/IP</a></li>
+                  <li><a href="#/p2" class="outline current">Modelo Cliente/Servidor</a></li>
+                  <li><a href="#/p3" class="outline">Sockets y Protocolos</a></li>
+                  <li><a href="#/p4" class="outline">Protocolo HTTP</a></li>
+                  <li><a href="#/p5" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Modelo cliente/servidor</h2>
+                <p>Supongamos que dos nodos quieren conectarse para intercambiar información</p>
+                <p>¿Cómo y cuándo se establece esta conexión?</p>
+            </section>
+            <section>
+                <p>En el modelo <em>cliente/servidor</em> cada nodo adquiere un rol:
+                    <ul>
+                        <li>El <em>servidor</em> permanece conectado a la espera de información que llegue por un determinado puerto.
+                            <br/> Se dice que el servidor <em>escucha</em> en dicho puerto.
+                            <li>El <em>cliente</em> inicia la comunicación enviando información al servidor.
+                    </ul>
+            </section>
+
+            <section>
+                <div style="width:45%;float:left">
+                    <h3>Servidor</h3>
+                    <ul>
+                        <li>Pasivo: espera a que un cliente envíe una petición</li>
+                        <li>Responde (sirve) las peticiones de varios clientes</li>
+                        <li>A cada tipo de petición se le llama <em>servicio</em></li>
+                    </ul>
+                </div>
+                <div style="width:45%;float:left;margin-left:10%" class="fragment">
+                    <h3>Cliente</h3>
+                    <ul>
+                        <li>Activo: toma la iniciativa en la comunicación con el servidor</li>
+                        <li>Ha de conocer la dirección IP del servidor, y el puerto al que enviar la información (petición)</li>
+                    </ul>
+                </div>
+                <div style="clear:left" />
+            </section>
+
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos">
+                  <li><a href="#/p1" class="outline">Repaso del Modelo TCP/IP</a></li>
+                  <li><a href="#/p2" class="outline">Modelo Cliente/Servidor</a></li>
+                  <li><a href="#/p3" class="outline current">Sockets y Protocolos</a></li>
+                  <li><a href="#/p4" class="outline">Protocolo HTTP</a></li>
+                  <li><a href="#/p5" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+
+            <section>
+              <h2>Sockets</h2>
+                <p>
+                    El sistema operativo proporciona un mecanismo de acceso a la capa de transporte.
+                </p>
+                <svg width="440" height="310">
+                    <defs>
+                        <marker id="arrow2" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+                        </marker>
+                    </defs>
+                    <g transform="scale(0.6) translate(100 170)">
+                        <rect x="0" y="0" width="400" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                        <text x="200" y="65" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                        <rect x="0" y="100" width="400" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                        <text x="200" y="165" text-anchor="middle" style="font-weight:bold">Red</text>
+                        <rect x="0" y="200" width="400" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                        <text x="200" y="265" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+                    </g>
+                    <rect x="0" y="75" width="360" height="225" style="fill:none;stroke:blue;stroke-dasharray:5 5;stroke-width:3px" class="fragment" data-fragment-index="1" />
+                    <line x1="125" y1="75" x2="125" y2="95" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" class="fragment" data-fragment-index="1" />
+                    <line x1="225" y1="115" x2="225" y2="95" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" class="fragment" data-fragment-index="1" />
+                    <rect x="100" y="70" width="150" height="10" style="fill:blue" class="fragment" data-fragment-index="1" />
+                    <text x="370" y="100" style="fill:blue;font-weight:bold" class="fragment" data-fragment-index="1">S.O.</text>
+                    <image xlink:href="images/Programmer.png" x="100" y="0" height="50" width="50" class="fragment" data-fragment-index="2" />
+                    <text x="150" y="40" style="font-size:25px;fill:#7002ba" class="fragment" data-fragment-index="2">Programador/a</text>
+                </svg>
+                <p>
+                    Este mecanismo se basa en el uso de <em>sockets</em>.
+                </p>
+            </section>
+
+            <section>
+                <p>
+                    Supongamos que un servidor está escuchando en un determinado puerto y que un cliente se conecta al mismo:
+                </p>
+                <svg width="600" height="55">
+                    <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                    <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                    <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                    <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+                    <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+
+                    <ellipse cx="150" cy="25" rx="15" ry="20" style="stroke:blue;stroke-width:3;fill:none" class="fragment" data-fragment-index="1" />
+                    <ellipse cx="390" cy="25" rx="15" ry="20" style="stroke:blue;stroke-width:3;fill:none" class="fragment" data-fragment-index="1" />
+                </svg>
+                <p>
+                    Esto crea un canal de comunicación bidireccional entre cliente y servidor.
+                </p>
+                <div class="barra fragment" data-fragment-index="1" style="padding:5px">
+                    A cada uno de los extremos de este canal de comunicación se le llama
+                    <em>socket</em>
+                </div>
+            </section>
+
+            <section>
+                <p>
+                    Cada socket tiene asociados dos flujos:
+                </p>
+                <ul>
+                    <li><strong>Flujo de entrada</strong> (<span style="font-style:italic">input stream</span>)
+                        <br/> La información que llegue desde el otro extremo se lee a través de este flujo.
+                    </li>
+                    <li style="padding-top:1em"><strong>Flujo de salida</strong> (<span style="font-style:italic">output stream</span>)
+                        <br/> Todo lo que se escriba en este flujo es enviado al otro extremo.
+                    </li>
+                </ul>
+                <div class="barra" style="margin-top:1em">
+                    El programador lee y escribe en estos flujos como si de ficheros se tratase
+                </div>
+            </section>
+
+            <section>
+                <svg width="600" height="55">
+                    <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                    <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                    <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                    <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+                    <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+                </svg>
+                <div class="separador" />
+                <h3>Socket de Servidor</h3>
+                <ul>
+                    <li>Recibe las peticiones de a través de su flujo de entrada.</li>
+                    <li>Envía las respuestas a través del flujo de salida.</li>
+                </ul>
+                <div class="separador" />
+
+                <h3>Socket de Cliente</h3>
+                <ul>
+                    <li>Envía las peticiones a través del flujo de salida.</li>
+                    <li>Recibe las respuestas a través del flujo de entrada.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Ejemplo: servidor calculadora</h2>
+					<p>
+						Implementamos en Java un sencillo servidor que realiza la suma de dos números.
+					</p>
+					<svg width="600" height="80" viewbox="0 -10 600 65">
+						<rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2"/>
+						<rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2"/>
+						<text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+						<text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+						<use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)"/>
+						<text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+						<line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2"/>
+
+						<g class="fragment">
+							<text x="240" y="20" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"21 9"</text>
+							<path d="M 310 10 l 20 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)"/>
+						</g>
+						<g class="fragment">
+							<text x="320" y="55" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"30"</text>
+							<path d="M 280 45 l -40 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)"/>
+						</g>
+					</svg>
+					<p>
+						El cliente envía al servidor una cadena de texto con dos números enteros.
+					</p>
+					<p>
+						El servidor responde con la suma de dichos números.
+					</p>
+
+			</section>
+
+			<section>
+        <h3>Implementación del servidor</h3>
+                <pre><code data-trim data-noescape class="java">
+public class ArithServer {
+    // Número de puerto
+    private static final int PORT_NUMBER = 5432;
+
+    public static void main(String... args) {
+        try {
+            ServerSocket server = new ServerSocket(PORT_NUMBER);
+            Socket s = server.accept();
+            servePetition(s); // Implementado más adelante
+        } catch (IOException e) {
+            ...
+        }
+    }
+
+    private static void servePetition(Socket s) { ... }
+}
+</code></pre>
+            </section>
+
+            <section>
+                <div>
+                    <pre><code class="java">ServerSocket server = new ServerSocket(PORT_NUMBER);</code></pre>
+                    <p>
+                        Crea un objeto <code>ServerSocket</code>, que permite recibir conexiones a través del puerto dado.
+                    </p>
+                </div>
+                <div class="fragment">
+                    <pre><code class="java">Socket s = server.accept();</code></pre>
+                    <p>
+                        Queda a la espera de que se conecte un cliente.
+                        <br/> El método <code>accept()</code> <strong>detiene</strong> la ejecución del programa hasta que reciba la conexión de un cliente.
+                        <br/>
+                    </p>
+                </div>
+            </section>
+            <section>
+                El objeto de la clase <code>Socket</code> es el que permite acceder a los flujos de entrada y salida del socket:
+                <pre>public InputStream getInputStream();
+public OutputStream getOutputStream();</pre>
+            </section>
+
+            <section>
+                El método <code>servePetition</code> recibe la petición y envía la respuesta a través de los flujos del socket.
+                <pre><code data-trim class="java">
+private static void servePetition(Socket socket) {
+  try (
+      Scanner sc = new Scanner(socket.getInputStream());
+      PrintWriter out =
+        new PrintWriter(
+          new OutputStreamWriter(socket.getOutputStream())
+        )) {
+    // Leer sumandos a partir del flujo de entrada
+    int sum1 = sc.nextInt();
+    int sum2 = sc.nextInt();
+
+    // Escribir en el flujo de salida
+    out.println(sum1 + sum2);
+  } catch (IOException e) { ... }
+}
+</code></pre>
+                <p>Más información: <a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html">Java try-with-resources</a></p>
+            </section>
+
+            <section>
+                <h3>Implementación del cliente</h3>
+                <pre><code data-trim class="java">
+public static void main(String... args) {
+  try {
+    Socket s = new Socket("localhost", PORT_NUMBER);
+
+    // Enviar información al servidor y recibir respuesta
+    int res = add(s, 21, 45);
+
+    System.out.println("21 + 45 = " + res);
+  } catch (IOException e) {
+    System.err.println("Error de conexión: " + e.getMessage());
+  }
+}</code></pre> La conexión a un servidor se realiza creando directamente una instancia de la clase <code>Socket</code>, indicando el servidor al que conectarse
+                (<span style="font-family:monospace; font-size:0.9em">localhost</span> = propia máquina) y el puerto.
+            </section>
+
+            <section>
+                La función <code>add()</code> es la que envía la petición al servidor:
+                <pre><code data-trim class="java">
+private static int add(Socket s, int n1, int n2) {
+  try (PrintWriter out = new PrintWriter(
+          new OutputStreamWriter(s.getOutputStream()));
+       Scanner sc = new Scanner(s.getInputStream())) {
+    // Enviar sumandos al servidor
+    out.print(n1);
+    out.print(" ");
+    out.println(n2);
+    out.flush();
+    // Recibir resultado
+    return sc.nextInt();
+  } catch (IOException e) {
+    System.err.println("Error de E/S: " + e.getMessage());
+    return -1;
+  }
+}
+</pre></code>
+            </section>
+
+            <section>
+                <p>Para ejecutar este ejemplo:</p>
+                <ul>
+                    <li>Ejecutamos método <code>main()</code> del servidor.</li>
+                    <li>Ejecutamos método <code>main()</code> del cliente, obteniendo como salida:
+                        <pre>21 + 45 = 66</pre>
+                    </li>
+                    <li>Tras esto, tanto el cliente como el servidor <strong>finalizan</strong>.</li>
+                </ul>
+            </section>
+
+            <section>
+                Si queremos que el servidor siga atendiendo peticiones de otros clientes, podemos hacerlo mediante un bucle que se repita indefinidamente:
+                <pre><code>ServerSocket server = new ServerSocket(PORT_NUMBER);
+while (true) {
+    Socket s = server.accept();
+    servePetition(s);
+}</code></pre>
+            </section>
+
+            <section>
+                <h3>Extensión del servidor</h3>
+                <p>
+                    Modificamos el servidor para que pueda realizar otro tipo de operaciones aritméticas.
+                </p>
+                <p>
+                    El servidor recibirá mensajes de la forma:
+                    <ul>
+                        <li><code>ADD <i>n1</i> <i>n2</i></code></li>
+                        <li><code>SUB <i>n1</i> <i>n2</i></code></li>
+                        <li><code>MUL <i>n1</i> <i>n2</i></code></li>
+                        <li><code>DIV <i>n1</i> <i>n2</i></code></li>
+                        <li><code>SQRT <i>n1</i></code></li>
+                    </ul>
+                </p>
+            </section>
+
+            <section>
+                <h3>Ejemplos</h3>
+                <svg width="600" height="80" viewbox="0 -10 600 65">
+                    <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                    <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                    <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                    <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+                    <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+
+                    <g class="fragment">
+                        <text x="240" y="20" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"ADD 2 9"</text>
+                        <path d="M 310 10 l 20 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" transform="translate(20 0)" />
+                    </g>
+                    <g class="fragment">
+                        <text x="320" y="55" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"11"</text>
+                        <path d="M 280 45 l -40 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" />
+                    </g>
+                </svg>
+
+                <p class="separador" />
+
+                <svg width="600" height="80" viewbox="0 -10 600 65">
+                    <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                    <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                    <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                    <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+                    <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+
+                    <g class="fragment">
+                        <text x="240" y="20" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"MUL 11 4"</text>
+                        <path d="M 310 10 l 20 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" transform="translate(20 0)" />
+                    </g>
+                    <g class="fragment">
+                        <text x="320" y="55" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"44"</text>
+                        <path d="M 280 45 l -40 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" />
+                    </g>
+                </svg>
+
+                <p class="separador" />
+
+                <svg width="600" height="80" viewbox="0 -10 600 65">
+                    <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                    <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                    <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                    <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                    <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">5432</text>
+                    <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+
+                    <g class="fragment">
+                        <text x="240" y="20" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"DIV 3 0"</text>
+                        <path d="M 310 10 l 20 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" transform="translate(20 0)" />
+                    </g>
+                    <g class="fragment">
+                        <text x="320" y="55" text-anchor="middle" style="font-size:30;font-family:monospace;fill:rgb(12, 136, 238)">"ERROR"</text>
+                        <path d="M 245 45 l -40 0" style="stroke:black;stroke-width:2" marker-end="url(#arrow)" />
+                    </g>
+                </svg>
+            </section>
+            <section>
+                <h3>Código del servidor</h3>
+                <pre><code class="java" data-noescape style="font-size:15px;line-height:20px">private static void servePetition(Socket socket) {
+  try (Scanner sc = new Scanner(socket.getInputStream());
+       PrintWriter out = new PrintWriter(
+          new OutputStreamWriter(socket.getOutputStream())
+        )) {
+    String op = sc.next();
+    switch (op) {
+      case "ADD"  : serveAddition(sc, out);       break;
+      case "SUB"  : serveSubstraction(sc, out);   break;
+      case "MUL"  : serveMultiplication(sc, out); break;
+      case "DIV"  : serveDivision(sc, out);       break;
+      case "SQRT" : serveSquareRoot(sc, out);     break;
+      default     : out.println("ERROR");
+    }
+  } catch (IOException e) {
+    System.err.println("Error al obtener el flujo de entrada: " + e.getMessage());
+  }
+}</code></pre>
+            </section>
+            <section>
+                <h3>Ejemplo: división</h3>
+                <pre><code class="java" data-noescape>private static void serveDivision(Scanner sc, PrintWriter out) {
+  int n1 = sc.nextInt();
+  int n2 = sc.nextInt();
+  if (n2 != 0) {
+    System.out.println("Dividiendo " + n1 + " entre " + n2);
+    out.println((double)n1 / n2);
+  } else {
+    out.println("ERROR");
+  }
+}</code></pre>
+            </section>
+
+            <section>
+                <h3>Petición del cliente</h3>
+                <pre><code>public static void main(String... args) throws IOException {
+    Socket s = new Socket("localhost", 5432);
+    BufferedWriter bw = new BufferedWriter(
+          new OutputStreamWriter(s.getOutputStream()));
+    bw.write("MUL 4 12\n");
+    bw.flush();
+    BufferedReader br = new BufferedReader(
+          new InputStreamReader(s.getInputStream()));
+    System.out.println(br.readLine());
+    bw.close();
+    br.close();
+}
+</code></pre>
+                <div class="fragment">
+                    <p>Resultado:</p>
+                    <pre>48</pre>
+                </div>
+            </section>
+            <section>
+                <h3>Resumen: Comunicación con el servidor</h3>
+                <table class="protocolo">
+                    <tr>
+                        <th>Petición</th>
+                        <th>Respuesta</th>
+                    </tr>
+                    <tr>
+                        <td><code>ADD <i>n1</i> <i>n2</i></code></td>
+                        <td><code><i>n1</i> + <i>n2</i></code></td>
+                    </tr>
+                    <tr>
+                        <td><code>SUB <i>n1</i> <i>n2</i></code></td>
+                        <td><code><i>n1</i> - <i>n2</i></code></td>
+                    </tr>
+                    <tr>
+                        <td><code>MUL <i>n1</i> <i>n2</i></code></td>
+                        <td><code><i>n1</i> * <i>n2</i></code></td>
+                    </tr>
+                    <tr>
+                        <td><code>DIV <i>n1</i> <i>n2</i></code></td>
+                        <td><code><i>n1</i> / <i>n2</i></code> (si <code>n1</code> &NotEqual; 0)
+                            <br/>
+                            <code>ERROR</code> (e.o.c.)
+                            <br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>SQRT <i>n</i></code></td>
+                        <td>&radic;<code><i>n</i></code> (si <code>n</code> &geq; 0)
+                            <br/>
+                            <code>ERROR</code> (e.o.c.)
+                            <br/>
+                        </td>
+                    </tr>
+                </table>
+                <div class="separador" />
+                <div class="important fragment">Esta tabla describe un <span class="important">protocolo</h3></div>
+            </section>
+
+            <section>
+              <p>
+                Hemos implementado la <em>capa de aplicación</em> de la calculadora.
+              </p>
+              <svg width="900" height="500">
+                  <rect x="30%" y="445" width="40%" height="20" style="fill:url(#grad1)" />
+
+                  <rect x="0" y="200" width="30%" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                  <text x="15%" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                  <rect x="0" y="300" width="30%" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                  <text x="15%" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                  <rect x="0" y="400" width="30%" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                  <text x="15%" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+                  <rect x="70%" y="200" width="30%" height="100" style="fill:rgb(252, 219, 145);stroke-width:4;stroke:black" />
+                  <text x="85%" y="265" text-anchor="middle" style="font-weight:bold">Transporte</text>
+                  <rect x="70%" y="300" width="30%" height="100" style="fill:rgb(146, 217, 244);stroke-width:4;stroke:black" />
+                  <text x="85%" y="365" text-anchor="middle" style="font-weight:bold">Red</text>
+                  <rect x="70%" y="400" width="30%" height="100" style="fill:rgb(231, 176, 238);stroke-width:4;stroke:black" />
+                  <text x="85%" y="465" text-anchor="middle" style="font-weight:bold">Enlace de datos</text>
+
+                  <g class="fragment">
+                    <rect x="0" y="100" width="30%" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="15%" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                    <rect x="70%" y="100" width="30%" height="100" style="fill:rgb(255, 174, 162);stroke-width:4;stroke:black" />
+                    <text x="85%" y="165" text-anchor="middle" style="font-weight:bold">Aplicación</text>
+                  </g>
+
+
+                  <g class="fragment">
+                    <line x1="35%" y1="150" x2="65%" y2="150" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <line x1="65%" y1="150" x2="35%" y2="150" style="stroke-width:4;stroke:black" marker-end="url(#arrow)" />
+                    <text x="50%" y="140" text-anchor="middle" style="font-size:30px">PROTOCOLO</text>
+                    <image xlink:href="images/PC.png" x="10%" y="0" height="100px" width="100px"/>
+                    <image xlink:href="images/PC.png" x="80%" y="0" height="100px" width="100px"/>
+                  </g>
+              </svg>
+            </section>
+            <section>
+              <h3>Experimento</h3>
+              Conectamos con el servidor de la FdI en el puerto 80:
+              <pre><code style="font-size:16px; line-height:18px">public static void main(String... args) throws IOException {
+  Socket s = new Socket("informatica.ucm.es", 80);
+  PrintWriter pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+
+  // Petición
+  pw.println("GET / HTTP/1.0");
+  pw.println("Host: informatica.ucm.es\n");
+  pw.flush();
+
+  // Respuesta
+  Scanner sc = new Scanner(s.getInputStream());
+  while (sc.hasNextLine()) {
+    System.out.println(sc.nextLine());
+  }
+}</code></pre>
+            </section>
+
+            <section>
+              Respuesta obtenida:
+              <pre>
+HTTP/1.1 200 OK
+Date: Wed, 10 Aug 2016 16:40:14 GMT
+Server: Apache
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0,
+               pre-check=0
+Pragma: no-cache
+Content-Type: text/html; charset=UTF-8
+Set-Cookie: ucmweb=7rbkr7h03pld7rkugaod7u28a6; path=/;
+            domain=ucm.es
+Connection: close
+
+&lt;!DOCTYPE html>
+&lt;html lang="es">
+&lt;head>
+	&lt;title>Facultad de Informática. Universidad Complutense de
+  ...</pre>
+            </section>
+            <section>
+              <h3>Aplicaciones Web</h3>
+              <svg width="600" height="80" viewbox="-2 -10 604 65">
+                  <rect x="0" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                  <rect x="450" y="0" width="150" height="50" style="fill:rgb(178, 221, 99);stroke:black;stroke-width:2" />
+                  <text x="75" y="40" text-anchor="middle" style="font-size:30px">Cliente</text>
+                  <text x="525" y="40" text-anchor="middle" style="font-size:30px">Servidor</text>
+                  <use xlink:href="#flecha" x="0" y="0" style="fill:rgb(156, 23, 10)" transform="translate(390 10)" />
+                  <text x="400" y="32" style="font-size:22px;font-weight:bold;fill:white">80</text>
+                  <line x1="150" y1="25" x2="390" y2="25" style="stroke:black;stroke-width:2" />
+              </svg>
+              <p>Las aplicaciones web también utilizan el modelo cliente-servidor:</p>
+              <ul>
+                <li class="fragment"><strong>Cliente:</strong> Navegador web.<br/>
+                  <span style="color:rgb(0, 134, 191)">Firefox, Chrome, Opera, etc.</span>
+                    </li>
+                    <li class="fragment"><strong>Servidor:</strong> Servidor web.
+                        <br/>
+                        <span style="color:rgb(0, 134, 191)">Apache HTTP server, Tomcat, Nginx, etc.</span></li>
+                    <li class="fragment"><strong>Protocolo:</strong> <span style="color:rgb(238, 21, 80)">HTTP</span></li>
+                    </ul>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos">
+                  <li><a href="#/p1" class="outline">Repaso del Modelo TCP/IP</a></li>
+                  <li><a href="#/p2" class="outline">Modelo Cliente/Servidor</a></li>
+                  <li><a href="#/p3" class="outline">Sockets y Protocolos</a></li>
+                  <li><a href="#/p4" class="outline current">Protocolo HTTP</a></li>
+                  <li><a href="#/p5" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h3>Esquema general</h3>
+                <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+                    <defs>
+                        <style id="bx-google-fonts">
+                            @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500,700,900,100italic,300italic,400,400italic,500italic,700italic,900italic);
+                        </style>
+                    </defs>
+                    <rect x="4.588" y="7.857" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <image width="27.841" height="27.841" x="34.773" y="17.735" preserveAspectRatio="none" xlink:href="images/chrome.png"/>
+                    />
+                    <text x="25.366" y="100.704" style="font-size: 16px; word-spacing: 0px;">Cliente</text>
+                    <rect x="213.981" y="6.558" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <text x="230.863" y="100.054" style="font-size: 16px; word-spacing: 0px;">Servidor</text>
+                    <image width="28.985" height="28.769" x="34.836" y="47.291" preserveAspectRatio="none" xlink:href="images/firefox.png"/>
+                    <image width="50.077" height="34.428" x="220.772" y="20.562" preserveAspectRatio="none" xlink:href="images/apache.png"/>
+                    <path d="M 200.69 31.733 L 218.714 31.21 L 223.024 36.435 L 219.106 41.92 L 200.69 42.312 L 200.69 31.733 Z" style="stroke: rgb(0, 0, 0); fill: rgb(206, 27, 27);" bx:origin="0.5 0.5" />
+                    <path d="M 189.564 48.141 Z" style="stroke: black; fill: none;" />
+                    <text x="203.586" y="39.898" style="font-size: 8px; font-family: Roboto; text-transform: none; font-weight: 700; word-spacing: 0px; fill: rgb(255, 255, 255);">80</text>
+                    <path d="M 75.198 31.71 C 75.198 31.71 96.509 14.661 143.393 13.383 C 190.277 12.105 207.753 28.726 207.753 28.7bo26" style="stroke: black; fill: none;" bx:origin="0.5 0.5" />
+                    <text x="90.771" y="9.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">GET /index.html HTTP/1.0</text>
+                    <text x="90.771" y="17.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 72.854 64.103 C 72.854 64.103 94.165 47.054 141.049 45.776 C 187.933 44.498 205.409 61.119 205.409 61.119" style="stroke: black; fill: none;" transform="matrix(-1, 0, 0, -1, 278.263002, 108.600994)" bx:origin="0.5 0.5" />
+                    <text x="110.809" y="73.691" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">HTTP/1.0 200 OK</text>
+                    <text x="110.809  " y="81.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(-0.485708, 0.874123, -0.874124, -0.485707, 307.31737, -68.032037)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="-3.223 -3.773" />
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(0.550459, -0.834863, 0.834862, 0.550459, -35.392201, 135.428704)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="0.53 0.609" />
+                </svg>
+            </section>
+            <section>
+                <h3>Estructura de una petición HTTP</h3>
+                <div style="font-family:monospace;font-size:27px">
+                    <div style="background-color:rgb(145, 209, 255);text-align:left">
+                        GET /register.html HTTP/1.1
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:100px">Línea de petición</span>
+                    </div>
+                    <div style="background-color:rgb(255, 232, 153);text-align:left">
+                        Host: www.foo.com
+                        <br/> Accept: text/html
+                        <br/> Accept-Language: en-US, es-ES
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:70px">Cabeceras</span>
+                        <br/> Connection: keep-alive
+                        <br/> If-Modified-Since: Fri, 26 Feb 2016 03:09:05 GMT
+                        <br/>
+                    </div>
+                    <div>
+                        <span style="color:#A0A0A0;font-style:italic"> (línea en blanco) </span>
+                    </div>
+                    <div style="background-color:rgb(236, 255, 170);text-align:left">
+                        name=Francisco%20Sanchez&amp;age=12
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:37px;top:10px">Cuerpo de la petición (opcional)</span>
+                        <br/> ...
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h4>Línea de petición</h4>
+                <p>Tiene el siguiente formato:</p>
+                <pre><code class="nohighlight" data-trim>[método] [recurso] [versión_HTTP]
+              </code></pre>
+                <ul>
+                    <li><code style="font-size:30px">[método]</code>: Acción a realizar (GET, POST, HEAD, PUT, ...)</li>
+                    <li><code style="font-size:30px">[recurso]</code>: Nombre del recurso (URI) sobre el que se accederá.</li>
+                    <li><code style="font-size:30px">[versión_HTTP]</code>: HTTP/1.0 o HTTP/1.1.</li>
+                </ul>
+                <p>Ejemplo:</p>
+                <pre><code class="nohighlight" data-trim>GET /index.html HTTP/1.1
+              </code></pre>
+            </section>
+            <section>
+                <h4>Algunos métodos disponibles</h4>
+                <ul>
+                    <li><code style="font-size:30px">GET</code>: Obtener un recurso del servidor.</li>
+                    <li><code style="font-size:30px">HEAD</code>: Igual que GET, pero el servidor no devolverá el recurso; sólo las cabeceras de la respuesta.</li>
+                    <li><code style="font-size:30px">POST</code>: Enviar información al servidor.</li>
+                    <li><code style="font-size:30px">PUT</code>: Guardar información en el servidor.</li>
+                    <li><code style="font-size:30px">DELETE</code>: Eliminar información del servidor.</li>
+                    <li><code style="font-size:30px">OPTIONS</code>: Obtener la lista de métodos soportados por el servidor.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Recursos HTTP</h4>
+                <pre><code class="nohighlight" data-trim data-noescape>[método] <span style="background-color:rgb(239, 255, 140)">[recurso]</span> [versión_HTTP]
+              </code></pre>
+                <p>El nombre de recurso tiene la aparencia de un nombre de fichero, pero <strong>no tiene por qué corresponder con un fichero físico almacenado en el servidor</strong></p>
+                <p>Un servidor web puede hace corresponder las URIs con llamadas a programas (por ejemplo, servlets), accesos a recursos físicos almacenados con un nombre distinto, etc.</p>
+            </section>
+
+            <section>
+                <h4>Cabeceras en una petición</h4>
+                <p>Especifican información adicional en una petición</p>
+                <div style="background-color:rgb(255, 232, 153);text-align:left;font-family:monospace;font-size:30px">
+                    Host: www.foo.com
+                    <br/> Accept: text/html
+                    <br/> Accept-Language: en-US, es-ES
+                    <br/> Connection: keep-alive
+                    <br/> If-Modified-Since: Fri, 26 Feb 2016 03:09:05 GMT
+                    <br/>
+                </div>
+            </section>
+
+            <section>
+                <h4>Algunos ejemplos de cabeceras</h4>
+                <ul>
+                    <li>
+                        <code style="font-size:30px">Host: www.ucm.es</code>
+                        <br/> Obligatorio en HTTP/1.1. Indica el servidor virtual al que acceder.
+                    </li>
+                    <li>
+                        <code style="font-size:30px">Accept: text/html, image/gif, */*</code>
+                        <br/> Tipos de contenido (MIME types) que se espera recibir (<a href="https://www.sitepoint.com/web-foundations/mime-types-complete-list/">Lista de tipos MIME</a>)
+                    </li>
+                    <li>
+                        <code style="font-size:30px">Accept-Language: en-US</code>
+                        <br/> Idioma(s) en los que se espera recibir el recurso (<a href="http://www.langtag.net/registries/lsr-language.txt">Idiomas</a> y
+                        <a href="http://www.langtag.net/registries/lsr-region.txt">Regiones</a>)
+                    </li>
+                    <li>
+                        <code style="font-size:30px">Accept-Charset: UTF-8</code>
+                        <br/>
+                        <code style="font-size:30px">Accept-Encoding: x-gzip</code>
+                        <br/>Codificación de caracteres.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Algunos ejemplos de cabeceras</h4>
+                <ul>
+                    <li>
+                        <code style="font-size:30px">User-Agent: Mozilla/5.0 ...</code>
+                        <br/> Navegador o cliente que envía la petición.
+                    </li>
+                    <li>
+                        <code style="font-size:30px">Content-Type: text/html</code>
+                        <br/> En peticiones POST, indica el tipo de contenido que se adjunta en el cuerpo de la petición.
+                    </li>
+                    <li>
+                        <code style="font-size:30px">Authorization: Basic bWFudWVsOm1hbnVlbA==</code>
+                        <br/> Nombre de usuario y contraseña (para acceso a recursos protegidos por contraseña).
+                    </li>
+                    <li>
+                        <code style="font-size:30px">If-Modified-Since: Fri, 26 Feb 2016 03:09:05 GMT</code>
+                        <br/> Indica al servidor que sólo devuelva el recurso si ha sido modificado después de la fecha dada.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Estructura de una respuesta HTTP</h3>
+                <div style="font-family:monospace;font-size:25px">
+                    <div style="background-color:rgb(145, 209, 255);text-align:left">
+                        HTTP/1.1 200 OK
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:400px">Línea de estado</span>
+                    </div>
+                    <div style="background-color:rgb(255, 232, 153);text-align:left">
+                        Date: Mon, 15 Aug 2016 14:05:30 GMT
+                        <br/> Server: Apache
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:415px">Cabeceras de la respuesta</span>
+                        <br/> Set-Cookie: ucmweb=a8bcbkqfml72df71mee86drgj7; domain=ucm.es
+                        <br/> Expires: Thu, 19 Nov 1981 08:52:00 GMT
+                        <br/> Content-Type: text/html; charset=utf-8
+                    </div>
+                    <div>
+                        <span style="color:#A0A0A0;font-style:italic"> (línea en blanco) </span>
+                    </div>
+                    <div style="background-color:rgb(236, 255, 170);text-align:left">
+                        &lt;!DOCTYPE html&gt;
+                        <br/> &lt;html lang="es"&gt;
+                        <span class="no_arrow_box fragment" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:385px">Cuerpo de la respuesta</span>
+                        <br/> &lt;head&gt;
+                        <br/> &nbsp; &lt;title&gt;UCM-Universidad Complutense de Madrid&lt;/title&gt;
+                        <br/> ...
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h4>Línea de estado</h4>
+                <div style="font-family:monospace;font-size:25px">
+                    <div style="background-color:rgb(145, 209, 255);text-align:left">
+                        HTTP/1.1 200 OK
+                    </div>
+                </div>
+                <p>Indica la versión del protocolo HTTP utilizada, un código de estado y un texto con la descripción dicho código.</p>
+            </section>
+
+            <section>
+                <h4>Códigos de estado</h4>
+                <ul>
+                    <li><code style="font-size:30px">200 OK</code>: Petición recibida y servida con éxito.</li>
+                    <li><code style="font-size:30px">3xx</code>: Redirección: el recurso ha cambiado de dirección.
+                        <ul>
+                            <li><code style="font-size:30px">301 Move Permanently</code></li>
+                            <li><code style="font-size:30px">302 Move Temporarily</code></li>
+                            <li><code style="font-size:30px">304 Not modified</code></li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>En los códigos 301 y 302 se indica en la cabecera de la respuesta la nueva dirección del recurso. El código 304 se devuelve en el caso en el que el cliente haya incluido
+                    <code style="font-size:30px">If-Modified-Since</code> y el recurso no haya cambiado desde la fecha indicada.</p>
+            </section>
+
+            <section>
+                <h4>Códigos de estado</h4>
+                <ul>
+                    <li><code style="font-size:30px">4xx</code>: Errores atribuibles al cliente.</li>
+                    <ul>
+                        <li><code style="font-size:30px">400 Bad Request</code>: Petición incorrecta.</li>
+                        <li><code style="font-size:30px">401 Authentication Required</code>: Se requiere identificación (nombre y contraseña).</li>
+                        <li><code style="font-size:30px">403 Forbidden</code>: Identificación incorrecta.</li>
+                        <li><code style="font-size:30px">404 Not Found</code>: Recurso no encontrado en el servidor.</li>
+                        <li><code style="font-size:30px">405 Method not Allowed</code>: Acción (GET, POST, etc.) no permitida.</li>
+                    </ul>
+                    </li>
+                    <li><code style="font-size:30px">5xx</code>: Errores atribuibles al servidor.</li>
+                    <ul>
+                        <li><code style="font-size:30px">500 Internal Server Error</code></li>
+                        <li><code style="font-size:30px">503 Service Unavailable</code></li>
+                    </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Cuerpo de la respuesta</h4>
+                <div style="font-family:monospace;font-size:25px">
+                    <div style="background-color:rgb(236, 255, 170);text-align:left">
+                        &lt;!DOCTYPE html&gt;
+                        <br/> &lt;html lang="es"&gt;
+                        <br/> &lt;head&gt;
+                        <br/> &nbsp; &lt;title&gt;UCM-Universidad Complutense de Madrid&lt;/title&gt;
+                        <br/> ...
+                    </div>
+                </div>
+
+                <p>Tal y como indica la cabecera <code style="font-size:30px">Content-Type: text/html</code>, el cuerpo de la respuesta contiene un texto en formato HTML que define la estructura de la página web recuperada.</p>
+            </section>
+
+            <section>
+                El código HTML puede hacer referencia a otros recursos:
+                <div style="font-family:monospace;font-size:25px">
+                    <div style="background-color:rgb(236, 255, 170);text-align:left">
+                        ...
+                        <br/> &lt;link type="text/css" media="screen" rel="stylesheet" href="/themes/ucm3/css/portada.css?a=1" /&gt;
+                        <br/> ...
+                        <br/> &lt;img src="/nodes/web/00media/img/ucm-ws.png"/&gt;
+                        <br/> ...
+                    </div>
+                </div>
+                Cada uno de estos recursos deberá ser obtenido por el navegador Web en sucesivas peticiones HTTP al servidor.
+            </section>
+
+            <section>
+                <h3>Ver código HTML en Firefox</h3>
+                <ul>
+                    <li>Botón derecho &rarr; <cite style="font-style:italic">Ver código fuente</cite>, o bien,</li>
+                    <li>Ctrl+U</li>
+                </ul>
+                <img src="images/01/UCMPage.jpg" style="height:400px" />
+            </section>
+
+            <section>
+                <img src="images/01/UCMPageSource.jpg" style="height:600px" />
+            </section>
+
+            <section>
+                <h3>Observar cabeceras HTTP en Firefox</h3>
+                <cite style="font-style:italic">Herramientas</cite> &rarr;
+                <cite style="font-style:italic"> Desarrollador Web </cite> &rarr;
+                <cite style="font-style:italic">Red</cite> (Ctrl+Mayus+Q)</li>
+
+                <iframe width="420" height="315" src="https://www.youtube.com/embed/RaeyLZE6Yo0" frameborder="0" allowfullscreen></iframe>
+                <div>
+                    <a href="https://youtu.be/RaeyLZE6Yo0">https://youtu.be/RaeyLZE6Yo0</a>
+                </div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos">
+                  <li><a href="#/p1" class="outline">Repaso del Modelo TCP/IP</a></li>
+                  <li><a href="#/p2" class="outline">Modelo Cliente/Servidor</a></li>
+                  <li><a href="#/p3" class="outline">Sockets y Protocolos</a></li>
+                  <li><a href="#/p4" class="outline">Protocolo HTTP</a></li>
+                  <li><a href="#/p5" class="outline current">Referencias</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Referencias</h3>
+                <ul>
+                    <li>Wikipedia - <span style="font-style:italic">Internet Protocol Suite</span>
+                        <br/>
+                        <a href="https://en.wikipedia.org/wiki/Internet_protocol_suite">https://en.wikipedia.org/wiki/Internet_protocol_suite</a></li>
+                    <li><span style="font-style: italic">An Introduction to HTTP Basics</span>
+                        <br/>
+                        <a href="https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/HTTP_Basics.html">https://www.ntu.edu.sg/home/ehchua/<br/>programming/webprogramming/HTTP_Basics.html</a></li>
+                </ul>
+            </section>
+            </div>
+        </div>
+
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                history: true,
+
+                // More info https://github.com/hakimel/reveal.js#dependencies
+                dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                }, {
+                    src: 'plugin/markdown/markdown.js'
+                }, {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                }, {
+                    src: 'plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function() {
+                        hljs.initHighlightingOnLoad();
+                    }
+                }]
+            });
+        </script>
+</body>
+
+</html>
