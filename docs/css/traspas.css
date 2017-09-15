@@ -184,3 +184,8 @@ table.restapi th {
     padding: 0px 20px;
     background-color: #DFF;
 }
+
+img.noborder {
+    border: none !important;
+    box-shadow: none !important;
+}
