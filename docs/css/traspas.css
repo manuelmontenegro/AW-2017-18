@@ -29,7 +29,7 @@ table.protocolo td {
 
 span.important {
     color: rgb(0, 74, 186);
-    font-variant: small-caps;
+    /* font-variant: small-caps; */
     font-weight: bold;
 }
 

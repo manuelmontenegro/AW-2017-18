@@ -82,50 +82,109 @@
                 </ol>
             </section>
             <section>
-                <h3>Una visión global de la asignatura</h2>
-                <img src="images/intro/Intro1.svg" width="90%" class="noborder">
-                <p>
-                    Las tecnologías web utilizan una arquitectura de cliente/servidor.
-                </p>
+                <section>
+                    <h3>Una visión global de la asignatura</h3>
+                    <img src="images/intro/Intro1.svg" width="90%" class="noborder">
+                    <p>
+                        Las tecnologías web utilizan una arquitectura de cliente/servidor.
+                    </p>
+                </section>
+                <section data-transition="fade-out slide-in">
+                    <img src="images/intro/Intro1.svg" width="90%" class="noborder">
+                    <div style="height:6em">
+                        <p>El servidor es un programa que responde peticiones</p>
+                        <p class="fragment">El cliente realiza esas peticiones a través de un <strong>navegador</strong>.</p>
+                    </div>
+                </section>
+                <section data-transition="fade-in fade-out">
+                    <img src="images/intro/Intro2.svg" width="90%" class="noborder">
+                    <div style="height:6em">
+                        <p>Ambos componentes se comunican mediante un protocolo</p>
+                        <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 1</strong>: El protocolo HTTP</span></p>
+                    </div>
+                </section>
+                <section data-transition="fade-in slide-out">
+                    <img src="images/intro/Intro2.svg" width="90%" class="noborder">
+                    <div style="height:6em">
+                        <p>La información devuelta por el servidor (<em style="color:#009eb2">páginas HTML</em>, <em style="color:#009eb2">hojas de estilo CSS</em>, <em style="color:#009eb2">imágenes</em>, etc.) es la que permite al navegador visualizar la página web.</p>
+
+                        <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 2</strong>: HTML y CSS</span></p>
+                        <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 9</strong>: Accesibilidad en la web</span></p>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Nuestros objetivos</h5>
+                    <div style="background-color:#bbf5ad;padding:10px">
+                        <ol>
+                            <li>Desarrollar programas que se ejecuten en el lado del <strong>servidor</strong>.</li>
+                            <li>Desarrollar programas que se ejecuten en el lado del <strong>cliente</strong> (navegador).</li>
+                        </ol>
+                    </div>
+                    <p class="fragment">¿Qué lenguajes de programación utilizamos?</p>
+                    <div class="fragment">
+                        <p>
+                            Utilizaremos <span class="important">Javascript</span>, tanto en el lado del servidor como en el lado del cliente.
+                        </p>
+                        <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 3</strong>: Javascript</span></p>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>¿Javascript en el servidor?</h5>
+                    <p>Para ejecutar programas Javascript fuera de un navegador necesitamos un <strong>intérprete</strong>:</p>
+                    <p class="fragment">
+                        <img src="images/intro/nodejs.png" width="20%" class="noborder" alt="Node.js">
+                    </p>
+                </section>
+
+                <section>
+                    <p><img src="images/intro/Intro3.svg" class="noborder" width="70%"></p>
+                    <p>Existen distintas implementaciones de un servidor web:</p>
+                    <ul>
+                        <li><span class="important">Apache</span>, escrito en C.</li>
+                        <li><span class="important">Tomcat</span>, escrito en Java.</li>
+                    </ul>
+                    <p class="fragment"><strong>Implementaremos nuestro propio servidor en Javascript</strong></p>
+                    <p class="fragment">(utilizando una librería: <code>http</code>)</p>
+                    <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 4</strong>: Node.js</span></p>
+
+                </section>
+
+                <section>
+                    <p><img src="images/intro/Intro3.svg" class="noborder" width="70%"></p>
+                    <p>A medida que nuestro servidor web adquiera complejidad, necesitaremos mecanismos para organizar su estructura.</p>
+                    <p>Para ello existen los <strong>frameworks web</strong>.</p>
+                    <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Temas 5 y 6</strong>: Express.js</span></p>
+                </section>
+
+                <section>
+                    <p>Hemos visto que el servidor proporciona al navegador los recursos necesarios para visualizar la página: HTML, CSS, imágenes, etc.</p>
+                    <div class="fragment"><p>Pero el servidor también puede proporcionar al cliente <strong>código en Javascript</strong>:</p>
+                    <p><img src="images/intro/Intro4.svg" class="noborder" width="70%"></p></div>
+                </section>
+
+                <section>
+                    <p><img src="images/intro/Intro4.svg" class="noborder" width="70%"></p>
+                    <p>Este código será ejecutado por el <strong>navegador</strong> en el ordenador del usuario de la página. </p>
+                    <p>Nos permitirá modificar los elementos de la página dinámicamente.</p>
+                    <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 7</strong>: Javascript en el cliente y <em>jQuery</em></span></p>
+                </section>
+
+                <section>
+                    <p><img src="images/intro/Intro5.svg" class="noborder" width="70%"></p>
+                    <p>El código Javascript que se ejecute en el cliente también puede realizar peticiones al servidor.</p>
+                    <p>El servidor responderá con la información pedida.</p>
+                    <p><strong>Modelo SPA</strong> (<em>Single Page Application</em>)</p>
+                    <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 8</strong>: AJAX y Servicios Web</span></p>
+                </section>
+
             </section>
-            <section>
-                <img src="images/intro/Intro1.svg" width="90%" class="noborder">
-                <div style="height:5em">
-                    <p>El servidor es un programa que responde peticiones</p>
-                    <p class="fragment">El cliente realiza esas peticiones, a través de un <strong>navegador</strong>.</p>
-                </div>
-            </section>
-            <section>
-                <img src="images/intro/Intro2.svg" width="90%" class="noborder">
-                <div style="height:5em">
-                    <p>Ambos componentes utilizan el mismo protocolo</p>
-                    <p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 1</strong>: El protocolo HTTP</span></p>
-                </div>
-            </section>
-            <section>
-                <img src="images/intro/Intro3.svg" width="90%" class="noborder">
-                <div style="height:5em">
-                    <p>El servidor puede responder con la estructura de una página web en formato HTML...</p>
-                </div>
-            </section>
-            <section>
-                <img src="images/intro/Intro4.svg" width="90%" class="noborder">
-                <div style="height:5em">
-                    <p>... o con información sobre su visualización (CSS) ...</p>
-<p class="fragment"><span style="background-color:#674300; color:white; border-radius: 10px; padding:0px 10px">&rarr; <strong style="color:white">Tema 2</strong>: HTML y CSS</span></p>                    
-                </div>
-            </section>
-            <section>
-                <img src="images/intro/Intro5.svg" width="90%" class="noborder">
-                <div style="height:5em">
-                    <p>... u otro tipo de recurso (imágenes, tipos de letra, etc.)</p>
-                    <p>El cliente (navegador) utiliza la información recibida para renderizar la página web y mostrarla al usuario.</p>
-                </div>
-            </section>
+
             <section>
                 <h2>Requisitos</h2>
                 <ol>
-                    <li><span class="section">Tecnología de la programación</span>
+                    <li class="fragment"><span class="section">Tecnología de la programación</span>
                         <ul>
                             <li>Programación orientada a objetos.</li>
                             <li>Arquitectura MVC.</li>
@@ -141,160 +200,182 @@
             </section>
 
             <section>
-                <h2>Evaluación</h2>
-                <p>Tanto en junio como en septiembre:</p>
-                <ul>
-                    <li>
-                        <span style="font-weight:bold">10%</span> - Ejercicios sencillos.
-                    </li>
-                    <li>
-                        <span style="font-weight:bold">30%</span> - Prácticas (obligatorias).
-                    </li>
-                    <li>
-                        <span style="font-weight:bold">60%</span> - Examen final en laboratorio.
-                    </li>
-                </ul>
-                <div class="fragment">
-                    <p>Para aprobar es necesario:</p>
+
+                <section>
+                    <h2>Evaluación</h2>
+                    <img src="images/intro/Porcentajes1.svg" width="80%">
                     <ul>
-                        <li>Calificación de <strong>APTO</strong> en cada práctica.</li>
-                        <li>Calificación de <strong>4 sobre 10</strong> en el examen.</li>
-                        <li>Calificación final ponderada mayor o igual que 5.</li>
+                        <li>
+                            <span class="important">10%</span> - Práctica incremental guiada (opcional)
+                        </li>
+                        <li>
+                            <span class="important" style="color:#ccad00">30%</span> - Prácticas no guiadas (obligatorias)
+                        </li>
+                        <li>
+                            <span class="important" style="color:#c93535">60%</span> - Examen final en laboratorio
+                        </li>
                     </ul>
-                </div>
-            </section>
-
-            <section>
-                <h3>Calificación de los ejercicios</h3>
-                <p>Se realizan por parejas</p>
-                <p>Se evaluarán como APTO/NO APTO</p>
-                <p>La puntuación de los ejercicios vendrá dada por:</p>
-                <div style="border:1px solid black;padding:10px">$$10 * \frac{\text{Num. ejercicios aptos}}{\text{Num. ejercicios propuestos}}$$</div>
-
-            </section>
-
-            <section>
-                <h3>Calificación de las prácticas</h3>
-                <img src="svgs/calificacion-practicas.svg" width="700" style="border:none;box-shadow:none" />
-                <ul>
-                    <li class="fragment"><span class="section">NO APTO no recuperable</span>
-                        <br/> Práctica copiada o no entregada.
-                    </li>
-                    <li class="fragment"><span class="section">NO APTO recuperable</span>
-                        <br/> Errores graves de diseño, o funcionamiento incorrecto. Puede volver a entregarse.
-                    </li>
-                    <li class="fragment"><span class="section">APTO con calificación numérica</span>
-                        <br/> La calificación numérica se otorga en función de las extensiones entregadas.
-                    </li>
-            </section>
-
-            <section>
-                <h2>Prácticas de laboratorio</h2>
-                <p>Se realizan por parejas</p>
-                <ol>
-                    <li>Aplicación web modelo clásico (50%)</li>
-                    <li>Aplicación web avanzada (50%)</li>
-                </ol>
-                <p>Sesiones de laboratorio:</p>
-                <ul>
-                    <li>Jueves de 16 a 18h.</li>
-                    <li>A partir del 6 de octubre.</li>
-                    <li>Laboratorios 1 y 2.</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>Atención al estudiante</h2>
-                <ul>
-                    <li>
-                        <span class="section">Campus Virtual</span>
+                    <div class="fragment">
+                        <p>Para aprobar es necesario:</p>
                         <ul>
-                            <li>Material y entrega de prácticas.</li>
-                            <li>¡No para mensajes al profesor!</li>
+                            <li>Calificación de <strong>APTO</strong> en cada práctica.</li>
+                            <li>Calificación de <strong>4 sobre 10</strong> en el examen.</li>
+                            <li>Calificación final ponderada mayor o igual que 5.</li>
                         </ul>
-                    </li>
-                    <li class="fragment">
-                        <span class="section">GitHub</span>
-                        <ul>
-                            <li><a href="https://github.com/manuelmontenegro/AW-2016-17">https://github.com/manuelmontenegro/AW-2016-17</a></li>
-                            <li>Código de los ejemplos y ejercicios.</li>
-                            <li>Diapositivas actualizadas en formato HTML.</li>
-                        </ul>
-                    </li>
-                </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Práctica guiada</h3>
+                    <img src="images/intro/Porcentajes2.svg" width="80%">
+                    <p>Se realiza por parejas, en sucesivas entregas (cortas)</p>
+                    <p>Cada entrega se evalúa como APTO/NO APTO</p>
+                    <p>Puntuación total de la práctica guiada:</p>
+                    <div>$$10 * \frac{\text{Num. entregas aptas}}{\text{Num. entregas propuestas}}$$</div>
+
+                </section>
+
+
+                <section>
+                    <h3>Prácticas no guiadas</h3>
+                    <img src="images/intro/Porcentajes3.svg" width="80%">
+                    <p>Se realizan por parejas.</p>
+                    <ol>
+                        <li>Aplicación web modelo clásico (65%)</li>
+                        <li>Aplicación web modelo SPA (35%)</li>
+                    </ol>
+                    <p><span class="important">Sesiones de laboratorio:</span></p>
+                    <ul>
+                        <li>Viernes de 16 a 18h.</li>
+                        <li>A partir del 6 de octubre.</li>
+                        <li>Laboratorios 5 y 6.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Calificación de prácticas no guiadas</h4>
+                    <img src="images/intro/Porcentajes3.svg" width="80%">
+                    <ul>
+                        <li class="fragment"><span class="section">NO APTO no recuperable</span>
+                            <br/> Práctica copiada o no entregada.
+                            <br/> Las copias se informarán al CAC (decanato)
+                        </li>
+                        <li class="fragment"><span class="section">NO APTO recuperable</span>
+                            <br/> Errores graves de diseño, o funcionamiento incorrecto. Puede volver a entregarse.
+                        </li>
+                        <li class="fragment"><span class="section">APTO con calificación numérica</span>
+                            <br/> La calificación numérica se otorga en función de las extensiones entregadas.
+                        </li>
+                    </ul>
+                </section>
+
             </section>
 
             <section>
-                <ul>
-                    <li>
-                        <span class="section">Tutorías</span>
-                        <ul>
-                            <li>Martes y jueves, 14-16h, 18-19h.
-                                <br/>Despacho 219 (2ª planta)</li>
-                            <li>Otro horario: PPH.</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">
-                        <span class="section">Además de las tutorías...</span>
-                        <ul>
-                            <li>Leer FAQ de ejercicios y en el Campus Virtual.</li>
-                            <li>Correo: <a href="mailto:montenegro@fdi.ucm.es"><code>montenegro@fdi.ucm.es</code></a></li>
-                            <li>¡No mensajes a través del CV!</li>
-                        </ul>
-                    </li>
-                </ul>
+                <section>
+                    <h2>Atención al estudiante</h2>
+                    <ul>
+                        <li>
+                            <span class="section">Campus Virtual</span>
+                            <ul>
+                                <li>Material y entrega de prácticas.</li>
+                                <li>¡No para mensajes al profesor!</li>
+                            </ul>
+                        </li>
+                        <li class="fragment">
+                            <span class="section">GitHub</span>
+                            <ul>
+                                <li><a href="https://github.com/manuelmontenegro/AW-2017-18">https://github.com/manuelmontenegro/AW-2017-18</a></li>
+                                <li>Código de los ejemplos y ejercicios.</li>
+                                <li>Diapositivas actualizadas en formato HTML.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <span class="section">Tutorías</span>
+                            <ul>
+                                <li>Martes: 10-13h y 14-16h.
+                                    <br/>Miércoles: 17-18h
+                                    <br/>Despacho 219 (2ª planta)</li>
+                                <li>Otro horario: PPH.</li>
+                            </ul>
+                        </li>
+                        <li class="fragment">
+                            <span class="section">Además de las tutorías...</span>
+                            <ul>
+                                <li>Leer FAQ de prácticas en el Campus Virtual.</li>
+                                <li>Correo: <a href="mailto:montenegro@fdi.ucm.es"><code>montenegro@fdi.ucm.es</code></a></li>
+                                <li>¡No mensajes a través del CV!</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
             </section>
 
             <section>
-                <h2>Software</h2>
-                <p>Navegador <strong>actualizado</strong>: Firefox o Chrome</p>
-                <p>
-                    <img src="images/firefox.png" style="border:none;box-shadow:none;width:120px" />
-                    <img src="images/chrome.png" style="border:none;box-shadow:none;width:120px" />
-                </p>
-                <div class="fragment">
-                    <p>Sistema gestor de bases de datos:
-                        <br/>XAMPP = MariaDB + phpMyAdmin
-                        <br/>MariaDB tiene la misma interfaz que MySQL
+                <section>
+                    <h2>Software</h2>
+                    <p>Navegador <strong>actualizado</strong>: Firefox o Chrome</p>
+                    <p>
+                        <img src="images/firefox.png" style="border:none;box-shadow:none;width:120px" />
+                        <img src="images/chrome.png" style="border:none;box-shadow:none;width:120px" />
+                    </p>
+                    <div class="fragment">
+                        <p>Sistema gestor de bases de datos:
+                            <br/><span class="important">XAMPP</span> = MariaDB + phpMyAdmin
+                            <br/>MariaDB tiene la misma interfaz que MySQL
+                        </p>
+                        <p>
+                            <img src="images/intro/xampp.png" style="border:none;box-shadow:none;width:300px" />
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Tecnología del lado del servidor</h3>
+                    <div>
+                    <img src="images/intro/nodejs.png" style="width:400px;border:none;box-shadow:none" />
+                    </div>
+                    <p><strong>Node.js</strong> (<a href="https://nodejs.org/en/">nodejs.org</a>)</p>
+                </section>
+
+                <section>
+                    <h3>Entornos de desarrollo</h3>
+                    <div>
+                        <img src="https://code.visualstudio.com/images/favicon.ico" class="noborder" width="10%">
+                    </div>
+                    <p>
+                        <strong>Visual studio code</strong> (<a href="https://code.visualstudio.com/">code.visualstudio.com</a>)
                     </p>
                     <p>
-                        <img src="images/intro/xampp.png" style="border:none;box-shadow:none;width:300px" />
+                        <img src="images/intro/netbeans.jpg" style="width:300px;border:none;box-shadow:none;padding:0px 20px" />
                     </p>
-                </div>
+                    <p>
+                        <strong>Netbeans IDE</strong> (<a href="https://netbeans.org/">netbeans.org</a>)
+                    </p>
+                    <p class="fragment"> o bien: Atom, vim, Sublime Text, Notepad++, etc.
+                </section>
             </section>
 
             <section>
-                <p>Tecnología del lado del servidor: Node.js</p>
-                <img src="images/intro/nodejs.png" style="width:400px;border:none;box-shadow:none" />
-            </section>
-
-            <section>
-                <p>Entornos de desarrollo:</p>
-                <p>
-                    <img src="images/intro/eclipse.jpg" style="width:300px;border:none;box-shadow:none;padding:0px 20px" />
-                    <img src="images/intro/netbeans.jpg" style="width:300px;border:none;box-shadow:none;padding:0px 20px" />
-                </p>
-                <p class="fragment"> o bien: Atom, gedit, Sublime Text, Notepad++, etc.
-            </section>
-
-            <section>
-              <h2>Bibliografía</h2>
-              <p>Se concretará al final de cada tema.</p>
-              <ul>
-                <li>E. Freeman, E. Freeman<br/>
-                   	<a href="http://cisne.sim.ucm.es/record=b3283071~S6*spi">Head first HTML : with CSS &amp; XHTML</a> <br/>
-                    O'Reilly (2012)
-                </li>
-                <li>E. Brown<br/>
-                  <a href="http://cisne.sim.ucm.es/record=b3579629~S6*spi">Learning Javascript (3rd edition)</a> <br/>
-                  O'Reilly (2016)
-                </li>
-                <li>
-                  B. A. Syed<br/>
-                  <a href="http://cisne.sim.ucm.es/record=b3413478~S6*spi">Beginning Node.js</a><br/>
-                  Apress (2014)
-                </li>
-              </ul>
+                <h2>Bibliografía</h2>
+                <p>Se concretará al final de cada tema.</p>
+                <ul>
+                    <li>E. Freeman, E. Freeman<br/>
+                        <a href="http://cisne.sim.ucm.es/record=b3283071~S6*spi">Head first HTML : with CSS &amp; XHTML</a> <br/> O'Reilly (2012)
+                    </li>
+                    <li>E. Brown<br/>
+                        <a href="http://cisne.sim.ucm.es/record=b3579629~S6*spi">Learning Javascript (3rd edition)</a> <br/> O'Reilly (2016)
+                    </li>
+                    <li>
+                        B. A. Syed<br/>
+                        <a href="http://cisne.sim.ucm.es/record=b3413478~S6*spi">Beginning Node.js</a><br/> Apress (2014)
+                    </li>
+                </ul>
             </section>
 
         </div>
