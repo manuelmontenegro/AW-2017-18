@@ -1,0 +1,16 @@
+body {
+  padding: 50px;
+  font: 14px "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  color: rgb(86, 7, 187)
+}
+
+a {
+  color: #00B7FF;
+}
+
+#perro {
+  width: 300px;
+}

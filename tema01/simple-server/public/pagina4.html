@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Página de prueba</title>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+    <h1>Formulario de búsqueda (POST)</h1>
+    <form action="busqueda.html" method="post">
+      <p>
+        <label for="termino">Término de búsqueda: </label>
+        <input type="text" name="termino" id="termino"/>
+      </p>
+      <p>
+        Tipo de búsqueda:
+        <input type="radio" name="tipobusqueda" value="basica" id="busqbasica"/> <label for="busqbasica">Básica</label>
+        <input type="radio" name="tipobusqueda" value="avanzada" id="busqavanzada"/> <label for="busqavanzada">Avanzada</label>
+      </p>
+      <p>
+        <input type="submit" value="Buscar"/>
+      </p>
+    </form>
+
+</body>
+
+</html>
