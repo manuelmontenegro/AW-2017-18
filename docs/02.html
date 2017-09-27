@@ -21,6 +21,7 @@
         link.type = 'text/css';
         link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
+
     </script>
 
     <link rel="stylesheet" href="css/traspas.css" />
@@ -2203,79 +2204,8 @@ top: <span style="font-style:italic">coordenada_y</span>;
                 </section>
 
             </section>
-            <section>
-                <h3>Posicionamiento en forma de tabla</h3>
-                <p>En ocasiones resulta útil concebir la disposición de una página web como una tabla.</p>
-                <img src="images/02/TableLayout.png" style="width:80%;border:none">
-            </section>
-
-
-            <section>
-                <p>El elemento <code>&lt;table&gt;</code> <strong>no</strong> debe usarse para esto, ya que se mezclarían detalles de estilo de la página con la estructura. </p>
-
-                <p>No obstante, se puede conseguir una distribución similar considerando cada celda de esta tabla virtual como una sección lógica <code>&lt;div&gt;</code> y utilizando las propiedades
-                    <code>display:table-row</code> y <code>display:table-cell</code>.
-                </p>
-            </section>
-
-            <section>
-                <h4>Ejemplo</h4>
-                <pre><code data-trim class="html">
-&lt;div id=&quot;contenido&quot;&gt;
-    &lt;div id=&quot;fila_superior&quot;&gt;
-        &lt;div id=&quot;logo&quot;&gt; ... &lt;/div&gt;
-        &lt;div id=&quot;titulo&quot;&gt; ...  &lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div id=&quot;fila_inferior&quot;&gt;
-        &lt;div id=&quot;menu&quot;&gt; ... &lt;/div&gt;
-        &lt;div id=&quot;texto&quot;&gt; ... &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-                </code></pre>
-                <ul>
-                    <li>Secciones lógicas que se comportan como filas: <code>#fila_superior</code> y
-                        <code>#fila_inferior</code>.</li>
-                    <li>Secciones lógicas que se comportan como celdas: <code>#logo</code>, <code>#titulo</code>,
-                        <code>#menu</code> y <code>#texto</code>.
-                    </li>
-                </ul>
-            </section>
-            <section>
-                <pre><code data-trim class="css">
-#contenido {
-    display: table;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#fila_superior, #fila_inferior {
-    display: table-row;
-}
-
-#logo, #titulo, #menu, #texto {
-    display: table-cell;
-    padding: 5px;
-}
-
-#logo {
-    background-color: #A0A0A0;
-    text-align: center;
-    width: 200px;
-}
-
-#titulo { background-color: #F0F0F0; }
-#menu   { background-color: #A0FFFF; }
-#texto  { background-color: #FFFFA0; }
-                </code></pre>
-            </section>
-
-            <section>
-                <p>Resultado:</p>
-                <img src="images/02/TableLayoutResult.png" style="width:80%;border:none">
-            </section>
-
+            
+            
             <section>
                 <section>
                     <h3>Posicionamiento flexible (Flexbox)</h3>
@@ -2435,7 +2365,7 @@ align-self: flex-start | flex-end | center | baseline | stretch
                     <p>Por ejemplo, si asignamos <code>align-self: flex-end</code> al tercer elemento:</p>
                     <img class="noborder" src="images/02/Flex14.png" width="40%">
                 </section>
-                
+
                 <section>
                     <pre><code data-trim data-noescape class="css">
 flex-grow: <em>número</em>
@@ -2444,7 +2374,7 @@ flex-grow: <em>número</em>
                     <p>El número indica el <strong>peso</strong> del elemento a la hora de ocupar el espacio del padre. Si toma el valor <code>0</code> no se expande.</p>
                     <p>Por ejemplo:</p>
                     <img class="noborder" src="images/02/Flex15.png" width="80%">
-                    
+
                 </section>
 
                 <section>
@@ -2454,28 +2384,167 @@ order: <em>número</em>
                     <p>Determina el orden del elemento dentro del padre.</p>
                     <p>Esto permite colocar elementos en un orden distinto en el que aparecen en el código HTML:</p>
                     <img class="noborder" src="images/02/Flex16.png" width="80%">
-                    
+
                 </section>
-            
+                
+                <section>
+                    <p>Más información:<br>
+                        <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">https://css-tricks.com/snippets/css/a-guide-to-flexbox/</a>
+                    </p>
+                </section>
+
             </section>
 
-            
+
             <section>
                 <section>
                     <h3>Posicionamiento en rejilla (Grid)</h3>
                     <p>Más recientemente aún, se ha incorporado un mecanismo de colocación de elementos en forma de rejilla flexible:</p>
 
+                    <p>
+                        <img src="images/02/Grid1.png" class="noborder" style="width:60%">
+                    </p>
+                </section>
+                <section>
                     <p>Soporte en navegadores:</p>
                     <ul>
-                        <li>Firefox 38 o posterior.</li>
-                        <li>Chrome 21 o posterior.</li>
-                        <li>Safari 6.1 o posterior.</li>
-                        <li>Opera 12.1 o posterior.</li>
-                        <li>Edge 12 o posterior.</li>
+                        <li>Firefox 52 o posterior.</li>
+                        <li>Chrome 57 o posterior.</li>
+                        <li>Safari 10.1 o posterior.</li>
+                        <li>Opera 44 o posterior.</li>
+                        <li>Edge 15 (parcialmente).</li>
                         <li>Internet Explorer lo soporta parcialmente.</li>
+                        <li>Opera Mini no lo soporta.</li>
                     </ul>
                 </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <p>Partimos del siguiente código:</p>
+                    <div style="float:left; width:50%">
+                        <pre><code data-trim data-noescape class="html">
+&lt;div class=&quot;contenedor&quot;&gt;
+    &lt;div id=&quot;uno&quot;&gt;1&lt;/div&gt;
+    &lt;div id=&quot;dos&quot;&gt;2&lt;/div&gt;
+    &lt;div id=&quot;tres&quot;&gt;3&lt;/div&gt;
+    &lt;div id=&quot;cuatro&quot;&gt;4&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+                    </div>
+                    <div style="float:left; width:50%">
+                        <pre><code data-trim data-noescape class="css">
+div.contenedor {
+    ...
+    width: 400px;
+    padding: 10px;
+    <span class="hl">display: grid</span>
+}
+</code></pre>
+                    </div>
+                    <div style="clear:both">
+                        <img src="images/02/Grid2.png" class="noborder">
+                    </div>
+                </section>
+
+                <section>
+                    <p>Mediante <code>grid-template-rows</code> y <code>grid-template-columns</code> indicamos el número de columnas y la longitud de cada una.</p>
+
+                    <pre><code data-trim data-noescape class="css">
+div.contenedor {
+    ...
+    /* Tres columnas */
+    grid-template-rows: 150px 100px;
+    /* Dos filas */
+    grid-template-columns: 60px 90px 50px;
+}
+</code></pre>
+                    <img src="images/02/Grid3.png" style="width:40%" class="noborder">
+
+                </section>
+
+                <section>
+                    <p>Es posible especificar unidades relativas, indicando los <strong>pesos</strong> de cada una de las filas o columnas.</p>
+                    <pre><code data-trim data-noescape class="css">
+div.contenedor {
+    ...
+    /* Tres columnas */
+    grid-template-rows: 1fr auto;
+    /* Dos filas */
+    grid-template-columns: 1fr 3fr 1fr;
+}
+</code></pre>
+                    <img src="images/02/Grid4.png" style="width:40%" class="noborder">
+                    <p><code>auto</code> = no ocupar espacio extra</p>
+                </section>
+
+                <section>
+                    <h4>Posición de cada elemento</h4>
+                    <p>Por defecto, los elementos se van situando de izquierda a derecha y de arriba a abajo en la cuadrícula.</p>
+                    <p>
+                        <img src="images/02/Grid5.png" style="width:40%" class="noborder">
+                    </p>
+                </section>
+
+                <section>
+                    <p>Pero podemos especificar la posición de elementos individualmente:</p>
+                    <pre><code data-trim data-noescape class="css">
+grid-column: <em>inicio</em> / <em>fin</em>
+grid-row:    <em>inicio</em> / <em>fin</em>
+</code></pre>
+                    <p>El elemento se situará desde la fila/columna <code><em>inicio</em></code> hasta la fila/columna <code><em>fin</em></code>, excluyendo esta última.</p>
+                    <p>Se comienza a contar desde el <code>1</code>.</p>
+                    <div class="fragment">
+                        <p>Alternativamente, podemos utilizar:</p>
+                        <pre><code data-trim data-noescape class="css">
+grid-column: <em>inicio</em> / span <em>numFilas</em>
+grid-row:    <em>inicio</em> / span <em>numColumnas</em>
+</code></pre>
+                    </div>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="css">
+#tres   {  grid-row: 2 / 3;   grid-column: 1 / 3; }
+#cuatro {  grid-row: 1 / 3;   grid-column: 3 / 4; }</code></pre>
+                    <p>
+                        <img src="images/02/Grid6.png" style="width:40%" class="noborder">
+                    </p>
+                    <p>También podíamos haber utilizado:</p>
+                    <pre><code data-trim data-noescape class="css">
+#tres   {  grid-row: 2 / span 1;   grid-column: 1 / span 2; }
+#cuatro {  grid-row: 1 / span 2;   grid-column: 3 / span 1; }</code></pre>
+                </section>
+                <section>
+                    <p>Especificar espaciado entre las celdas:</p>
+                    <pre><code data-trim data-noescape class="css">
+div.contenedor {
+    ...
+    grid-column-gap: 10px;
+    grid-row-gap: 30px;
+}
+</code></pre>
+                    <p>
+                        <img src="images/02/Grid7.png" style="width:40%" class="noborder">
+                    </p>
+                </section>
+
+                <section>
+                    <h4>Otras propiedades</h4>
+                    <ul>
+                        <li><code>justify-items</code>, <code>align-items</code><br> Similares a las de Flexbox, permiten alinear un elemento dentro de su celda. Por defecto toman el valor <code>stretch</code>.
+
+                        </li>
+                        <li><code>grid-template-areas</code>, <code>grid-area</code><br> Otra forma de especificar la posición de los elementos.
+                        </li>
+                    </ul>
+                    <p>Más información:<br>
+                        <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">https://css-tricks.com/snippets/css/complete-guide-grid/</a>
+                    </p>
+                </section>
             </section>
+
+
             <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
                 <ol class="contenidos">
                     <li><a href="#/p1" class="outline">Introducción. Página básica</a></li>
@@ -2885,6 +2954,7 @@ Sexo:
                 }
             }]
         });
+
     </script>
 </body>
 
