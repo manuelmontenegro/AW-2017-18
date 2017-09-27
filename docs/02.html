@@ -2276,6 +2276,206 @@ top: <span style="font-style:italic">coordenada_y</span>;
                 <img src="images/02/TableLayoutResult.png" style="width:80%;border:none">
             </section>
 
+            <section>
+                <section>
+                    <h3>Posicionamiento flexible (Flexbox)</h3>
+                    <p>Las últimas versiones de CSS incorporan un nuevo tipo de posicionamiento (<em>Flexbox</em>), que permite configurar la disposición de los elementos dentro de un contenedor.</p>
+
+                    <p>Soporte en navegadores:</p>
+                    <ul>
+                        <li>Firefox 38 o posterior.</li>
+                        <li>Chrome 21 o posterior.</li>
+                        <li>Safari 6.1 o posterior.</li>
+                        <li>Opera 12.1 o posterior.</li>
+                        <li>Edge 12 o posterior.</li>
+                        <li>Internet Explorer lo soporta parcialmente.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+
+                    <div style="float:left; width: 50%">
+                        <pre><code data-trim class="html">
+&lt;div class=&quot;externo&quot;&gt;
+    &lt;div class=&quot;interno&quot;&gt;1&lt;/div&gt;
+    &lt;div class=&quot;interno&quot;&gt;2&lt;/div&gt;
+    &lt;div class=&quot;interno&quot;&gt;3&lt;/div&gt;
+    &lt;div class=&quot;interno&quot;&gt;4&lt;/div&gt;
+&lt;/div&gt;                    
+                    </code></pre>
+                    </div>
+                    <div style="float:left; width: 50%">
+                        <pre><code data-trim data-noescape class="css">
+div.externo {
+    display: <span class="hl">flex</span>;
+    width: 700px;
+    padding: 10px;
+    ...
+}
+
+div.interno {
+    width: 100px;
+    height: 100px;
+    ...
+}
+</code></pre>
+                    </div>
+                    <div style="clear:both">
+                        <img class="noborder" src="images/02/Flex1.png" width="70%">
+                    </div>
+                </section>
+
+                <section>
+                    <p>La propiedad <code>flex-direction</code> determina el <strong>eje principal</strong>.</p>
+                    <ul>
+                        <li>
+                            <code>flex-direction: row</code><br>
+                            <img class="noborder" src="images/02/Flex1.png" width="50%">
+                        </li>
+                        <li>
+                            <code>flex-direction: column</code><br>
+                            <img class="noborder" src="images/02/Flex2.png" width="50%">
+                        </li>
+                    </ul>
+                    <p>El <strong>eje secundario</strong> es el perpendicular al principal.</p>
+                </section>
+
+                <section>
+                    <p>Disposición a lo largo del eje principal:</p>
+                    <pre><code data-trim data-noescape class="css">
+justify-content: flex-start | flex-end | center 
+               | space-between | space-around 
+</code></pre>
+                    <ul style="float:left;width:45%">
+                        <li>
+                            <code>flex-start</code><br>
+                            <img class="noborder" src="images/02/Flex1.png" width="100%">
+                        </li>
+                        <li>
+                            <code>flex-end</code><br>
+                            <img class="noborder" src="images/02/Flex3.png" width="100%">
+                        </li>
+                        <li>
+                            <code>center</code><br>
+                            <img class="noborder" src="images/02/Flex4.png" width="100%">
+                        </li>
+                    </ul>
+                    <ul style="float:right;width:45%">
+                        <li>
+                            <code>space-between</code><br>
+                            <img class="noborder" src="images/02/Flex5.png" width="100%">
+                        </li>
+                        <li>
+                            <code>space-around</code><br>
+                            <img class="noborder" src="images/02/Flex6.png" width="100%">
+                        </li>
+                    </ul>
+                    <div style="clear:both"></div>
+                </section>
+
+
+                <section>
+                    <p>Disposición a lo largo del eje secundario:</p>
+                    <pre><code data-trim data-noescape class="css">
+align-items: flex-start | flex-end | center | stretch | baseline
+</code></pre>
+                    <ul style="float:left;width:45%">
+                        <li>
+                            <code>flex-start</code><br>
+                            <img class="noborder" src="images/02/Flex7.png" width="80%">
+                        </li>
+                        <li>
+                            <code>flex-end</code><br>
+                            <img class="noborder" src="images/02/Flex8.png" width="80%">
+                        </li>
+                        <li>
+                            <code>center</code><br>
+                            <img class="noborder" src="images/02/Flex9.png" width="80%">
+                        </li>
+                    </ul>
+                    <ul style="float:right;width:45%">
+                        <li>
+                            <code>stretch</code><br>
+                            <img class="noborder" src="images/02/Flex10.png" width="80%">
+                        </li>
+                        <li>
+                            <code>baseline</code><br>
+                            <img class="noborder" src="images/02/Flex11.png" width="80%">
+                        </li>
+                    </ul>
+                    <div style="clear:both"></div>
+
+                </section>
+
+                <section>
+                    <p>Si los elementos se "salen" del contenedor, podemos especificar cómo se colocan:</p>
+                    <pre><code data-trim data-noescape class="css">
+flex-wrap: wrap | nowrap | ...
+</code></pre>
+                    <ul>
+                        <li>
+                            <code>wrap</code><br>
+                            <img class="noborder" src="images/02/Flex12.png" width="60%">
+                        </li>
+                        <li>
+                            <code>nowrap</code><br>
+                            <img class="noborder" src="images/02/Flex13.png" width="60%">
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h4>Propiedades de los elementos hijos</h4>
+                    <pre><code data-trim data-noescape class="css">
+align-self: flex-start | flex-end | center | baseline | stretch
+</code></pre>
+                    <p>Alineación de un elemento hijo con respecto al eje secundario.</p>
+                    <p>Por ejemplo, si asignamos <code>align-self: flex-end</code> al tercer elemento:</p>
+                    <img class="noborder" src="images/02/Flex14.png" width="40%">
+                </section>
+                
+                <section>
+                    <pre><code data-trim data-noescape class="css">
+flex-grow: <em>número</em>
+</code></pre>
+                    <p>Determina cómo se distribuye el espacio del eje principal entre los elementos.</p>
+                    <p>El número indica el <strong>peso</strong> del elemento a la hora de ocupar el espacio del padre. Si toma el valor <code>0</code> no se expande.</p>
+                    <p>Por ejemplo:</p>
+                    <img class="noborder" src="images/02/Flex15.png" width="80%">
+                    
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="css">
+order: <em>número</em>
+</code></pre>
+                    <p>Determina el orden del elemento dentro del padre.</p>
+                    <p>Esto permite colocar elementos en un orden distinto en el que aparecen en el código HTML:</p>
+                    <img class="noborder" src="images/02/Flex16.png" width="80%">
+                    
+                </section>
+            
+            </section>
+
+            
+            <section>
+                <section>
+                    <h3>Posicionamiento en rejilla (Grid)</h3>
+                    <p>Más recientemente aún, se ha incorporado un mecanismo de colocación de elementos en forma de rejilla flexible:</p>
+
+                    <p>Soporte en navegadores:</p>
+                    <ul>
+                        <li>Firefox 38 o posterior.</li>
+                        <li>Chrome 21 o posterior.</li>
+                        <li>Safari 6.1 o posterior.</li>
+                        <li>Opera 12.1 o posterior.</li>
+                        <li>Edge 12 o posterior.</li>
+                        <li>Internet Explorer lo soporta parcialmente.</li>
+                    </ul>
+                </section>
+            </section>
             <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
                 <ol class="contenidos">
                     <li><a href="#/p1" class="outline">Introducción. Página básica</a></li>
