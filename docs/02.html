@@ -21,7 +21,6 @@
         link.type = 'text/css';
         link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
-
     </script>
 
     <link rel="stylesheet" href="css/traspas.css" />
@@ -282,19 +281,19 @@ resultado. Entre estas funciones podemos citar &lt;code&gt;map&lt;/code&gt;,
                 </code></pre>
                     <img src="images/02/StrongEm.png" style="width:90%;border:none" />
                 </section>
-                <section>
-                    <h3>Comentarios</h3> En HTML van delimitados por las secuencias de símbolos
-                    <code>&lt;!--</code> y <code>--&gt;</code>
-                    <pre><code data-trim class="html">
+            </section>
+            <section>
+                <h3>Comentarios</h3> En HTML van delimitados por las secuencias de símbolos
+                <code>&lt;!--</code> y <code>--&gt;</code>
+                <pre><code data-trim class="html">
 &lt;p&gt;Esto es un p&aacute;rrafo&lt;/p&gt;
 &lt;!-- Todo lo que hay en este comentario se ignorar&aacute;, incluyendo
      etiquetas &lt;em&gt;HTML&lt;/em&gt; --&gt;
 &lt;p&gt;Esto es otro p&aacute;rrafo&lt;/p&gt;
                 </code></pre>
-                    <img src="images/02/Comments.png" style="width:90%;border:none" />
-                </section>
-
+                <img src="images/02/Comments.png" style="width:90%;border:none" />
             </section>
+
             <section>
                 <h3>Caracteres especiales</h3>
                 <div style="float:left;width: 55%">
@@ -1807,6 +1806,13 @@ a {
                 </div>
             </section>
 
+            <section>
+                <h3>Inspector de propiedades de Chrome</h3>
+                <p>
+                    <cite style="font-style:italic">Herramientas para desarrolladores</cite> &rarr; Pestaña <cite style="font-style:italic">Elements</cite> (Ctrl+Mayus+I)
+                </p>
+
+            </section>
 
             <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
                 <ol class="contenidos">
@@ -1896,10 +1902,6 @@ a {
             </section>
 
 
-            <section>
-                <h4>Los elementos mixtos inline/block</h4>
-                <!-- TODO: Introducir inline-block -->
-            </section>
 
             <section>
                 <h3>El atributo <code style="text-transform:none">display</code></h3>
@@ -1926,6 +1928,45 @@ a {
             </section>
 
 
+            <section>
+                <section>
+                    <h3>Los elementos mixtos inline/block</h3>
+                    <p>Los elementos <code>inline</code> ignoran algunas propiedades CSS:</p>
+                    <ul>
+                        <li>Márgenes superiores e inferiores.</li>
+                        <li>Anchura y altura.</li>
+                    </ul>
+
+                    <pre><code data-trim class="css">
+span {
+    background-color: #FFE0E0;
+    border: 2px solid red;
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+}
+                </code></pre>
+                    <p class="fragment"><img src="images/02/InlineNormal.png" style="width: 70%" class="noborder"></p>
+
+                </section>
+
+                <section>
+                    <p>Los elementos de tipo <code>inline-block</code> se comportan como elementos en línea (respetan el flujo horizontal) pero permiten tener márgenes y una dimensión específica. </p>
+
+                    <pre><code data-trim class="css">
+span {
+    display: inline-block;
+    background-color: #FFE0E0;
+    border: 2px solid red;
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+}
+                </code></pre>
+                    <p class="fragment"><img src="images/02/InlineBlock.png" style="width: 70%" class="noborder"></p>
+
+                </section>
+            </section>
             <section>
                 <section>
                     <h3>Secciones lógicas</h3>
@@ -2644,7 +2685,6 @@ Sexo:
                 }
             }]
         });
-
     </script>
 </body>
 
