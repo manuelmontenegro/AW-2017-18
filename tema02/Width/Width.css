@@ -1,0 +1,17 @@
+body {
+    font-family: sans-serif;
+}
+
+p.importante {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: url(Caution.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    border: 1px dashed rgb(200, 0, 0);
+    border-left: 5px solid rgb(200, 0, 0);
+    background-color: rgb(255, 200, 200);
+    padding: 10px 30px;
+    font-weight: bold;
+}

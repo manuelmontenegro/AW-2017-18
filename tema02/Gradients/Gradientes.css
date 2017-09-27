@@ -1,0 +1,27 @@
+span.letrero {
+    margin: 5px;
+    padding: 2px 0px;
+    background: black;
+    border: 2px solid black;
+    color: white;
+    border-radius: 6px;
+    position: relative;
+    top: 1em;
+}
+
+#grad1 {
+    background: linear-gradient(to right, yellow, green);
+    height: 100px;
+}
+
+#grad2 {
+    background: linear-gradient(to right bottom, black, gray, black);
+    height: 100px;
+}
+
+#grad3 {
+    background: radial-gradient(yellow, white);
+    height: 100px;
+}
+
+

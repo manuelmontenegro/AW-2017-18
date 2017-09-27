@@ -1,0 +1,23 @@
+/*
+a {
+    color: blue !important;
+}
+*/
+
+p > a {
+    color: red;
+}
+
+.enlace {
+    color: purple;
+}
+
+/*
+.enlace2 {
+    color: yellow;
+}
+*/
+
+#fdi {
+    color: green;
+}

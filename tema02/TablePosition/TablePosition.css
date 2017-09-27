@@ -1,0 +1,34 @@
+#contenido {
+    display: table;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#fila_superior, #fila_inferior {
+    display: table-row;
+}
+
+#logo, #titulo, #menu, #texto {
+    display: table-cell;
+    padding: 5px;
+}
+
+#logo {
+    background-color: #A0A0A0;
+    text-align: center;
+}
+
+#titulo {
+    background-color: #F0F0F0;
+    padding: 5px;
+}
+
+#menu {
+    background-color: #A0FFFF;
+    width: 200px;
+}
+
+#texto {
+    background-color: #FFFFA0;
+}

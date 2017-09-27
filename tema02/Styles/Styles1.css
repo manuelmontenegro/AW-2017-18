@@ -1,0 +1,17 @@
+
+
+body {
+    font-family: sans;
+    background: #F0F0F0;
+}
+
+
+h1 {
+    color:blue;
+    text-decoration:underline;
+}
+
+strong {
+    font-weight:bold;
+    color:blue;
+}

@@ -1,0 +1,46 @@
+p {
+    padding: 5px;
+    background-color: #F0F0FF;
+}
+
+p.flotante_izq {
+    float: left;
+    width: 40%;
+    background-color: #FFA000;
+}
+
+p.flotante_dch {
+    float: right;
+    width: 40%;
+    background-color: #FFA000;
+}
+
+p.shrink {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p.absolute {
+    position: absolute;
+    left: 100px;
+    top: 20px;
+    width: 40%;
+    background-color: #FFA000;
+}
+
+p.relative {
+    position: relative;
+    left: 100px;
+    top: 20px;
+    width: 40%;
+    background-color: #FFA000;
+}
+
+p.fixed {
+    position: fixed;
+    left: 100px;
+    top: 20px;
+    width: 40%;
+    background-color: #FFA000;
+}

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "Baloo Bhai";
+    src: url("BalooBhai-Regular.ttf")
+}
+
+h1 {
+    font-family: "Baloo Bhai", Arial, sans-serif;
+    font-weight: normal;
+}

@@ -1,0 +1,31 @@
+
+
+body {
+    font-family: "Asana Math", serif;
+}
+
+h1 {
+    border-left: 5px solid black;
+    padding-left: 10px;
+    padding-top: 8px;
+    color:#006000;
+    background: #E0F0E0;
+    font-style: oblique;
+}
+
+p {
+    margin-left: 2em;
+}
+
+strong {
+    font-weight:bold;
+}
+
+code {
+    font-family: "Inconsolata", monospace;
+    font-size: small;
+    color: #006000;
+    background: #E0E0E0;
+    padding-left:2px;
+    padding-right:2px;
+}

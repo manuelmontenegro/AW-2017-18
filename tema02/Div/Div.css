@@ -1,0 +1,16 @@
+div.articulo {
+    margin-left: 20px;
+    margin-top: 10px;
+    padding: 10px 20px;
+
+    background-image: url(http://cdn.backgroundhost.com/backgrounds/subtlepatterns/brushed_alu.png);
+    border-radius: 10px;
+}
+
+div.articulo h2 {
+    color: #902020;
+}
+
+span.rojo {
+    color: red;
+}

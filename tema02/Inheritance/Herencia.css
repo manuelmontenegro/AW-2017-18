@@ -1,0 +1,14 @@
+body {
+    font-family: sans-serif;
+}
+
+p.cuadro {
+    border: 2px dashed blue;
+    padding: 20px;
+}
+
+a {
+    border: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+}
