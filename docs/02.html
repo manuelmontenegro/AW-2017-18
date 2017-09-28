@@ -270,7 +270,6 @@
                             <br/> Los navegadores suelen mostrarlo en letra de tipo <span style="font-family:monospace">monoespaciada</span>.</li>
 
                     </ul>
-                    <p class="fragment" style="background-color:#DDDDFF;border-radius:10px"><strong>No utilizar: </strong><code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;tt&gt;</code>, ...</p>
                 </section>
                 <section>
                     <h4>Ejemplo</h4>
@@ -830,7 +829,7 @@ Aquí otro párrafo.
                         <p>Es posible incluir imágenes dentro de enlaces:</p>
                         <pre><code data-trim class="html">
 &lt;a href=&quot;http://www.muenster.de&quot;&gt;
-  &lt;img src=&quot;Munster.jpg&quot;alt=&quot;Foto de la calle del ayuntamiento&quot;&gt;
+  &lt;img src=&quot;Munster.jpg&quot; alt=&quot;Foto de la calle del ayuntamiento&quot;&gt;
 &lt;/a&gt;
                 </code></pre>
                         <p>El navegador saltará al enlace al hacer clic en la imagen.</p>
@@ -845,7 +844,7 @@ Aquí otro párrafo.
        style="width: 640; height: 420"&gt;
 &lt;/a&gt;
                 </code></pre>
-                    <p class="fragment">Más información: <a href="">CSS en línea</a></p>
+                    <p class="fragment">Más información: <a href="#regla3">CSS en línea</a></p>
                 </section>
             </section>
 
@@ -1646,7 +1645,7 @@ p > a {
                     <p>En general, prevalecen las clases que se definen después en la hoja de estilo CSS.</p>
                 </section>
 
-                <section>
+                <section id="regla3">
                     <h4>Regla 3: Atributo <code style="text-transform:none">style</code></h4>
                     <p>Es posible (aunque no se recomienda) introducir estilos directamente en el código HTML:</p>
                     <pre><code data-trim style="html">
@@ -1809,9 +1808,8 @@ a {
 
             <section>
                 <h3>Inspector de propiedades de Chrome</h3>
-                <p>
-                    <cite style="font-style:italic">Herramientas para desarrolladores</cite> &rarr; Pestaña <cite style="font-style:italic">Elements</cite> (Ctrl+Mayus+I)
-                </p>
+                    <p><cite style="font-style:italic">Herramientas para desarrolladores</cite> &rarr; Pestaña <cite style="font-style:italic">Elements</cite> (Ctrl+Mayus+I)</p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/rBR3fzJHhsM" frameborder="0" allowfullscreen></iframe>
 
             </section>
 
@@ -1836,13 +1834,13 @@ a {
                         Elementos de tipo <strong>bloque</strong>:
                         <ul>
                             <li>Ocupan todo el ancho de la página.</li>
-                            <li>Los elementos de tipo bloque contiguos se colocan de arriba a abajo en la página HTML.</li>
+                            <li>Se colocan de arriba a abajo en la página HTML.</li>
                         </ul>
                     </li>
                     <li>
                         Elementos de tipo <strong>inline</strong>:
                         <ul>
-                            <li>Ocupan el ancho que necesiten, según el contenido.</li>
+                            <li>Ocupan solo el ancho que necesiten, según el contenido.</li>
                             <li>Se colocan de izquierda a derecha, hasta ocupar el ancho de la página. Saltan a la línea siguiente si es necesario.</li>
                         </ul>
                     </li>
@@ -2447,7 +2445,7 @@ div.contenedor {
                 </section>
 
                 <section>
-                    <p>Mediante <code>grid-template-rows</code> y <code>grid-template-columns</code> indicamos el número de columnas y la longitud de cada una.</p>
+                    <p>Mediante <code>grid-template-rows</code> y <code>grid-template-columns</code> indicamos el número de filas y columnas, y la longitud de cada una de ellas.</p>
 
                     <pre><code data-trim data-noescape class="css">
 div.contenedor {
@@ -2479,14 +2477,14 @@ div.contenedor {
 
                 <section>
                     <h4>Posición de cada elemento</h4>
-                    <p>Por defecto, los elementos se van situando de izquierda a derecha y de arriba a abajo en la cuadrícula.</p>
+                    <p>Por defecto, los elementos se van situando de izquierda a derecha y de arriba a abajo en la cuadrícula...</p>
                     <p>
                         <img src="images/02/Grid5.png" style="width:40%" class="noborder">
                     </p>
                 </section>
 
                 <section>
-                    <p>Pero podemos especificar la posición de elementos individualmente:</p>
+                    <p>...pero podemos especificar la posición de elementos individualmente:</p>
                     <pre><code data-trim data-noescape class="css">
 grid-column: <em>inicio</em> / <em>fin</em>
 grid-row:    <em>inicio</em> / <em>fin</em>
@@ -2516,7 +2514,7 @@ grid-row:    <em>inicio</em> / span <em>numColumnas</em>
 #cuatro {  grid-row: 1 / span 2;   grid-column: 3 / span 1; }</code></pre>
                 </section>
                 <section>
-                    <p>Especificar espaciado entre las celdas:</p>
+                    <p>Especificar espacio entre las celdas:</p>
                     <pre><code data-trim data-noescape class="css">
 div.contenedor {
     ...
