@@ -1,0 +1,3589 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 3 - Javascript</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 3</div>
+                <h1 style="height:3em;position:relative;top:0.3em">Programación en JavascriPT</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2016/17
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>El lenguaje Javascript</h2>
+                <p>Javascript fue creado por Brendan Eich en 1995, para ser incluido en el navegador <em>Netscape</em>.</p>
+                <p><em>Netscape</em> colaboraba en aquel momento con la empresa <em>Sun Microsystems</em>, propietaria por entonces del lenguaje Java.</p>
+                <p>Concebido inicialmente como un <strong>lenguaje &laquo;pegamento&raquo;</strong>, destinado a integrar los distintos componentes de las páginas web: applets, plugins, etc.</p>
+                <p></p>
+            </section>
+
+            <section>
+                <h3>Principales hitos en la historia de Javascript</h3>
+                <ul>
+                    <li>1997 - <strong>HTML Dinámico</strong>
+                        <br/> Los programas modifican dinámicamente la estructura de un documento HTML mediante la manipulación de su DOM.
+                    </li>
+                    <li class="fragment">2005 - <strong>AJAX</strong>
+                        <br> Los programas pueden realizar peticiones al servidor desde Javascript, lo que impulsó el paradigma de aplicaciones web de una sola página (SPA).
+                    </li>
+                    <li class="fragment">
+                        2009 - <strong>Node.js</strong>
+                        <br> Permite utilizar Javascript en el lado del servidor.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Javascript y ECMAScript</h3>
+                <p>En el año 1996 Netscape decidió estandarizar Javascript.</p>
+                <p>El estándar fue publicado por la organización <em>Ecma International</em>. El nombre del estándar era <strong>ECMAScript</strong>.</p>
+                <p>La versión actual del estándar es ECMAScript 7 y fue publicada en junio de 2016.</p>
+
+            </section>
+
+            <section>
+                <h3>Javascript en el navegador</h3>
+                <p>Los principales navegadores contienen un <strong>intérprete</strong> que permite ejecutar los programas Javascript incluidos en las páginas web.</p>
+                <p>El componente del navegador encargado de esto recibe el nombre de <strong>motor Javascript</strong>.</p>
+                <div class="fragment">
+                    <p>Motores Javascript más conocidos:</p>
+                    <ul>
+                        <li><strong>SpiderMonkey</strong>, utilizado en Firefox.</li>
+                        <li><strong>V8</strong>, utilizado en Chrome.</li>
+                        <li><strong>Chakra</strong>, utilizado en Edge.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h3>¿Y Node.js?</h3>
+                <p>Es un intérprete del lenguaje Javascript, pensado para ejecutarse <strong>fuera de un navegador</strong>.</p>
+                <p>Su implementación está basada en el motor <strong>V8</strong> de Chrome.</p>
+                <p>Se utiliza principalmente para implementar las funcionalidades del lado del servidor en aplicaciones web.</p>
+                <img src="images/intro/nodejs.png" style="width:30%; border:none; box-shadow:none">
+            </section>
+
+            <section>
+                <h3>Javascript más allá de la web</h3>
+                <ul>
+                    <li><strong>Aplicaciones de escritorio</strong>, mediante Node y Electron.
+                        <br> Ejemplos: Atom, Visual Studio Code, etc.
+                    </li>
+                    <li><strong>Aplicaciones móviles</strong>, mediante Apache Cordova.</li>
+                    <li><strong>Extensiones de entornos de escritorio</strong>, como GNOME Shell o Windows 10.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Un programa de ejemplo</h3>
+                <pre><code data-trim class="javascript">
+// planets.js
+// ----------
+
+"use strict";
+
+var planetas = [
+    "Mercurio", "Venus", "Tierra",
+    "Marte", "Júpiter", "Saturno",
+    "Urano", "Neptuno"
+    ];
+
+planetas.forEach(function(p) {
+    console.log("¡Hola, " + p + "!");
+});
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Ejecución desde Node</h3>
+                <p>Si se tiene Node instalado, basta con ejecutar desde una línea de comandos:</p>
+                <pre><code data-trim class="no-highlight">
+node planets.js
+                </code></pre>
+                <img src="images/03/NodeExec.png" style="width:60%; border:none">
+            </section>
+
+            <section>
+                <h3>Ejecución desde un navegador</h3>
+                <p>Si, alternativamente, se quiere ejecutar un programa desde el navegador, ha de importarse el fichero <em>Javascript</em> desde un documento HTML, y abrir éste último desde el navegador.</p>
+                <pre><code data-trim class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;script src=&quot;planets.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Abre las herramientas del desarrollador y recarga la p&aacute;gina
+        para visualizar el resultado del programa.
+    &lt;/body&gt;
+&lt;/html&gt;
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Una vez cargada la página en el navegador, abrir la consola de Javascript.</p>
+                <p>En Firefox: <em>Desarrollador &rarr; Consola Web</em> (Ctrl + Mayús + K)</p>
+                <img src="images/03/NavegadorExec.png" style="width:60%;border:none">
+            </section>
+
+            <section>
+              <h3>¿<code style="text-transform:none">"use strict"</code>?</h3>
+              <p>Javascript es un lenguaje muy flexible.</p>
+              <p class="fragment">...pero esto conlleva una gran responsabilidad.</p>
+              <p class="fragment">Javascript tiene algunas características que hacen que el lenguaje sea, a veces, <strong>demasiado permisivo</strong>.</p>
+              <p class="fragment">Esto hacía que programar en Javascript fuese una tarea propensa a errores.</p>
+            </section>
+
+            <section>
+              <p>Introduciendo la cadena <code>"use strict"</code> al principio del programa
+                hace que éste se evalúe en <strong>modo estricto</strong>.</p>
+              <p>Este modo hace que el compilador detecte y prohíba el uso de características demasiado permisivas del lenguaje:</p>
+              <ul>
+                <li>Utilizar variables sin declararlas.</li>
+                <li>Borrar una variable mediante <code>delete</code>.</li>
+                <li>Duplicidades en nombres de atributos y parámetros.</li>
+                <li>Estructuras poco recomendables: <code>with</code>.</li>
+              </ul>
+            </section>
+
+
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline current">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>El &laquo;Java&raquo; en Javascript</h2>
+                <p>
+                    La sintaxis de Javascript está inspirada en la de Java.
+                </p>
+                <ul>
+                    <li class="fragment">
+                        Comentarios:
+                        <pre><code data-trim class="javascript">
+// Comentario de una línea
+/* Comentario de varias
+   líneas */
+                        </code></pre>
+                    </li>
+                    <li class="fragment">Declaraciones de variables y asignaciones:
+                        <pre><code data-trim class="javascript">
+var x = 3;
+y = y + 1;
+y += 3;
+                    </code></pre>
+                    </li>
+                    <li class="fragment">Pre/postincremento, pre/postdecremento:
+                        <pre><code data-trim class="javascript">
+z = x++;
+--x;
+                    </code></pre>
+                    </li>
+
+                </ul>
+            </section>
+
+            <section>
+                <h3>Sentencias condicionales</h3>
+                <ul style="width:20em">
+                    <li class="fragment">
+                        If-then-else:
+                        <pre><code data-trim class="javascript">
+if (x &lt; y) {
+    return x;
+} else {
+    return y;
+}
+                        </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Switch:
+                        <pre><code data-trim class="javascript">
+switch(day) {
+    case 6:
+    case 7:
+        console.log("Es fin de semana");
+        break;
+    default:
+        console.log("Es día laborable");
+}
+                        </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Bucles</h3>
+                <ul style="width:20em">
+                    <li class="fragment">Bucle while:
+                        <pre><code data-trim class="javascript">
+while (x &lt;= 0) {
+    n = n * x;
+    x--;
+}
+                    </code></pre>
+                    </li>
+                    <li class="fragment">Bucle do-while:
+                        <pre><code data-trim class="javascript">
+do {
+    mult *= a[x];
+    x++:
+} while (a[x] === 0)
+                    </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Bucles for:
+                        <pre><code data-trim class="javascript">
+for (var i = 0; i &lt; b.length; i++) {
+    sum += b[i] + c[i];
+}
+                        </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <ul style="width:20em">
+                    <li>
+                        break y continue:
+                        <pre><code data-trim class="javascript">
+while (i &lt; x.length) {
+    if (x[i] === ".") break;
+    i++;
+}
+
+                        </code></pre>
+                        <pre><code data-trim class="javascript">
+for (var i = 0; i &lt; x.length; i++) {
+    if (x[i] % 2 === 0)
+        continue;
+    z *= x[i];
+}
+                        </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Funciones</h3>
+                <ul style="width: 100%">
+                    <li class="fragment">Definición de funciones:
+                        <pre><code data-trim class="javascript">
+    function abs(x) {
+        if (x &lt; 0) {
+            return x;
+        } else {
+            return -x;
+        }
+    }
+                    </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Llamadas a funciones y métodos:
+                        <pre><code data-trim class="javascript">
+x = abs(-3);
+console.log("El valor absoluto de x es " + x);
+                </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Manejo de excepciones</h3>
+                <ul style="width:100%">
+                    <li class="fragment">
+                        Bloques try-catch o try-catch-finally:
+                        <pre><code data-trim data-noescape class="javascript">
+try {
+   funcion_no_existe();
+} catch (e) {  <span class="arrow_box_left caja_codigo fragment" style="position:relative;left:5em">No se especifica el tipo de excepción</span>
+    console.error(e.message);
+} finally {
+    console.log("Esto se ejecuta siempre");
+}
+                        </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Lanzamiento de excepciones:
+                        <pre><code data-trim class="javascript">
+throw new Error("Fichero no encontrado");
+                        </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Atributos de <code>Error</code>:
+                        <ul>
+                            <li><code>Error.message</code>: mensaje de error.</li>
+                            <li><code>Error.stack</code>: pila de ejecución.</li>
+                            <li><code>Error.name</code>: nombre de la clase del error.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Cadenas de texto</h3>
+                <ul style="float:left; width:45%">
+                    <li>Inicialización:
+                        <pre><code data-trim class="javascript">
+var str = "Esto es una cadena";
+                    </code></pre> o bien
+                        <pre><code data-trim class="javascript">
+var str = 'Esto es una cadena';
+                    </code></pre>
+                    </li>
+                    <li>
+                        Acceso al carácter i-ésimo:
+                        <pre><code data-trim data-noescape class="javascript">
+str[2]  <span class="no_arrow_box caja_codigo fragment">!</span> // &rarr; "t"
+                        </code></pre>
+                    </li>
+                </ul>
+                <ul style="float:right; width:45%" class="fragment">
+                    <li>Métodos:
+                        <pre><code data-trim class="javascript">
+str.slice(2, 5);
+    // &rarr; "to es"
+"  vale ".trim();
+    // &rarr; "vale"
+str.split(" ");
+    // &rarr; ["Esto", "es",
+    //    "una", "cadena"]
+str.toUpperCase();
+    // &rarr; "ESTO ES UNA CADENA"
+str.toLocaleUpperCase();
+    // &rarr; "ESTO ES UNA CADENA"
+str.startsWith("Est");
+    // &rarr; true
+"ab".repeat(5);
+    // &rarr; "ababababab"
+                    </code></pre>
+                    </li>
+                </ul>
+                <div style="clear:both"></div>
+            </section>
+
+            <section>
+                <h3>Operadores</h3>
+                <ul style="position:relative; top: 1em">
+                    <li>Relacionales:
+                        <code>==</code>, <code>===</code>,
+                        <code>&lt;</code>, <code>&lt;=</code>,
+                        <code>&gt;</code>, <code>&gt;=</code>
+                        <span class="no_arrow_box caja_codigo fragment" style="position:relative; top:-1.3em;left:-6.4em">!</span>
+
+                    </li>
+
+                    <li>
+                        Aritméticos:
+                        <code>+</code>, <code>-</code>, <code>*</code>,
+                        <code>/</code>, <code>%</code>
+                    </li>
+
+                    <li>
+                        Lógicos:
+                        <code>&amp;&amp;</code>, <code>||</code>, <code>!</code>
+                    </li>
+                    <li>
+                        A nivel de bit:
+                        <code>&amp;</code>, <code>|</code>, <code>^</code>,
+                        <code>&gt;&gt;</code>, <code>&lt;&lt;</code>,
+                        <code>&gt;&gt;&gt;</code>
+                    </li>
+
+                </ul>
+            </section>
+
+
+            <section>
+                <h3>Arrays</h3>
+                <ul style="width:100%">
+                    <li>Inicialización:
+                        <pre><code data-trim data-noescape class="javascript">
+var x = [4, 6, "pepe", 1, 3];   <span class="arrow_box_left caja_codigo fragment">Corchetes en lugar de { }</span>
+
+var z = [];   <span class="arrow_box_left caja_codigo fragment" style="position:relative;">Vector vacío</span>
+
+var m = new Array(3);
+                    </code></pre>
+                    </li>
+                    <li class="fragment">Acceso:
+                        <pre><code data-trim class="javascript">
+console.log(x[3]);  // &rarr; 1
+m[2] = "Elemento nuevo";
+                        </code></pre>
+                    </li>
+                    <li class="fragment">
+                        Longitud:
+                        <pre><code data-trim class="javascript">
+x.length  // &rarr; 5
+z.length  // &rarr; 0
+m.length  // &rarr; 3
+                        </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline current">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Once rarezas de Javascript</h2>
+                <p><strong>(para alguien muy acostumbrado a Java)</strong></p>
+                <ol>
+                    <li>Javascript es dinámicamente tipado.</li>
+                    <li>Valores indefinidos, nulos y <code>NaN</code>.</li>
+                    <li>Las conversiones invisibles.</li>
+                    <li>Argumentos que sobran y faltan.</li>
+                    <li>Las funciones son ciudadanos de primera clase.</li>
+                    <li>Javascript tiene objetos, pero no clases.</li>
+                    <li>Las funciones constructoras y el operador <code>new</code>.</li>
+                    <li>Los arrays son flexibles, y también son objetos.</li>
+                    <li>Las funciones de orden superior sobre arrays.</li>
+                    <li>El objeto <code>this</code> es de quita y pon.</li>
+                    <li>Los módulos en Javascript</li>
+                </ol>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 1</span><span style="display:none">:</span><br>Javascript es un lenguaje dinámicamente tipado</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>declaraciones de tipo</h3>
+                    <p>En Java es necesario declarar el tipo de una variable antes de su primer uso:</p>
+                    <pre><code data-trim class="java">
+int x;
+String z = "It's something";
+List&lt;Integer&gt; lista;
+                    </code></pre>
+
+                    <p>En Javascript no se indica el tipo de la variable a declarar. Se utiliza siempre la palabra reservada <code>var</code>.</p>
+                    <pre><code data-trim class="javascript">
+var x;
+var z = "It's something";
+var lista;
+                    </code></pre>
+
+                    <div class="fragment" style="color:blue">
+                        ¿Qué ventajas e inconvenientes tiene indicar el tipo de las variables en el programa?
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Lenguajes <strong>estáticamente tipados</strong></h4>
+                    <ul>
+                        <li>
+                            <p>Se detecta <strong>en tiempo de compilación</strong> que las operaciones se realizan sobre argumentos del tipo correcto.</p>
+                            <p>Por ejemplo, el compilador avisa de errores como:</p>
+                            <pre><code data-trim class="javascript">
+"pepe" * 24
+                            </code></pre>
+                        </li>
+                        <li>
+                            <p>Estos lenguajes pueden requerir declaraciones de tipos por parte del programador.</p>
+                            <p>Por ejemplo: Java, C, etc.</p>
+                        </li>
+                        <li>
+                            <p>En algunos lenguajes el compilador <strong>infiere</strong> los tipos.</p>
+                            <p>Por ejemplo: Haskell, C++, etc.</p>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Lenguajes <strong>dinámicamente</strong> tipados</h4>
+                    <ul>
+                        <li>
+                            <p>Se comprueba <strong>durante la ejecución del programa</strong> que las operaciones se realizan sobre argumentos de tipo correcto.</p>
+                            <div class="fragment">
+                                <p>Por ejemplo, en Javascript:</p>
+                                <pre><code data-trim class="javascript">
+if (...) {
+    y = 3 * "foo";
+}
+                            </code></pre>
+                                <p>El error debido a la expresión <code>3 * "foo"</code> solamente se manifestará si la condición del <code>if</code> se cumple.</p>
+                            </div>
+                        </li>
+
+                    </ul>
+                </section>
+                <section>
+                    <h4>Ejemplos</h4>
+                    <ul>
+                        <li>
+                            <p><strong>Lenguajes sin tipos</strong></p>
+                            <p style="font-size:70%">Son poco usuales: Tcl, ensamblador, etc.</p>
+                        </li>
+                        <li class="fragment">
+                            <p><strong>Lenguajes estáticamente tipados, no dinámicamente</strong></p>
+                            <p style="font-size:70%">C, Haskell, etc.</p>
+                        </li>
+                        <li class="fragment">
+                            <p><strong>Lenguajes dinámicamente tipados, no estáticamente</strong></p>
+                            <p style="font-size:70%">Python, <span style="background-color:#C0FFC0; padding:0px 10px">Javascript</span>, PHP, etc.</p>
+                        </li>
+                        <li class="fragment">
+                            <p><strong>Lenguajes estáticamente y dinámicamente tipados</strong></p>
+                            <p style="font-size:70%">Java, C++, C#, etc.</p>
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Tipos disponibles en Javascript</h4>
+                    <ul>
+                        <li>Tipo del valor indefinido (<code>undefined</code>)</li>
+                        <li>Tipo del puntero nulo (<code>null</code>)</li>
+                        <li>
+                            <p>Tipo numérico (<code>number</code>).</p>
+                            <p style="font-size:70%">El sistema de tipos no distingue entre enteros y coma flotante.</p>
+                        </li>
+                        <li>Tipo booleano (<code>boolean</code>).
+                            <p style="font-size:70%">Incluye los valores <code>true</code> y <code>false</code>.</p>
+                        </li>
+                        <li>Tipo cadena (<code>string</code>).</li>
+                        <li>Tipo objeto (<code>object</code>).
+                            <p style="font-size:70%">Incluye también a arrays, funciones y expresiones regulares.</p>
+                        </li>
+
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Tipos primitivos vs tipos objeto</h4>
+                    <div style="width:80%;margin-left:auto;margin-right:auto">
+                        <ul style="float:left" class="fragment">
+                            <li><span style="color:#3080B0; font-weight:bold">Tipos primitivos</span>
+                                <ul>
+                                    <li>Indefinido</li>
+                                    <li>Nulo</li>
+                                    <li>Numérico</li>
+                                    <li>Booleano</li>
+                                    <li>Cadena</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="fragment">
+                            <li><span style="color:#3080B0; font-weight:bold">Tipos objeto</span>
+                                <ul>
+                                    <li>Objeto</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both"></div>
+                </section>
+                <section>
+                    <p>Los tipos primitivos son <strong>inmutables</strong></p>
+                    <pre><code data-trim data-noescape class="javascript">
+var str1 = "Cadena";
+var str2 = str1.slice(0, 3);      <span class="arrow_box_left caja_codigo">No modifica la cadena <span style="font-family:monospace">str1</span></span>
+console.log(str1);  // &rarr; Cadena1
+console.log(str2);  // &rarr; Cad
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Las comparaciones entre tipos primitivos se hacen por <strong>valor</strong>, no por referencia</p>
+                        <pre><code data-trim data-noescape class="javascript">
+var str1 = "Cadena";
+var str2 = "Cadena";
+var str3 = "Otra cadena";
+str1 == str2;   // &rarr; true
+str1 === str2;  // &rarr; true
+str1 != str3    // &rarr; true
+str1 !== str3   // &rarr; true
+                    </code></pre>
+                        <p>En Java <code>str1 == str2</code> devuelve <code>false</code>, pues son objetos distintos. En cambio, <code>str1.equals(str2)</code> devuelve <code>true</code>.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Las cadenas pueden compararse lexicográficamente mediante los operadores relacionales <code>&lt;=</code>, <code>&lt;</code>, <code>&gt;=</code> y
+                        <code>&gt;</code>:</p>
+                    <pre><code data-trim class="javascript">
+"Pablo" &lt; "Diana"    // &rarr; true
+"Pablo" &lt; "Paolo"    // &rarr; true
+"alma" &lt;= "Pablo"    // &rarr; false
+"Águeda" &lt; "Pablo"   // &rarr; false
+                    </code></pre>
+                    <p>Se utiliza <code>localeCompare()</code> para comparar según el abecedario del idioma correspondiente.</p>
+                    <pre><code data-trim class="javascript">
+"alma".localeCompare("Pablo");      // &rarr; -1 ('alma' es menor)
+"Sergio".localeCompare("Pablo");    // &rarr; 1  ('Pablo' es menor)
+"Sergio".localeCompare("Sergio");   // &rarr; 0  (iguales)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Comprobación de tipos</h4>
+                    <p>La función <code>typeof</code> permite obtener el tipo de un elemento. Devuelve una cadena con el nombre del tipo.</p>
+                    <pre><code data-trim class="javascript">
+var x = 3;
+console.log(typeof(x));                         // &rarr; number
+console.log(typeof("Hola"));                    // &rarr; string
+console.log(typeof(variable_que_no_existe));    // &rarr; undefined
+console.log(typeof(2 &lt; 9));                     // &rarr; boolean
+console.log(typeof([1, 3, 5]));                 // &rarr; object
+console.log(typeof(null));                      // &rarr; object
+                    </code></pre>
+                    <p>Aunque <code>null</code> es un tipo básico, <code>typeof(null)</code> devuelve <code>"object"</code>.
+                    </p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 2</span><span style="display:none">:</span><br>Valores indefinidos, nulos, y <span style="text-transform:none">NaN</span></h3>
+                    </div>
+                </section>
+
+                <section>
+                    <div>
+                        <h4>El valor indefinido (<code style="text-transform:none">undefined</code>)</h4>
+                        <p>Se utiliza para las variables no inicializadas y para atributos no existentes dentro de objetos.</p>
+                        <pre><code data-trim class="javascript">
+var coordenadas = { x: 5, y: 6 };
+var v;
+console.log(v);                 // &rarr; undefined
+console.log(coordenadas.z);     // &rarr; undefined
+                        </code></pre>
+                    </div>
+                    <div class="fragment">
+                        <h4>El valor nulo (<code style="text-transform:none">null</code>)</h4>
+                        <p>Se utiliza para denotar una referencia a objeto nula.</p>
+                        <pre><code data-trim class="javascript">
+var x = null;   // La variable 'x' esta inicializada, pero a una
+                // referencia nula.
+console.log(x); // &rarr; null
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>El valor Not-a-Number (<code style="text-transform:none">NaN</code>)</h4>
+                    <p>Se devuelve como resultado de operaciones aritméticas incorrectas:</p>
+                    <pre><code data-trim class="javascript">
+Math.log(-2)    // &rarr; NaN
+parseInt("x2d") // &rarr; NaN
+                    </code></pre>
+                    <div class="fragment">
+                        <h4>Los valores infinitos</h4>
+                        <p><code>Infinity</code> y <code>-Infinity</code> se utilizan para desbordamientos, o para operaciones que devuelven &plusmn;&infin;</p>
+                        <pre><code data-trim class="javascript">
+Math.pow(2, 10000)  // &rarr; Infinity
+Math.log(0)         // &rarr; -Infinity
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>¡Cuidado con las comparaciones de <code>NaN</code>!</p>
+                    <pre><code data-trim data-noescape class="javascript">
+Math.log(-3) === NaN <span class="fragment">// &rarr; false</span>
+NaN === NaN          <span class="fragment">// &rarr; false</span>
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Si se quiere determinar si una operación ha dado <code>NaN</code> como resultado, debe utilizarse la función <code>isNaN</code></p>
+                        <pre><code data-trim class="javascript">
+isNaN(NaN)          // &rarr; true
+isNaN(Math.log(-3)) // &rarr; true
+                    </code></pre>
+                    </div>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 3</span><span style="display:none">:</span><br>Las conversiones invisibles</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Conversiones Javascript</h4>
+                    <p>¿A qué valor se evalúan las siguientes expresiones?</p>
+                    <pre><code data-trim data-noescape class="javascript">
+"3" * 4             <span class="fragment">// &rarr; 12</span>
+3 * 4               <span class="fragment">// &rarr; 12</span>
+"3" * "4"           <span class="fragment">// &rarr; 12</span>
+"3" * "pepe"        <span class="fragment">// &rarr; NaN</span>
+"12" + "20"         <span class="fragment">// &rarr; 1220</span>
+"12" + 20           <span class="fragment">// &rarr; 1220</span>
+12 + "20"           <span class="fragment">// &rarr; 1220</span>
+Math.log10("1000")  <span class="fragment">// &rarr; 3</span>
+"10" &lt; "2"          <span class="fragment">// &rarr; true</span>
+"10" &lt; 2            <span class="fragment">// &rarr; false</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>¿En qué casos se cumple la condición del <code>if</code>?</p>
+                    <pre><code data-trim data-noescape class="javascript">
+if (23) { .... }            <span class="fragment">// &rarr; se cumple</span>
+if (-1) { .... }            <span class="fragment">// &rarr; se cumple</span>
+if (0) { .... }             <span class="fragment">// &rarr; no se cumple</span>
+if ("Pepe") { .... }        <span class="fragment">// &rarr; se cumple</span>
+if ("") { .... }            <span class="fragment">// &rarr; no se cumple</span>
+if ([1, 3]) { .... }        <span class="fragment">// &rarr; se cumple</span>
+if ([]) { .... }            <span class="fragment">// &rarr; se cumple</span>
+if (null) { .... }          <span class="fragment">// &rarr; no se cumple</span>
+if (undefined) { .... }     <span class="fragment">// &rarr; no se cumple</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Cómo evitar confusiones</h4>
+                    <p>Con este panorama, hay dos alternativas:</p>
+                    <ol>
+                        <li class="fragment">Aprenderse concienzudamente las reglas de conversión de Javascript:
+                            <p>Información: <a href="http://webreflection.blogspot.com.es/2010/10/javascript-coercion-demystified.html">http://webreflection.blogspot.com.es/2010/10/javascript-coercion-demystified.html</a></p>
+                        </li>
+                        <li class="fragment">
+                            <strong>[Recomendado]</strong> Hacer las conversiones explícitamente, en caso de no estar seguro/a del tipo de una expresión
+                            <p>Funciones <code>Number(...)</code>, <code>String(...)</code>, <code>Boolean(...)</code></p>
+                        </li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>Funciones de conversión</h4>
+                    <p>La función <code>Number()</code></p>
+                    <pre><code data-trim data-noescape class="javascript">
+Number("32")        <span class="fragment">// &rarr; 32</span>
+Number("2f3")       <span class="fragment">// &rarr; NaN</span>
+Number(true)        <span class="fragment">// &rarr; 1</span>
+Number(false)       <span class="fragment">// &rarr; 0</span>
+Number(undefined)   <span class="fragment">// &rarr; NaN</span>
+Number(null)        <span class="fragment">// &rarr; 0</span>
+Number(new Date())  <span class="fragment">// &rarr; 1476191814528 (depende de fecha y hora)</span>
+                    </code></pre>
+                    <p>Cuando la función <code>Number</code> se llama sobre un objeto <code>x</code>, se devuelve <code>x.valueOf()</code>.</p>
+                    <p>Ver también: <code>parseInt</code> <a href="http://www.w3schools.com/jsref/jsref_parseint.asp">[+]</a></p>
+
+                </section>
+
+                <section>
+                    <p>La función <code>String()</code></p>
+                    <pre><code data-trim data-noescape class="javascript">
+String(true)       <span class="fragment">// &rarr; "true"</span>
+String(undefined)  <span class="fragment">// &rarr; "undefined"</span>
+String(32)         <span class="fragment">// &rarr; "32"</span>
+String(new Date()) <span class="fragment">// &rarr; "Tue Oct 11 2016 15:23:02 GMT+0200 (CEST)"</span>
+                    </code></pre>
+
+                    <p>La función <code>String</code> aplicada sobre un objeto <code>x</code> llama al método <code>x.toString()</code></p>
+                </section>
+
+                <section>
+                    <p>La función <code>Boolean()</code></p>
+                    <ul>
+                        <li>Valores falsos: <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code>, <code>NaN</code>, <code>""</code>.</li>
+                        <li>Valores ciertos: el resto.</li>
+                    </ul>
+
+                    <pre><code data-trim data-noescape class="javascript">
+Boolean("")         <span class="fragment">// &rarr; true</span>
+Boolean(34)         <span class="fragment">// &rarr; false</span>
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h4>Operadores de igualdad</h4>
+                    <dl>
+                        <dt><code>x === y</code> - Igualdad estricta</dt>
+                        <dd><code>x</code> e <code>y</code> son del mismo tipo y tienen el mismo valor.</dd>
+                        <dt><code>x == y</code> - Igualdad flexible</dt>
+                        <dd><code>x</code> e <code>y</code> pueden convertirse al mismo tipo, de modo que tras hacer la conversión tienen el mismo valor.</dd>
+                    </dl>
+                    <div class="fragment">
+                        <pre><code data-trim data-noescape class="javascript">
+"25" == 25      <span class="fragment">// &rarr; true</span>
+"25" === 25     <span class="fragment">// &rarr; false</span>
+false == 0      <span class="fragment">// &rarr; true</span>
+"" == 0         <span class="fragment">// &rarr; true</span>
+2.0 === 2       <span class="fragment">// &rarr; true (recuerda: no se distingue entre tipo
+                //         de enteros y de coma flotante)</span>
+
+                    </code></pre>
+                    </div>
+                    <p class="fragment">También se definen <code>!=</code> y <code>!==</code> como la negación de <code>==</code> y <code>===</code> respectivamente.</p>
+                </section>
+
+                <section>
+                    <h4>Moraleja</h4>
+                    <p style="background-color:#007000; color:white; padding: 80px 20px; font-size: 200%">Utiliza siempre
+                        <span style="font-family: monospace">===</span> y <span style="font-family: monospace">!==</span></p>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 4</span><span style="display:none">:</span><br>Argumentos que sobran y faltan</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Definición de una función</h4>
+                    <pre><code data-trim class="javascript">
+function imprime_args(p1, p2, p3) {
+    console.log("p1: " + p1);
+    console.log("p2: " + p2);
+    console.log("p3: " + p3);
+}
+
+                    </code></pre>
+                    <div class="fragment">
+                        <h4>Llamada a una función</h4>
+                        <pre><code data-trim class="javascript">
+imprime_args(1, "bar", true);
+                    </code></pre>
+                    </div>
+                    <div class="fragment">
+                        <p>Resultado:</p>
+                        <pre>
+p1: 1
+p2: bar
+p3: true</pre></div>
+                </section>
+
+
+                <section>
+                    <p>El número de argumentos en la llamada a la función no ha de coincidir necesariamente con el número de parámetros en la definición</p>
+
+                    <ul>
+                        <li class="fragment">Si se proporcionan argumentos &laquo;de más&raquo; se ignoran los sobrantes:
+                            <pre><code data-trim class="javascript">
+imprime_args("uno", "dos", "tres", "cuatro");
+                        </code></pre>
+                            <pre>
+p1: uno
+p2: dos
+p3: tres</pre>
+                        </li>
+                        <li class="fragment">
+                            Si faltan argumentos, los parámetros correspondientes tomarán el valor <code>undefined</code>
+                            <pre><code data-trim class="">
+imprime_args("uno", "dos");
+                            </code></pre>
+                            <pre>
+p1: uno
+p2: dos
+p3: undefined</pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Esto nos permite definir funciones con parámetros opcionales.</p>
+                    <pre><code data-trim class="javascript">
+/*
+    El parámetro 'color' es opcional. Su valor por defecto
+    es 'negro'.
+
+    El parámetro 'trazo' especifica el grosor del trazo y
+    también es opcional. Su valor por defecto es 1.
+*/
+function pintar_circulo(x, y, color, trazo) {
+    if (color === undefined) color = "negro";
+    if (trazo === undefined) trazo = 1;
+
+    console.log("Pintar círculo en (" + x + ", " + y + ")" +
+                " con color " + color +
+                " y trazo de grosor " + trazo);
+}
+                   </code></pre>
+                </section>
+
+                <section>
+                    <p>Implementación alternativa:</p>
+                    <pre><code data-trim class="javascript">
+/*
+    El parámetro 'color' es opcional. Su valor por defecto
+    es 'negro'.
+
+    El parámetro 'trazo' especifica el grosor del trazo y
+    también es opcional. Su valor por defecto es 1.
+*/
+function pintar_circulo(x, y, color, trazo) {
+    color = color || "negro";
+    trazo = trazo || 1;
+
+    console.log("Pintar círculo en (" + x + ", " + y + ")" +
+                " con color " + color +
+                " y trazo de grosor " + trazo);
+}
+                   </code></pre>
+                    <p class="fragment" style="color:blue">¿Es correcta?</p>
+                </section>
+
+                <section>
+                    <h4>Número variable de parámetros</h4>
+                    <p>La variable especial <code>arguments</code> contiene la lista de argumentos recibidos por la función</p>
+                    <pre><code data-trim class="javascript">
+/*
+    Devuelve el resultado de sumar los números pasados como
+    parámetros. Los argumentos que no sean números se ignoran.
+*/
+function suma() {
+    var result = 0;
+    for (var i = 0; i &lt; arguments.length; i++) {
+        if (typeof(arguments[i]) === "number") {
+            result += arguments[i];
+        }
+    }
+    return result;
+}
+                    </code></pre>
+
+                    <pre class="fragment"><code data-trim class="javascript">
+suma(3, 4, "foo", 9)    // &rarr; 16
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Parámetros nominales</h4>
+                    <p>Utilizando objetos podemos simular el paso de parámetros nominales.</p>
+                    <p>Por ejemplo, supongamos una función <code>abrir_fichero</code> que espera un nombre de fichero y, opcionalmente:</p>
+                    <ul>
+                        <li>
+                            <p>Un parámetro <code>solo_lectura</code> que indica si el fichero se abre en modo lectura o en modo lectura/escritura.</p>
+                            <p>Valor por defecto: <code>true</code></p>
+                        </li>
+                        <li>
+                            <p>Un parámetro <code>binario</code> que indica si el fichero es binario o no.</p>
+                            <p>Valor por defecto: <code>false</code></p>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Ejemplos de llamadas</p>
+                    <pre><code data-trim class="javascript">
+abrir_fichero("mio.txt");
+// Abriendo fichero mio.txt en modo lectura
+
+abrir_fichero("mio.txt", { solo_lectura: false });
+// Abriendo fichero mio.txt en modo lectura/escritura
+
+abrir_fichero("mio.txt", { binario: true });
+// Abriendo fichero binario mio.txt en modo lectura
+
+abrir_fichero("mio.txt", { binario: true, solo_lectura: false });
+// Abriendo fichero binario mio.txt en modo lectura/escritura
+
+abrir_fichero("mio.txt", { solo_lectura: true, binario: false });
+// Abriendo fichero mio.txt en modo lectura
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Implementación:</p>
+                    <pre><code data-trim class="javascript">
+/*
+    El objeto 'ops' tiene como atributos los parámetros
+    opcionales.
+*/
+function abrir_fichero(nombre, ops) {
+    // Si no se han pasado parámetros opcionales, el objeto
+    // 'ops' habrá tomado el valor undefined. Lo inicializamos
+    // al objeto vacío.
+    if (ops === undefined) ops = {};
+
+    // Inicialización de los parámetros opcionales no pasados
+    if (ops.solo_lectura === undefined) ops.solo_lectura = true;
+    if (ops.binario      === undefined) ops.binario      = false;
+
+    // Cuerpo de la función
+    console.log("Abriendo fichero "
+        + (ops.binario ? "binario " : "")
+        + nombre + " en modo "
+        + (ops.solo_lectura ? "lectura" : "lectura/escritura"));
+
+}
+                    </code></pre>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 5</span><span style="display:none">:</span><br>Las funciones son ciudadanos de primera clase</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>¿Qué significa eso?</h4>
+                    <p>Que las funciones son tratadas como objetos.</p>
+                    <p>En particular:</p>
+                    <ul style="color:#008dbc">
+                        <li class="fragment">Se puede asignar una función a una variable.</li>
+                        <li class="fragment">Pueden pasarse funciones como parámetros.</li>
+                        <li class="fragment">Pueden recibirse funciones como resultados.</li>
+                    </ul>
+
+                    <div class="fragment">
+                        <p>Esta característica es compartida por muchos lenguajes funcionales e imperativos:</p>
+                        <p>Haskell, Scala, Erlang, C, C++, Java 8, etc.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Partimos de las siguientes definiciones:</p>
+                    <pre><code data-trim class="javascript">
+function incrementar(x) {
+    return x + 1;
+}
+
+function duplicar(x) {
+    return 2 * x;
+}
+
+function cuadrado(y) {
+    return y * y;
+}
+
+function factorial(n) {
+    if (n &lt;= 0) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Asignamos algunas de estas funciones a la variable <code>f</code>:</p>
+                    <pre><code data-trim class="javascript">
+var f = incrementar;
+console.log(f(5));
+// Imprime: 6
+
+f = factorial;
+console.log(f(10));
+// Imprime: 3628800
+                    </code></pre>
+                    <div class="fragment">
+                        <p>¡Cuidado con los paréntesis!</p>
+                        <pre><code data-trim  data-noescape class="javascript">
+var f = incrementar(); <span class="fragment"> // INCORRECTO
+// Esto realiza la llamada incrementar(undefined), y devuelve el
+// valor resultante (que también es undefined a f).</span>
+
+console.log(f(5));
+// ERROR: f no es una función
+                    </code></pre>
+                    </div>
+                </section>
+
+
+                <section>
+                    <p>La siguiente función recibe una lista de funciones y un valor. Aplica cada una de las funciones de la lista al valor dado y muestra los resultados por consola:</p>
+                    <pre><code data-trim class="javascript">
+function aplicar_funciones(funs, z) {
+    for (var i = 0; i &lt; funs.length; i++) {
+        console.log("Aplicar función " + i +
+                    " pasando " + z + ": " + funs[i](z));
+    }
+}
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Ejemplo:</p>
+                        <pre><code data-trim class="javascript">
+aplicar_funciones([incrementar,duplicar,cuadrado,factorial], 5);
+                    </code></pre>
+                        <pre>
+Aplicar función 0 pasando 5: 6
+Aplicar función 1 pasando 5: 10
+Aplicar función 2 pasando 5: 25
+Aplicar función 3 pasando 5: 120</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>De igual modo, se puede devolver una función como resultado:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+function buscar_por_nombre(nombre) {
+    switch(nombre) {
+        case "INC": return incrementar;
+        case "DUP": return dup;
+        case "SQR": return cuadrado;
+        case "FCT": return factorial;
+    }
+    <span class="fragment">// Si la función termina sin alcanzar un return,
+    // se considera que devuelve undefined</span>
+}
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Ejemplo:</p>
+                        <pre><code data-trim class="javascript">
+var g = buscar_por_nombre("INC");
+console.log(g(10));
+                    </code></pre>
+                        <pre>
+11</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Funciones como expresiones</h4>
+                    <p>Se puede utilizar una definición de función en cualquier sitio donde se espere una expresión.</p>
+                    <p>En estos casos es posible omitir el nombre de la función (<strong>función anónima</strong>)</p>
+                    <pre><code data-trim class="javascript">
+var f = function() { console.log("Hola"); };
+f();
+
+var g = function(x, y) { return x + y; };
+console.log(g(3, 5));
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>En el ejemplo anterior:</p>
+                    <pre><code data-trim class="javascript">
+aplicar_funciones(
+    [ function(x) { return x - 3; },
+      function(x) { return Math.sqrt(x); },
+      factorial,
+      function(z) { return Math.log(z); }  ], 2);
+                    </code></pre>
+                    <pre>
+Aplicar función 0 pasando 2: -1
+Aplicar función 1 pasando 2: 1.4142135623730951
+Aplicar función 2 pasando 2: 2
+Aplicar función 3 pasando 2: 0.6931471805599453</pre>
+
+                    <p class="fragment">¿Puede reemplazarse la referencia a <code>factorial</code> por otra función anónima?</p>
+                </section>
+
+                <section>
+                    <h4>Ámbito de variables</h4>
+                    <p>Las variables declaradas dentro de una función tienen como ámbito dicha función:</p>
+                    <pre><code data-trim class="javascript">
+function f(n) {
+    var x = ...;
+    // x está en ámbito dentro de la función
+}
+
+// aquí x está fuera de ámbito
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p><strong>Solamente las funciones definen ámbitos</strong></p>
+                    <p>El resto de bloques no.</p>
+                    <pre><code data-trim class="javascript">
+if (...) {
+    var z = ...;
+}
+
+// La z está en ámbito fuera del if-then
+
+for (var x = 0; x &lt; 10; x++) {
+    var y = ...;
+}
+
+// Tanto 'x' como 'y' están en ámbito a la salida
+// del bucle.
+                    </code></pre>
+                    <p>Puede arreglarse mediante <em>expresiones funcionales invocadas inmediatamente</em> (IIFE) <a href="https://en.wikipedia.org/wiki/Immediately-invoked_function_expression">[+]</a></p>
+                </section>
+
+                <section>
+                    <h4>Clausuras</h4>
+                    <p>Una función puede hacer referencia a variables declaradas en un ámbito superior</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var y = 3;  // variable global
+
+var f = function(x) {
+    return x + y;   <span class="arrow_box_left caja_codigo fragment">Referencia a la variable global y</span>
+}
+
+console.log(f(5));
+// Imprime: 8
+                    </code></pre>
+                    <div class="fragment">
+                        <p>¿Y si cambio el valor de la variable <code>y</code> después de definir <code>f</code>?</p>
+                        <pre class="fragment"><code data-trim class="javascript">
+y = 9;
+console.log(f(2));
+// Imprime: 11
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Más difícil todavía</h4>
+                    <p>Supongamos el siguiente caso</p>
+                    <pre><code data-trim class="javascript">
+var z = 3;  // Variable global
+
+function g() {
+    var z = 7;     // Variable local; oculta a la global
+    var f = function(x) { return z + x; };
+    console.log(f(1));
+}
+
+g();
+                    </code></pre>
+                    <p>¿Qué imprime <code>g()</code>?</p>
+                    <pre class="fragment">8   // es decir: 7 + 1</pre>
+                    <p class="fragment">En la expresión <code>z + x</code> dentro de la definición de <code>f</code>, la aparición de <code>z</code> se liga a la variable <code>z</code> definida dentro de <code>g</code>, que es la que está en ámbito en el momento de crear
+                        la función <code>f</code>. </p>
+                </section>
+
+                <section>
+                    <h4>Y aún más difícil</h4>
+                    <p>Ahora &laquo;sacamos&raquo; la función <code>f</code> del ámbito <code>g</code> devolviéndola como resultado:</p>
+                    <pre><code data-trim class="javascript">
+var z = 3;  // Variable global
+
+function g() {
+    var z = 7;  // Variable local; oculta a la global
+    return function(x) { return z + x; };
+}
+
+// La variable local z ya no está en ámbito,
+// Pero la variable global z sí lo está
+var h = g();
+
+// ¿Qué imprime esto? ¿3 + 5? ¿7 + 5?
+console.log(h(5));
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Resultado:</p>
+                        <pre>12</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+function g() {
+    var z = 7;
+    return function(x) { return z + x; };
+}
+                    </code></pre>
+                    <p>En la expresión <code>function(x) { return z + x; }</code>, la aparición de <code>z</code> queda ligada a la variable <code>z</code> local en <code>g</code>, que es la que está en ámbito en el momento de crear la función. Este vínculo
+                        es <strong>permamente</strong>.
+                    </p>
+                    <p>Tras crear la función anónima, cualquier llamada la misma utilizará siempre esta variable <code>z</code>, ¡aunque ya esté fuera de ámbito en el momento de realizar la llamada!</p>
+                </section>
+
+                <section>
+                    <div style="background-color:#F0BfDf; padding: 20px 20px">
+                        Cuando se crea una función que hace referencia a nombres de variables externas, esos nombres siempre referenciarán a las variables que estuviesen en ámbito <strong>en el momento de crear la función</strong>.
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: incrementador</h4>
+                    <pre><code data-trim class="javascript">
+function incrementador(n) {
+    return function(x) { return x + n; };
+}
+                    </code></pre>
+                    <pre class="fragment"><code data-trim class="javascript">
+var inc1 = incrementador(1);
+console.log(inc1(5)); // &rarr; 6
+console.log(inc1(9)); // &rarr; 10
+                    </code></pre>
+                    <pre class="fragment"><code data-trim class="javascript">
+var inc3 = incrementador(3);
+console.log(inc3(5)); // &rarr; 8
+console.log(inc3(9)); // &rarr; 12
+                    </code></pre>
+                </section>
+
+                <section data-transition="slide-in fade-out">
+                    <img src="images/03/Inc1.svg" style="width:100%; border:none">
+                    <p>Al comenzar la llamada a <code>incrementador(1)</code> se crea un entorno con el valor de la variable local <code>n = 1</code> </p>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <img src="images/03/Inc2.svg" style="width:100%; border:none">
+                    <p>La llamada a <code>incrementador(1)</code> devuelve una función en la que la <code>n</code> está ligada al entorno correspondiente.</p>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <img src="images/03/Inc3.svg" style="width:100%; border:none">
+                    <p>Al llamar a <code>incrementador(3)</code> se crea otro entorno distinto en el que <code>n = 3</code>.</p>
+                </section>
+
+                <section data-transition="fade-in slide-out">
+                    <img src="images/03/Inc4.svg" style="width:100%; border:none">
+                    <p>La función creada en esta llamada tiene la variable <code>n</code> ligada a la <code>n</code> de este último entorno.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: contador</h4>
+                    <pre><code data-trim data-noescape class="javascript">
+function contador() {
+    var n = 1;
+    return function() {
+                return n++;
+           }
+}
+
+var c1 = contador();
+var c2 = contador();
+
+console.log(c1());  <span class="fragment">// &rarr; 1</span>
+console.log(c1());  <span class="fragment">// &rarr; 2</span>
+console.log(c1());  <span class="fragment">// &rarr; 3</span>
+console.log(c2());  <span class="fragment">// &rarr; 1</span>
+console.log(c2());  <span class="fragment">// &rarr; 2</span>
+console.log(c1());  <span class="fragment">// &rarr; 4</span>
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 6</span><span style="display:none">:</span><br>Javascript tiene objetos,<br> pero no clases</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Objetos</h4>
+                    <p>Un <strong>objeto</strong> es una colección de <strong style="color:#5050FF">atributos</strong>, cada uno de ellos asociado a un <strong style="color:#5050FF">valor</strong>.</p>
+                    <pre><code data-trim class="javascript">
+var x = {
+    nombre: "Ana María",
+    apellidos: "Gamboa Esteban",
+    edad: 54
+};
+                   </code></pre>
+                    <div class="fragment">
+                        <p>El literal <code>{}</code> representa un objeto vacío (sin atributos)</p>
+                        <pre><code data-trim class="javascript">
+var y = {};
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>El acceso a los atributos de un objeto se realiza mediante:</p>
+                    <ul style="width: 100%">
+                        <li class="fragment">El operador punto (<code>.</code>)
+                            <pre><code data-trim class="javascript">
+x.apellidos // &rarr; "Gamboa Esteban"
+                            </code></pre>
+                        </li>
+                        <li class="fragment">o bien, mediante el operador corchete
+                            <pre><code data-trim class="javascript">
+x["apellidos"] // &rarr; "Gamboa Esteban"
+                            </code></pre>
+                            <pre class="fragment"><code data-trim class="javascript">
+var atrib = "nombre";
+x[atrib] // &rarr; "Ana María"
+                            </code></pre>
+                        </li>
+                    </ul>
+                    <div class="fragment">
+                        <p>El acceso a una propiedad inexistente devuelve <code>undefined</code></p>
+                        <pre><code data-trim class="javascript">
+x.noexiste  // &rarr; undefined
+y.nombre    // &rarr; undefined
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Modificación de atributos:</p>
+                    <pre><code data-trim class="javascript">
+x.edad = x.edad + 1;  // o bien: x.edad++
+x["nombre"] = "Ana Josefa";
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Es posible añadir atributos dinámicamente en cualquier momento:</p>
+                        <pre><code data-trim class="javascript">
+x.direccion = "Calle Bautista, 25";
+y.nombre = "Javier";
+
+console.log(x);
+ // { nombre: 'Ana Josefa', apellidos: 'Gamboa Esteban', edad: 55,
+ //   direccion: "Calle Bautista, 25" }
+console.log(y);
+ // { nombre: 'Javier' }
+                    </code></pre>
+                    </div>
+                    <div class="fragment">
+                        <p>...y también borrarlos:</p>
+                        <pre><code data-trim class="javascript">
+delete x.edad;
+console.log(x);
+ // { nombre: 'Ana Josefa', apellidos: 'Gamboa Esteban' }
+
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Los nombres de atributos no han de ser necesariamente identificadores válidos de Javascript. En caso de no serlo, han de ir entre comillas:</p>
+                    <pre><code data-trim class="javascript">
+var z = {
+    "Atributo con espacios": 21,
+    "14": "foo",
+    "false": "ok"
+};
+                    </code></pre>
+                    <p>Para acceder a atributos cuyo nombre no es identificador se puede utilizar solamente la notación corchete</p>
+                    <pre><code data-trim class="javascript">
+z["Atributo con espacios"] = 22;
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>Object.keys()</code> devuelve un array con las claves de un objeto:</p>
+                    <pre><code data-trim class="javascript">
+var x = {
+    nombre: "Ana María",
+    apellidos: "Gamboa Esteban",
+    edad: 54
+};
+
+console.log(Object.keys(x));
+    // [ 'nombre', 'apellidos', 'edad' ]
+                    </code></pre>
+                    <div class="fragment">
+                        <p>El operador <code>in</code> permite determinar la existencia de un atributo dentro de un objeto:</p>
+                        <pre><code data-trim class="javascript">
+if ("edad" in x) {
+    console.log("x tiene un atributo llamado 'edad'");
+}
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Igualdad de objetos</h4>
+                    <p>Cuando se aplica el operador <code>==</code> o <code>===</code> sobre objetos, se comprueba que las referencias a ambos lados del operador apuntan al mismo objeto (igualdad al estilo de Java)</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var coords1 = { x: 20, y: 30 };
+var coords2 = { x: 20, y: 30 };
+var coords3 = coords1;
+
+console.log(coords1 === coords2);
+    <span class="fragment">// &rarr; false</span>
+
+console.log(coords1 === coords3);
+    <span class="fragment">// &rarr; true</span>
+                    </code></pre>
+                    <p class="fragment"><strong>Recuerda:</strong> en Javascript, las cadenas no son objetos; son tipos básicos.</p>
+                </section>
+
+                <section>
+                    <h4>Funciones dentro de objetos</h4>
+                    <p>Como las funciones son ciudadanos de primera clase, pueden ser asignadas a los atributos de un objeto:</p>
+                    <pre><code data-trim class="javascript">
+var empleado = {
+    nombre: "Manuel",
+    saludar: function() {
+        console.log("¡Hola!");
+    }
+};
+
+empleado.saludar();
+    // &rarr; ¡Hola!
+                    </code></pre>
+                    <p class="fragment">Este tipo de funciones reciben el nombre de <strong>métodos</strong>.</p>
+                    <div class="fragment">
+                        <p>Se puede añadir métodos a un objeto ya construido:</p>
+                        <pre><code data-trim class="javascript">
+empleado.despedir = function() { console.log("¡Adios!"); };
+empleado.despedir();
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>El objeto <code style="text-transform:none">this</code></h4>
+                    <p style="font-family:monospace">
+                        <span style="background-color:#A4A430; padding:2px; border-radius: 6px">empleado</span>.<span style="background-color:#B080B0; padding:2px; border-radius: 6px">saludar</span>();
+                    </p>
+                    <p>En toda llamada a método se distinguen tres componentes:</p>
+                    <ul>
+                        <li class="fragment">Método llamado: <span style="background-color:#B080B0; padding:2px; border-radius: 6px; font-family:monospace">saludar</span></li>
+                        <li class="fragment">Argumentos (ninguno, en este caso)</li>
+                        <li class="fragment">Objeto sobre el que se realiza la llamada: <span style="background-color:#A4A430; padding:2px; border-radius: 6px; font-family:monospace">empleado</span></li>
+                    </ul>
+                    <p class="fragment">Cuando llamamos a un método, éste recibe, además de los correspondientes argumentos, una variable especial (<code>this</code>) que contiene una referencia al objeto sobre el que se realiza la llamada.</p>
+                </section>
+
+                <section>
+                    Ejemplo:
+                    <pre><code data-trim data-noescape class="javascript">
+var empleado = {
+    nombre: "Manuel",
+
+    saludar: function() {
+        console.log("¡Hola, " + <span style="background-color:#D4D430; padding:2px; border-radius: 6px">this</span>.nombre + "!");
+    }
+
+    cambiarNombre: function(nuevoNombre) {
+        <span style="background-color:#D4D430; padding:2px; border-radius: 6px">this</span>.nombre = nuevoNombre;
+    }
+};
+                    </code></pre>
+
+                    <pre><code data-trim class="javascript">
+empleado.saludar();
+    // &rarr; ¡Hola, Manuel!
+
+empleado.cambiarNombre("Irene");
+
+empleado.saludar();
+    // &rarr; ¡Hola, Irene!
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <p>Pueden transferirse métodos entre distintos objetos: </p>
+                    <pre><code data-trim data-noescape class="javascript">
+var otro_empleado = {
+    nombre: "David",
+    saludar: empleado.saludar
+};
+
+<span style="background-color:#D4D430; padding:2px; border-radius: 6px">otro_empleado</span>.saludar();
+    // &rarr; ¡Hola, <span style="background-color:#D4D430; padding:2px; border-radius: 6px">David</span>!
+                    </code></pre>
+                    <p>Se imprime el nombre de <code>otro_empleado</code>, porque es el objeto que recibe la llamada, aunque se llame a un método proveniente de otro objeto.</p>
+                    <div class="fragment">
+                        <p>¿Qué ocurre al ejecutar el siguiente código?</p>
+                        <pre><code data-trim class="javascript">
+var f = empleado.saludar;
+f();
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Podemos encapsular la creación de objetos mediante funciones constructoras:</p>
+                    <pre><code data-trim class="javascript">
+function construirComplejo(real, imag) {
+    return {
+        r : real,
+        i : imag,
+
+        modulo: function() {
+            return Math.sqrt(this.r * this.r + this.i * this.i);
+        },
+
+        argumento: function() {
+            return Math.atan2(this.i, this. r);
+        }
+
+    }
+}
+
+var c1 = construirComplejo(-3, 0);
+console.log(c1.argumento());  // &rarr; 3.141592653589793
+var c2 = construirComplejo(1, 1);
+console.log(c2.modulo());     // &rarr; 1.4142135623730951
+                    </code></pre>
+                    <p style="font-size:60%" class="fragment">(Más adelante veremos otra forma de crear funciones constructoras)</p>
+                </section>
+
+                <section>
+                    <p>Problema: duplicidad de objetos función para cada objeto.</p>
+                    <img src="images/03/DosComplejos.svg" style="height:100%; border:none">
+                    <p class="fragment">¿No podrían <code>c1</code> y <code>c2</code> compartir los métodos?</p>
+                </section>
+
+                <section>
+                    <p>Posible solución:</p>
+                    <pre><code data-trim class="javascript">
+function moduloComplejo() {
+    return Math.sqrt(this.r * this.r + this.i * this.i);
+}
+
+function argumentoComplejo() {
+    return Math.atan2(this.i, this. r);
+}
+
+function construirComplejo(real, imag) {
+    return {
+        r : real,
+        i : imag,
+        modulo: moduloComplejo,
+        argumento: argumentoComplejo
+    }
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <img src="images/03/DosComplejosComparten.svg" style="width:95%; border:none">
+                </section>
+
+                <section>
+                    <p>Ahora añadimos un método nuevo a <code>c1</code>:</p>
+                    <pre><code data-trim class="javascript">
+var c1 = construirComplejo(-3, 0);
+var c2 = construirComplejo(1, 1);
+
+// ...
+
+c1.coordenadasPolares = function() {
+    console.log("(" + this.modulo() + ", "
+                    + this.argumento() + ")");
+}
+                    </code></pre>
+                    <p>Este método existe solamente dentro de <code>c1</code>.</p>
+                    <div style="background-color: #F0D0D0" class="fragment">
+                        <p>¿Existe alguna manera de añadir un método simultáneamente a todos los objetos que hubiesen sido creados mediante <code>construirComplejo</code>?</p>
+                        <p class="fragment">Sí. Se puede hacer mediante <strong>prototipos</strong>.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Prototipo de un objeto</h4>
+                    <p>Todo objeto en Javascript tiene un puntero &laquo;secreto&raquo; que puede apuntar a otro objeto:</p>
+                    <img src="images/03/ComplejoPrototipo.svg" style="width:40%;border:none;box-shadow:none">
+                    <div class="fragment">
+                        <p>... o puede ser un puntero nulo:</p>
+                        <img src="images/03/ComplejoPrototipo2.svg" style="width:23%;border:none;box-shadow:none">
+                    </div>
+                </section>
+
+                <section>
+                    <img src="images/03/CadenaPrototipos1.svg" style="width:50%;border:none;box-shadow:none">
+                    <p>En el primer caso decimos que el objeto apuntado es <strong>prototipo</strong> de <code>c1</code>.</p>
+                </section>
+
+                <section>
+                    <p>A su vez, el prototipo de <code>c1</code> puede tener otro prototipo:</p>
+                    <img src="images/03/CadenaPrototipos2.svg" style="width:80%;border:none;box-shadow:none">
+                    <p>De este modo tenemos una <strong>cadena de prototipos</strong>, que acabará en un objeto no tenga prototipo.</p>
+                </section>
+
+                <section>
+                    <h4>Búsqueda de atributos</h4>
+                    <p>¿Qué ocurre cuando se accede al atributo de un objeto?</p>
+                    <p>Supongamos la expresión <code>c1.nombre</code></p>
+                </section>
+
+                <section data-transition="slide-in fade-out">
+                    <p><code>c1.nombre</code></p>
+                    <img src="images/03/CadenaPrototipos3.svg" style="width:80%;border:none;box-shadow:none">
+                    <p>En primer lugar se intenta buscar un atributo llamado <code>nombre</code> dentro de <code>c1</code>.</p>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <p><code>c1.nombre</code></p>
+                    <img src="images/03/CadenaPrototipos4.svg" style="width:80%;border:none;box-shadow:none">
+                    <p>Si no se encuentra en <code>c1</code>, se busca el atributo dentro del prototipo de <code>c1</code>.</p>
+                </section>
+
+                <section data-transition="fade-in slide-out">
+                    <img src="images/03/CadenaPrototipos5.svg" style="width:80%;border:none;box-shadow:none">
+                    <p>Si no se encuentra en el prototipo de <code>c1</code>, se busca dentro del prototipo del prototipo de <code>c1</code>. Si no se encuentra allí, la búsqueda continúa por la cadena de prototipos hasta que:
+                    </p>
+                    <ul>
+                        <li>Se encuentre el atributo en algún objeto de la cadena.</li>
+                        <li>Se llegue al final de la cadena. En este caso la expresión <code>c1.nombre</code> se evalúa a <code>undefined</code>.</li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h4>Crear objetos que apunten a un prototipo</h4>
+                    <p>Se utiliza la función <code>Object.create()</code></p>
+                    <p>La siguiente sentencia:</p>
+                    <pre><code data-trim class="javascript">
+var y = Object.create(x);
+                    </code></pre>
+                    <p>crea un objeto <code>y</code> que tiene a <code>x</code> como prototipo:</p>
+                    <img src="images/03/PrototiposXY.svg" style="width:50%;border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    Ejemplo:
+                    <pre><code data-trim class="javascript">
+var circulo = {
+    centro: { x: 10, y: 20 },
+    radio: 5
+};
+
+var circulo_verde = Object.create(circulo);
+circulo_verde.color = "verde";
+
+
+var circulo_rojo = Object.create(circulo);
+circulo_rojo.color = "rojo";
+                    </code></pre>
+
+                    <pre class="fragment"><code data-trim data-noescape class="javascript">
+console.log(circulo_rojo.color);        <span class="fragment">// &rarr; "rojo"</span>
+console.log(circulo_verde.radio);       <span class="fragment">// &rarr; 5</span>
+console.log(circulo_verde.centro.x);    <span class="fragment">// &rarr; 10</span>
+console.log(circulo_rojo.centro);       <span class="fragment">// &rarr; { x: 10, y: 20 }</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h4>Cambiar y añadir atributos al prototipo</h4>
+                    <p>Añadimos lo siguiente al ejemplo anterior:</p>
+                    <pre><code data-trim class="javascript">
+                    circulo.grosorBorde = 2;
+                    </code></pre>
+                    <p>¿Qué ocurre con <code>circulo_verde</code> y <code>circulo_rojo</code>?</p>
+                    <pre><code data-trim data-noescape class="javascript">
+console.log(circulo_rojo.grosorBorde);      <span class="fragment">// &rarr; 2</span>
+console.log(circulo_verde.grosorBorde);     <span class="fragment">// &rarr; 2</span>
+                    </code></pre>
+                    <p class="fragment">&laquo;Heredan&raquo; automáticamente el nuevo atributo.</p>
+                    <div class="fragment">
+                        <p>Lo mismo ocurre con las modificaciones al prototipo:</p>
+                        <pre><code data-trim class="javascript">
+circulo.radio = 6;
+
+console.log(circulo_rojo.radio);    // &rarr; 6
+console.log(circulo_verde.radio);   // &rarr; 6
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Sobreescritura de atributos</h4>
+                    <p>Un objeto puede sobreescribir cualquier atributo heredado de su prototipo:</p>
+                    <pre><code data-trim class="">
+circulo_rojo.radio = 3;
+                    </code></pre>
+                    <pre><code data-trim data-noescape class="javascript">
+console.log(circulo_rojo.radio);    <span class="fragment">// &rarr; 3</span>
+console.log(circulo_verde.radio);   <span class="fragment">// &rarr; 6</span>
+                    </code></pre>
+                    <p class="fragment">El atributo sobreescrito no afecta a los demás objetos que tengan el mismo prototipo.</p>
+                </section>
+
+                <section>
+                    <p><code>circulo_rojo.radio = 3;</code></p>
+                    <img src="images/03/CirculosRojoyVerde.svg" style="width:60%;border:none;box-shadow:none">
+                    <div class="fragment">
+                        <p>¿Qué ocurre con lo siguiente?</p>
+                        <pre><code data-trim class="javascript">
+circulo_rojo.centro.x = 15;
+console.log(circulo_verde.centro.x);
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Volviendo al ejemplo de los números complejos</p>
+                    <img src="images/03/DosComplejosComparten.svg" style="width:95%; border:none">
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+var prototipoComplejo = {
+    modulo: function() {
+        return Math.sqrt(this.r * this.r + this.i * this.i);
+    },
+    argumento: function() {
+        return Math.atan2(this.i, this. r);
+    }
+};
+
+
+function construirComplejo(real, imag) {
+    var resultado = Object.create(prototipoComplejo);
+    resultado.r = real;
+    resultado.i = imag;
+    return resultado;
+}
+                    </code></pre>
+                    <pre><code data-trim class="javascript">
+var c1 = construirComplejo(-3, 0);
+var c2 = construirComplejo(1, 1);
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <p>Todas las funciones que se añadan al prototipo estarán disponibles automáticamente para todos los objetos que hayan sido creados previamente por <code>construirComplejo</code></p>
+                    <pre><code data-trim class="javascript">
+// Añadimos una nueva función al prototipo:
+
+prototipoComplejo.coordenadasPolares = function() {
+  console.log("(" + this.modulo() + ", " + this.argumento() + ")");
+}
+
+c1.coordenadasPolares();
+    // &rarr; (3, 3.141592653589793)
+
+c2.coordenadasPolares();
+    // &rarr; (1.4142135623730951, 0.7853981633974483)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>El objeto <code style="text-transform:none">Object.prototype</code></h4>
+                    <p>Por defecto, un objeto tiene como prototipo <code>Object.prototype</code>.</p>
+                    <p><code>Object.prototype</code> tiene algunos métodos predefinidos:</p>
+                    <ul>
+                        <li><code>toString()</code></li>
+                        <li><code>valueOf()</code></li>
+                        <li><code>isPrototypeOf()</code></li>
+                        <li><code>hasOwnProperty()</code></li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype">[+]</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplos</h4>
+                    <pre><code data-trim data-noescape class="javascript">
+var c3 = construirComplejo(1, 3);
+
+console.log(c3.toString());
+    // &rarr; [object Object]
+<span class="fragment">
+prototipoComplejo.toString = function() {
+    return "(" + this.r + ", " + this.i + ")";
+}
+
+console.log(c3.toString());
+    // &rarr; (1, 3)</span>
+                    </code></pre>
+                    <pre class="fragment"><code data-trim class="javascript">
+console.log(prototipoComplejo.isPrototypeOf(c3));
+    // &rarr; true
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Evitar la herencia de  <code style="text-transform:none">Object.prototype</code></h4>
+                    <p>Basta con crear un objeto mediante <code>Object.create</code> pasando <code>null</code> como prototipo.</p>
+                    <pre><code data-trim class="javascript">
+var objeto_vacio = Object.create(null);
+objeto_vacio.toString();    // ERROR
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>El operador <code>in</code> tiene en cuenta tanto los atributos propios como los heredados:</p>
+                    <pre><code data-trim class="javascript">
+var c4 = construirComplejo(1, 3);
+console.log("r" in c4);             // &rarr; true
+console.log("modulo" in c4);        // &rarr; true
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Si se desea comprobar la existencia de un atributo propio, ha de utilizarse el método <code>hasOwnProperty()</code>:</p>
+                        <pre><code data-trim class="javascript">
+console.log(c4.hasOwnProperty("r"));        // &rarr; true
+console.log(c4.hasOwnProperty("modulo"));   // &rarr; false
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Descriptores de objeto</h4>
+                    <p>Hasta ahora todos los atributos de un objeto permiten la lectura y escritura de su valor asociado.</p>
+                    <p>Mediante el método <code>Object.defineProperty()</code> podemos configurar el acceso a los atributos de un objeto.</p>
+                    <pre><code data-trim class="javascript">
+var x = {};
+
+Object.defineProperty(x, "ancho", {
+    value: 10,
+    writable: false
+});
+
+console.log(x.ancho);
+x.ancho = 20; // ERROR
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Esto permite encapsular el acceso a un atributo:</p>
+                    <pre><code data-trim class="javascript">
+x.__alto = 10; // Este es el atributo "privado"
+
+Object.defineProperty(x, "alto", {
+    // Método de acceso
+    get : function() { return this.__alto; },
+
+    // Método de modificación
+    set: function(nuevoAlto) {
+        if (nuevoAlto &lt; 0) {
+            this.__alto = 0;
+        } else if (nuevoAlto &gt; 100) {
+            this.__alto = 100;
+        } else {
+            this.__alto = nuevoAlto;
+        }
+    }
+});
+
+x.alto = -5;
+console.log(x.alto);    // &rarr; 0
+
+x.alto = 21;
+console.log(x.alto);    // &rarr; 21
+
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>defineProperty()</code> recibe un objeto como tercer parámetro que define las propiedades del atributo:</p>
+                    <ul>
+                        <li>
+                            <code>writable: true | false</code>
+                            <br> Control de acceso para escritura.
+                        </li>
+                        <li>
+                            <code>value</code>
+                            <br> Valor por defecto.
+                        </li>
+                        <li>
+                            <code>get: function() { ... }</code>
+                            <br> Método de acceso.
+                        </li>
+                        <li>
+                            <code>set: function(newValue) { ... }</code>
+                            <br> Método de modificación.
+                        </li>
+                        <li>
+                            <code>enumerable: true | false</code>
+                            <br> La propiedad aparecerá en el listado devuelto por <code>Object.keys()</code>.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 7</span><span style="display:none">:</span><br>Las funciones constructoras y el operador <span style="font-family:monospace; text-transform:none">new</span></h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Atributos de funciones</h4>
+                    <p>Las funciones de Javascript también son objetos.</p>
+                    <p class="fragment">Esto implica que también pueden contener atributos.</p>
+                    <pre class="fragment"><code data-trim class="javascript">
+function saludar() {
+    console.log("Hola, mundo!");
+}
+
+saludar.numeroLineas = 1;
+saludar.numeroParametros = 0;
+                    </code></pre>
+                    <img src="images/03/SaludarFun.svg" style="width:60%;border:none;box-shadow:none" class="fragment">
+                </section>
+
+                <section>
+                    <p>De hecho, las funciones tienen algunos atributos predefinidos:</p>
+                    <pre><code data-trim class="javascript">
+console.log(saludar.name)   // &rarr; "saludar"
+console.log(saludar.length) // &rarr; 0  (número de argumentos)
+                    </code></pre>
+                    <div class="fragment">
+                        <p>Entre estos atributos predefinidos existe uno llamado <code>prototype</code>, que inicialmente apunta un objeto vacío.</p>
+                        <pre><code data-trim class="javascript">
+console.log(saludar.prototype); // &rarr; { }
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>¡No confundir la propiedad <code>prototype</code> con el prototipo del objeto función!</p>
+                    <img src="images/03/SaludarFunPrototype.svg" style="width:90%;border:none;box-shadow:none">
+                    <p class="fragment">El atributo <code>prototype</code> juega un papel esencial en las funciones constructoras.</p>
+                </section>
+
+                <section>
+                    <h4>Funciones constructoras</h4>
+                    <p>Una función <strong>constructora</strong> es una función que se encarga de inicializar los atributos del objeto que se encuentra en la variable <code>this</code>.</p>
+                    <pre><code data-trim class="javascript">
+function Complejo(real, imag) {
+    this.r = real;
+    this.i = imag;
+}
+                    </code></pre>
+                    <p class="fragment">Los nombres de las funciones constructoras suelen comenzar con letra mayúscula.</p>
+                    <p class="fragment">Una función constructora es el equivalente a un constructor de clase en <em>Java</em>.<span class="fragment">.. y a la propia clase en sí.</span></p>
+                </section>
+
+                <section>
+                    <p>El atributo <code>prototype</code> de las funciones constructoras sirve para almacenar los métodos comunes a los objetos de la &laquo;clase&raquo;.</p>
+                    <pre><code data-trim class="javascript">
+Complejo.prototype.modulo = function() {
+    return Math.sqrt(this.r * this.r + this.i * this.i);
+}
+
+Complejo.prototype.argumento = function() {
+    return Math.atan2(this.i, this.r);
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>El operador <code style="text-transform:none">new</code></h4>
+                    <p>Se puede invocar a una función constructora utilizando el operador <code>new</code>:</p>
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <p class="fragment">A continuación se describe el funcionamiento de <code>new</code>.</p>
+                </section>
+
+                <section data-transition="slide-in fade-out">
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <img src="images/03/ComplejoConstructora1.svg" style="width:70%;border:none">
+                    <ol style="height:3em; width:90%">
+
+                    </ol>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <img src="images/03/ComplejoConstructora2.svg" style="width:70%;border:none">
+                    <ol style="height:3em; width:90%">
+                        <li>Se crea un objeto nuevo.</li>
+                    </ol>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <img src="images/03/ComplejoConstructora3.svg" style="width:70%;border:none">
+                    <ol style="height:3em; width:90%" start="2">
+                        <li>El prototipo del nuevo objeto será <code>Complejo.prototype</code>.</li>
+                    </ol>
+                </section>
+
+                <section data-transition="fade-in fade-out">
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <img src="images/03/ComplejoConstructora4.svg" style="width:70%;border:none">
+                    <ol style="height:3em; width:90%" start="3">
+                        <li>Se llama a la función constructora <code>Complejo</code> utilizando el nuevo objeto como <code>this</code>.</li>
+                    </ol>
+                </section>
+
+                <section data-transition="fade-in slide-out">
+                    <pre><code data-trim class="javascript">
+var x = new Complejo(-3, 0);
+                    </code></pre>
+                    <img src="images/03/ComplejoConstructora5.svg" style="width:70%;border:none">
+                    <ol style="height:3em; width:90%" start="4">
+                        <li>Se asigna el objeto resultante a la variable <code>x</code>.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>Resultado</h4>
+                    <pre><code data-trim class="javascript">
+function Complejo(real, imag) {
+    this.r = real;
+    this.i = imag;
+}
+
+Complejo.prototype.modulo = function() {
+    return Math.sqrt(this.r * this.r + this.i * this.i);
+}
+
+Complejo.prototype.argumento = function() {
+    return Math.atan2(this.i, this.r);
+}
+
+var x = new Complejo(-3, 0);
+console.log(x.modulo());     // &rarr; 3
+console.log(x.argumento());  // &rarr; 3.141592653589793
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Resumen</h4>
+                    <p>La expresión <code>new C(...)</code> se evalúa del siguiente modo:</p>
+                    <ol>
+                        <li>Se crea un nuevo objeto.</li>
+                        <li>Se establece el prototipo del nuevo objeto a <code>C.prototype</code>.</li>
+                        <li>Se llama a la función <code>C</code>, utilizando el nuevo objeto como <code>this</code>.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>El operador <code style="text-transform:none">instanceof</code></h4>
+                    <p>La expresión <code>x instanceof C</code> se evalúa a <code>true</code> si el objeto <code>C.prototype</code> es alcanzable ascendiendo desde <code>x</code> en la cadena de prototipos:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var x = new Complejo(-3, 0);
+
+console.log(x instanceof Complejo); <span class="fragment">// &rarr; true</span>
+console.log(x instanceof Object);   <span class="fragment">// &rarr; true</span>
+console.log(x instanceof Number);   <span class="fragment">// &rarr; false</span>
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 8</span><span style="display:none">:</span><br>Los arrays también son objetos</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Inicialización de arrays</h4>
+                    <p>
+                        Un array puede inicializarse enumerando sus elementos,
+                    </p>
+                    <pre><code data-trim class="javascript">
+var a = [23, 12, 69, 11, 34, 45];
+                    </code></pre>
+                    <div class="fragment">
+                        <p>o bien mediante el constructor <code>Array</code>:</p>
+                        <pre><code data-trim class="javascript">
+var b = new Array(10);
+// Todos los elementos tienen el valor 'undefined'
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Los arrays son objetos</h4>
+                    <p>Es posible asignar propiedades arbitrarias a un array.</p>
+                    <pre><code data-trim class="javascript">
+var a = [23, 12, 69, 11, 34, 45];
+a.estaOrdenado = false;
+
+console.log(a);
+    // &rarr; [ 1, 5, 3, 5, 4, esta_ordenado: false ]
+                    </code></pre>
+
+                    <p class="fragment">Todos los arrays tienen como prototipo el objeto <code>Array.prototype</code>, que contiene algunos métodos de utilidad sobre arrays. <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/prototype">[+]</a></p>
+                </section>
+
+                <section>
+                    <h4>Los arrays son flexibles y pueden tener &laquo;huecos&raquo;</h4>
+                    <p>Puede variarse la longitud de un array en tiempo de ejecución. Basta con modificar la propiedad <code>length</code>:</p>
+                    <pre><code data-trim class="javascript">
+var a = [23, 12, 69, 11, 34, 45];
+a.length += 2;  // Ampliamos el array
+
+console.log(a); // &rarr; [ 23, 12, 69, 11, 34, 45, ,  ]
+
+a.length = 3;  // Reducimos el array
+
+console.log(a); // &rarr; [ 23, 12, 69 ]
+                    </code></pre>
+                    <div class="fragment">
+                        <p>También se puede ampliar el array añadiendo elementos fuera de su rango:</p>
+                        <pre><code data-trim class="javascript">
+a[5] = 32;
+console.log(a); // &rarr; [ 23, 12, 69, , , 32 ]
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Métodos que modifican el tamaño del array:</p>
+                    <ul>
+                        <li>
+                            <code>push(x)</code>
+                            <br> Inserta <code>x</code> al final del array.
+                        </li>
+                        <li>
+                            <code>pop()</code>
+                            <br> Elimina y devuelve el último elemento del array.
+                        </li>
+                        <li>
+                            <code>unshift(x)</code>
+                            <br> Añade <code>x</code> al principio del array, desplazando los restantes elementos.
+                        </li>
+                        <li>
+                            <code>shift()</code>
+                            <br> Elimina el primer elemento del array, desplazando los restantes elementos.
+                        </li>
+                        <li>
+                            <code>splice(ini, num)</code> Partiendo del elemento en la posición <code>ini</code>, elimina <code>num</code> elementos.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Ejemplo:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var a = [1, 2, 3, 4, 5];
+    <span class="fragment">// a = [1, 2, 3, 4, 5];</span>
+
+a.push(8);
+    <span class="fragment">// a = [1, 2, 3, 4, 5, 8];</span>
+
+a.unshift(-4);
+    <span class="fragment">// a = [-4, 1, 2, 3, 4, 5, 8];</span>
+
+a.pop(); // &rarr; 8
+    <span class="fragment">// a = [-4, 1, 2, 3, 4, 5];</span>
+
+a.shift(); // &rarr; -4
+    <span class="fragment">// a = [1, 2, 3, 4, 5];</span>
+
+a.splice(2, 2); <span class="fragment">// &rarr; [3, 4]</span>
+    <span class="fragment">// a = [1, 2, 5];</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Otras operaciones destructivas:</p>
+                    <pre><code data-trim class="javascript">
+a = [4, 7, 4, 1, 3, 5];
+a.sort();
+    // a = [1, 3, 4, 4, 5, 7]
+
+a.reverse();
+    // a = [7, 5, 4, 4, 3, 1]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Operaciones no destructivas:</p>
+                    <ul>
+                        <li>
+                            <code>concat(arr_1, ..., arr_n)</code>
+                            <br> Añade los arrays pasados como argumento y devuelve el resultado.
+                            <pre><code data-trim class="javascript">
+[1, 2, 3].concat([4, 5], [6, 7, 8]);
+    // &rarr; [1, 2, 3, 4, 5, 6, 7, 8]
+
+                            </code></pre>
+                        </li>
+                        <li>
+                            <code>slice(ini, fin)</code>
+                            <br> Devuelve el segmento <code>[ini, fin)</code> del array.
+                            <pre><code data-trim class="javascript">
+["a", "b", "c", "d", "e", "f", "g"].slice(2, 5);
+    // &rarr; ["c", "d", "e"]
+                            </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <code>join(sep)</code>
+                            <br> Concatena los elementos del array intercalando
+                            <code>sep</code> como separador:
+                            <pre><code data-trim class="javascript">
+["Esto", "no", "me", "gusta"].join(" - ");
+    // &rarr; "Esto - no - me - gusta"
+                            </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Búsqueda de valores:</p>
+                    <ul>
+                        <li><code>indexOf(elem, [pos_inicial])</code>
+                            <p>Devuelve el índice de la última aparición de <code>elem</code> en el array, o -1 si no se encuentra.</p>
+                        </li>
+                        <li><code>lastIndexOf(elem)</code>
+                            <p>Devuelve el índice de la última aparición de <code>elem</code> en el array, o -1 si no se encuentra.</p>
+                        </li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 9</span><span style="display:none">:</span><br>Las funciones de orden superior sobre arrays</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Funciones de orden superior</h4>
+                    <p>Una función de <strong>orden superior</strong> es una función que recibe funciones como parámetro y/o devuelve funciones.</p>
+                    <p>Javascript proporciona varios métodos de orden superior para arrays que son muy útiles en la práctica.</p>
+                </section>
+
+                <section>
+                    <h4>Iteración: método <code style="text-transform:none">forEach</code></h4>
+                    <ul>
+                        <li>
+                            <code>forEach(f)</code>
+                            <br> Aplica la función <code>f</code> sobre todos los elementos del array.
+                        </li>
+                        <pre><code data-trim class="javascript">
+var personas = [ { nombre: "Ricardo", edad: 45},
+                 { nombre: "Julia", edad: 24 },
+                 { nombre: "Ashley", edad: 28 } ];
+
+personas.forEach(function(p) {
+    console.log("Hola, me llamo " + p.nombre
+                + " y tengo " + p.edad + " años");
+})
+
+                        </code></pre>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h4>Funciones de transformación</h4>
+                    <ul>
+                        <li>
+                            <code>map(f)</code>
+                            <br> Aplica la función <code>f</code> a cada elemento del array, devolviendo otro array con los resultados.
+                            <pre><code data-trim class="javascript">
+var a = [1, 3, 5, 2, 4];
+var dobles = a.map(function(n) {
+    return n * 2;
+});
+console.log(dobles); // [2, 6, 10, 4, 8]
+                            </code></pre>
+                        </li>
+                        <li class="fragment">
+                            <code>filter(f)</code>
+                            <br> Selecciona los elementos <code>x</code> del array tales que <code>f(x)</code> devuelve <code>true</code>.
+                            <pre><code data-trim class="javascript">
+var pares = a.filter(function(n) {
+    return n % 2 === 0;
+});
+console.log(pares); // [2, 4]
+                            </code></pre>
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h4>Funciones de reducción (I)</h4>
+                    <ul>
+                        <li>
+                            <code>every(f)</code>
+                            <br> Devuelve <code>true</code> si para <em>todo</em> elemento <code>x</code> del array, <code>f(x)</code> devuelve <code>true</code>.
+                        </li>
+                        <li>
+                            <code>some(f)</code>
+                            <br> Devuelve <code>true</code> si <em>existe</em> un elemento <code>x</code> en el array tal que <code>f(x)</code> devuelva <code>true</code>.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Funciones de reducción (II)</h4>
+                    <ul>
+                        <li>
+                            <code>reduce(f, [elemInicial])</code>
+                            <br> Recorre el array de izquierda a derecha, acumulando un valor durante el recorrido.
+                        </li>
+                        <pre><code data-trim class="javascript">
+var a = [2, 6, 9, 1];
+
+console.log(
+    "Valor final: " +
+    a.reduce(function(acum, n) { return 2 * acum +  n; }, 7)
+);  // &rarr; 171
+
+                        </code></pre>
+                    </ul>
+                </section>
+
+                <section>
+                    <p><img src="images/03/Reduce1.svg" style="width:100%; border:none; box-shadow:none"></p>
+                </section>
+
+                <section>
+                    <h4>Otros ejemplos</h4>
+                    <p>Suma de los elementos de un array</p>
+                    <pre><code data-trim class="javascript">
+[1, 5, 7, 4].reduce(function(ac, n) { return ac + n; }, 0)
+                    </code></pre>
+                    <img src="images/03/Reduce2.svg" style="width:80%;border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Otros ejemplos</h4>
+                    <p>Multiplicación de los elementos de un array</p>
+                    <pre><code data-trim class="javascript">
+[1, 5, 7, 4].reduce(function(ac, n) { return ac * n; }, 1)
+                    </code></pre>
+
+                    <p>Máximo de los elementos de un array</p>
+                    <pre><code data-trim class="javascript">
+[6, 1, 4, 3, 7].reduce(
+    function(acum, x) {
+        return Math.max(acum, x);
+    },
+    -Infinity
+)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Variantes</h4>
+                    <p><code>reduce(f, [ini])</code></p>
+                    <p>Si no se indica valor inicial, se supone que éste es el primer elemento del array.</p>
+                    <pre><code data-trim class="javascript">
+[1, 5, 7, 4].reduce(function(acum, x) { return acum + x; })
+                    </code></pre>
+                    <img src="images/03/Reduce3.svg" style="width:80%;border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>La función reductora</h4>
+                    <p><code>reduce(f, [ini])</code></p>
+                    <p>La función <code>f</code> puede recibir hasta cuatro parámetros:</p>
+                    <ol>
+                        <li>Valor acumulado hasta el momento.</li>
+                        <li>Elemento actual del array.</li>
+                        <li>Índice actual del array.</li>
+                        <li>Array sobre el que se está haciendo el <code>reduce</code>.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>Variantes</h4>
+                    <p><code>reduceRight(f, [ini])</code></p>
+                    <p>Realiza lo mismo que <code>reduce</code>, pero recorriendo el vector de derecha a izquierda.</p>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 10</span><span style="display:none">:</span><br>El objeto <span style="font-family:monospace; text-transform:none">this</span> es de quita y pon</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Partimos del siguiente código:</p>
+                    <pre><code data-trim class="javascript">
+var a = {
+    nombre : "Alberto",
+    saludar : function() { console.log("Hola, " + this.nombre); }
+}
+
+a.saludar();    // &rarr; Hola, Alberto
+                    </code></pre>
+                    <p>Cuando ejecutamos <code>a.saludar()</code>, la variable <code>this</code> toma el valor <code>a</code>, que es quién realiza la llamada.</p>
+                    <div class="fragment">
+                        <p>Podemos llamar al método <code>a.saludar</code> utilizando otro objeto cualquiera como <code>this</code>. Esto se realiza mediante la función <code>call</code>:</p>
+                        <pre><code data-trim class="javascript">
+var b = { nombre: "Elvira" };
+a.saludar.call(b);  // &rarr; Hola, Elvira
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>La función <code>call</code> es útil para modelizar la herencia de clases. (Ver ejercicios)</p>
+                    <p><code>call(objetoThis, arg1, arg2, ...)</code></p>
+                    <p>La función <code>apply</code> se comporta de modo similar, pero recibe un array de argumentos:</p>
+                    <p><code>apply(objetoThis, [arg1, arg2, ...])</code></p>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+var a = {
+    nombre: "Manuel",
+    saludar: function(numVeces) {
+        for (int i = 0; i &lt; numVeces; i++) {
+            console.log("Hola ", this.name);
+        }
+    }
+};
+
+a.saludar(3);
+a.saludar.call(a, 3);    // equivale a lo anterior
+a.saludar.apply(a, [3]); // idem
+
+a.saludar.call( { nombre: "Olivia" }, 4);
+a.saludar.apply( { nombre: "Olivia" }, [4]);
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>La función <code style="text-transform:none">bind</code></h4>
+                    <p><code>f.bind(objetoThis, arg1, arg2, ...)</code></p>
+                    <p>Devuelve una función que cuando sea llamada ejecutará el código de <code>f</code>, asignando la variable <code>this</code> al <code>objetoThis</code> pasado como parámetro, y pasando los parámetros <code>arg1</code>, <code>arg2</code>,
+                        etc.
+                    </p>
+                    <p>La función devuelta puede recibir parámetros adicionales que serán concatenados con los <code>arg1</code>, <code>arg2</code>, etc. pasados previamente a <code>bind</code>.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+/*
+    Llama a la función f() la cantidad de veces indicada
+    en el primer parámetro.
+*/
+function repetir(numVeces, f) {
+    for (var i = 0; i &lt; numVeces; i++) {
+        f();
+    }
+}
+
+repetir(3, function() { console.log("¡Hola!"); });
+                    </code></pre>
+                    <div class="fragment">
+                        <p>¿Qué ocurre al ejecutar el siguiente código?</p>
+                        <pre><code data-trim class="javascript">
+var a = {
+    nombre: "Manuel",
+    saludar: function() {
+        console.log("Hola, " + this.nombre);
+    }
+}
+
+repetir(3, a.saludar);
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <p>El objeto <code>this</code> se ha &laquo;perdido&raquo; al asignar <code>a.saludar</code> al parámetro <code>f</code>. Por tanto, la llamada <code>f()</code> se realiza con un <code>this</code> que es <code>undefined</code>.
+
+                        <pre><code data-trim class="javascript">
+var f = a.saludar;
+f();    // this = 'undefined'
+                    </code></pre>
+                        <div class="fragment">Sin embargo, podemos hacer:
+                            <pre><code data-trim class="javascript">
+var f = a.saludar.bind(a);
+f();    // this = a
+                    </code></pre></div>
+                        <div class="fragment">
+                            <p>Por tanto, arreglamos el problema anterior mediante:</p>
+                            <pre><code data-trim class="javascript">
+repetir(3, a.saludar.bind(a));
+                    </code></pre></div>
+
+                </section>
+
+                <section>
+                    <h4>Aplicaciones parciales</h4>
+                    <p>
+                        La función <code>bind</code> también puede utilizarse para preasignar algunos de los parámetros de una función.
+                    </p>
+                    <pre><code data-trim class="javascript">
+function suma(x, y, z) {
+    return x + y + z;
+}
+
+var g = suma.bind(null, 4, 5);
+    // Utilizamos null como objeto 'this', porque no se utiliza
+    // dentro de la función 'suma'.
+                    </code></pre>
+                    <p>
+                    </p>
+                    <p><code>suma.bind(null, 4, 5)</code> representa una llamada &laquo;a medias&raquo;, en la que solamente se han pasado dos parámetros. Devuelve una función <code>g</code> que espera el parámetro que falta:</p>
+                    <pre><code data-trim class="javascript">
+console.log(g(6)) // &rarr; 15
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Otro ejemplo de <code>bind</code>:</p>
+                    <pre><code data-trim class="javascript">
+var g = suma.bind(null, 5);
+    // Ahora g espera los dos parámetros restantes:
+console.log(g(1, 1)); // &rarr; 7
+
+var h = suma.bind(null, 1, 2, 3);
+    // He pasado todos los parámetros de 'suma',
+    // pero aún sigue siendo una llamada latente.
+    // Tengo que llamar a 'h' para que se realice la suma.
+console.log(h());   // &rarr; 6
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:20px">
+                        <h3><span class="titulo_rareza">Rareza 11</span><span style="display:none">:</span><br>los módulos de javascript</h3>
+                    </div>
+                    <p>(o, más bien, la ausencia de módulos en Javascript)</p>
+                </section>
+                <section>
+                    <p>
+                        Hasta la versión 6 de ECMAScript, el estándar ha especificado ningún sistema para estructurar los programas Javascript complejos en módulos.
+                    </p>
+                    <p>
+                        No obstante, es posible simular módulos en Javascript mediante los mecanismos disponibles en el lenguaje.
+                    </p>
+                    <p>
+                        Existen dos enfoques populares para simular módulos en Javascript:
+                    </p>
+                    <ul>
+                        <li><strong>CommonJS</strong></li>
+                        <li><strong>AMD</strong> (<em>Asynchronous Module  Definition</em>)</li>
+                    </ul>
+                    <p>Ambos se detallarán en temas posteriores.</p>
+                </section>
+
+                <section>
+                    <h4>CommonJS</h4>
+                    <p>Utilizado principalmente en <strong>Node</strong></p>
+                    <p>Al final del módulo se asigna a una variable especial <code>module.exports</code> el objeto que se desea exportar.</p>
+                    <pre><code data-trim class="javascript">
+function func1() {
+    ...
+}
+
+function func2() {
+    ...
+}
+
+function funcInterna() {  // Función privada. No exportar
+    ...
+}
+
+module.exports = {
+    func1 : func1,
+    func2 : func2
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h4>AMD (Asynchronous module definition)</h4>
+                    <p>Utilizado principalmente en los <strong>navegadores</strong></p>
+                    <p>Se basa en definir una función que devuelva el objeto a exportar, y pasarla a la función <code>define</code>.</p>
+                    <pre><code data-trim class="javascript">
+define(["dep1", "dep2", ...], function(dep1, dep2, ...) {
+    return {
+        func1: function() {
+            ...
+        },
+
+        func2: function() {
+            ...
+        }
+    }
+});
+                    </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline current">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Clases estándar</h2>
+                <p>El estándar de ECMAScript define las siguientes clases
+                    <br>(disponibles tanto en Node como en los navegadores)</p>
+                <ul>
+                    <li>Manejo de expresiones regulares</li>
+                    <li>Manejo de fechas</li>
+                    <li>Trazas y <em>logging</em></li>
+                    <li>Utilidades varias</li>
+
+                </ul>
+            </section>
+
+            <section>
+                <h3>Expresiones regulares</h3>
+                <p>Una expresión regular es un patrón que representa una o varias cadenas de texto.</p>
+                <p>Por ejemplo, la expresión regular <code>[A-Z][0-9]{3}</code> denota el conjunto de cadenas que comienzan por una letra mayúscula y van seguidas por tres dígitos</p>
+                <p style="font-size:80%">Ejs: <code>A324</code>, <code>F983</code>, etc.</p>
+                <p class="fragment">Ver: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">Lenguaje de expresiones regulares</a></p>
+            </section>
+
+            <section>
+                <p>En Javascript se delimitan las expresiones regulares por símbolos <code>/</code></p>
+                <pre><code data-trim class="javascript">
+var expr = /[A-Z][0-9]{3}/;
+                </code></pre>
+                <p class="fragment">Las expresiones regulares son objetos con los siguientes métodos:</p>
+                <ul>
+                    <li class="fragment">
+                        <code>test(str)</code>: Devuelve <code>true</code> si en la cadena <code>str</code> existe una subcadena que encaja con la expresión, o <code>false</code> en caso contrario.
+                    </li>
+                    <li class="fragment">
+                        <code>exec(str)</code>: También comprueba el ajuste de alguna subcadena de <code>str</code> con el patrón, pero devuelve más información sobre el ajuste producido (o <code>null</code> si no hay ajuste).
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Método <code style="text-transform:none">test</code></h4>
+                <pre><code data-trim data-noescape class="javascript">
+/[A-Z][0-9]{3}/.test("A655");
+    <span class="fragment">// &rarr; true</span>
+/[A-Z][0-9]{3}/.test("Otra cosa");
+    <span class="fragment">// &rarr; false</span>
+
+/el|la|los|las/.test("Esta frase tiene un artículo");
+    <span class="fragment">// &rarr; false</span>
+/el|la|los|las/.test("Esta clase tiene un artículo");
+    <span class="fragment">// &rarr; true</span>
+/\b(el|la|los|las)\b/.test("Esta clase tiene un artículo");
+    <span class="fragment">// &rarr; false</span>
+            </code></pre>
+                <p>El símbolo <code>\b</code> representa el límite de una palabra.</p>
+            </section>
+
+            <section>
+                <h4>Método <code style="text-transform:none">exec</code></h4>
+                <p>A veces podemos dividir la expresión regular en varios grupos con el fin de saber qué parte de la cadena capturada corresponde a cada grupo.</p>
+                <p>Cada grupo va delimitado entre paréntesis <code>(</code>, <code>)</code></p>
+                <p>La función <code>test</code> nos permite desglosar cualquier cadena que ajuste con el patrón en sus distintos grupos.</p>
+            </section>
+
+            <section>
+                <p>Por ejemplo, la siguiente expresión:</p>
+                <code>\d{4}\-[A-Z]{3}</code>
+                <div class="fragment">
+                    <p>ajusta con cualquier secuencia de cuatro dígitos (<code>\d</code> = digito) que vaya seguida de un guión (<code>\-</code>) y tres letras mayúsculas.</p>
+                    <p style="font-size:80%">Ejs: <code>0249-GSW</code>, <code>1934-HHG</code>, etc.</p>
+                </div>
+                <div class="fragment">
+                    <p>Si queremos poder separar la secuencia de dígitos de la de letras utilizamos dos grupos:</p>
+                    <code>(<span style="background-color:#FFFF70;border-radius:10px">\d{4}</span>)\-(<span style="background-color:#A0FFFF;border-radius:10px">[A-Z]{3}</span>)</code>
+                </div>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+var regexp = /(\d{4})\-([A-Z]{3})/;
+var result = regexp.exec("Mi matrícula de coche es 8367-AWD");
+                </code></pre>
+                <p>La subcadena <code><span style="background-color:#FFFF70;border-radius:10px">8367</span>-<span style="background-color:#A0FFFF;border-radius:10px">AWD</span></code> ajusta con el patrón <code>regexp</code>, pero <code>exec</code> nos permite
+                    saber qué fragmento de ésta ajusta con cada grupo</p>
+                <pre><code data-trim data-noescape class="javascript">
+
+result[0] <span class="fragment">// &rarr; "8367-AWD" (Cadena completa)</span>
+result[1] <span class="fragment">// &rarr; "8367"     (Primer grupo de captura)</span>
+result[2] <span class="fragment">// &rarr; "AWD"      (Segundo grupo de captura)</span>
+
+result.index <span class="fragment">// &rarr; 25   (Posición del ajuste dentro de la cadena)</span>
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Modificadores de expresiones regulares</h4>
+                <p>Se colocan tras el delimitador <code>/</code> final de la expresión.</p>
+                <table style="border:1px solid black">
+                    <tr>
+                        <td><code>i</code></td>
+                        <td>No distingue entre mayúsculas y minúsculas.</td>
+                    </tr>
+                    <tr>
+                        <td><code>g</code></td>
+                        <td>Ajuste global.
+                            <br> Permite encontrar varias ocurrencias en la misma cadena.</td>
+                    </tr>
+                    <tr>
+                        <td><code>m</code></td>
+                        <td>Buscar a lo largo de varias líneas.
+                            <br> Varía el comportamiento de <code>^</code> y <code>$</code>.
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h4>Ejemplos</h4>
+                <pre><code data-trim data-noescape class="javascript">
+var r1 = /Hola/i;
+r1.test("hola") <span class="fragment">// &rarr; true</span>
+
+var str = "Hola, hola\nHola caracola";
+
+str.match(/hola/);
+    <span class="fragment">// &rarr; [ 'hola', index: 6, ... ]</span>
+str.match(/hola/i);
+    <span class="fragment">// &rarr; [ 'Hola', index: 0, ... ]</span>
+
+// La búsqueda global encuentra todos los resultados
+str.match(/hola/gi);
+    <span class="fragment">// &rarr; [ 'Hola', 'hola', 'Hola' ]</span>
+
+// El carácter ^ significa 'principio de cadena'
+str.match(/^Hola/g);
+    <span class="fragment">// &rarr; [ 'Hola' ]</span>
+
+// Pero con el modificador 'm' significa 'principio de línea'
+str.match(/^Hola/gm);
+    <span class="fragment">// &rarr; [ 'Hola', 'Hola' ]</span>
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Métodos de cadenas relacionados con expresiones regulares</h4>
+                <ul>
+                    <li><code>match(regexp)</code>
+                        <br> Devuelve todas las subcadenas que ajustan con la expresión regular <code>regexp</code> (si ésta contiene el modificador <code>g</code>) o solamente la primera (en caso contrario).
+                    </li>
+                    <li><code>search(regexp)</code>
+                        <br> Devuelve el índice de la primera subcadena que ajuste con <code>regexp</code>, o -1 si no hay ninguna.
+                    </li>
+                    <li><code>replace(regexp, nuevaCadena)</code> Reemplaza por <code>nuevaCadena</code> las subcadenas que ajusten con <code>regexp</code>.
+                    </li>
+                    <li><code>split(regexp)</code> Divide la cadena en fragmentos, utilizando <code>regexp</code> como separador.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Sobre la función <code style="text-transform:none">replace</code></h4>
+                <p><code>replace(regexp, nuevaCadena)</code></p>
+                <p>La cadena de reemplazo (<code>nuevaCadena</code>) puede hacer referencia a los grupos de captura de la expresión regular.</p>
+                <pre><code data-trim class="javascript">
+var r = /(\d{4})\-([A-Z]{3})/;
+var str = "Mi número de matrícula es 9483-GSD";
+
+str.replace(r, "$2/$1");
+    // &rarr; "Mi número de matrícula es GSD/9483"
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Los objetos <code style="text-transform:none">Date</code></h3>
+                <p>Sirven para realizar operaciones con fechas y horas.</p>
+                <pre><code data-trim class="javascript">
+var ahora = new Date();
+ahora.toString();
+    // &rarr; 'Fri Oct 14 2016 14:37:56 GMT+0200 (CEST)'
+ahora.getFullYear();
+    // &rarr; 2016
+ahora.getMonth();
+    // &rarr; 9
+ahora.getSeconds();
+    // &rarr; 56
+
+var fechaInicio = new Date(2016, 09, 26);
+fechaInicio.toString();
+    // &rarr; 'Wed Oct 26 2016 00:00:00 GMT+0200 (CEST)'
+                </code></pre>
+                <p>Más información: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date">[+]</a></p>
+            </section>
+
+            <section>
+                <h3>El objeto <code style="text-transform:none">Math</code></h3>
+                <p>Utilidades matemáticas varias:</p>
+                <ul>
+                    <li>Constantes: <code>E</code>, <code>LN2</code>, <code>PI</code>, etc.
+                    </li>
+                    <li>Máximos y mínimos: <code>max</code>, <code>min</code>.</li>
+                    <li>Números aleatorios: <code>random</code>.</li>
+                    <li>Redondeo: <code>ceil</code>, <code>floor</code>, <code>trunc</code>, <code>round</code>, etc.</li>
+                    <li>Potencias: <code>pow</code>, <code>sqrt</code>, <code>cbrt</code>, etc.</li>
+                    <li>Trigonométricas: <code>sin</code>, <code>sinh</code>, <code>cos</code>, etc.</li>
+                    <li>Exponenciales y logarítmicas: <code>exp</code>, <code>log</code>, <code>log10</code>, etc.</li>
+                </ul>
+
+            </section>
+
+            <section>
+                <h3>El objeto <code style="text-transform:none">console</code></h3>
+                <p>Tiene, entre otros, los métodos:</p>
+                <ul>
+                    <li><code>log(str)</code>
+                        <br> Muestra mensajes de depuración.
+                    </li>
+                    <li><code>warn(str)</code>
+                        <br> Muestra mensajes de aviso.
+                    </li>
+                    <li><code>error(str)</code>
+                        <br> Muestra mensajes de error.
+                    </li>
+                    <li><code>assert(cond, str)</code>
+                        <br> Lanza un <code>AssertionError(str)</code> si <code>cond</code> no se cumple.
+                    </li>
+                    <li><code>time(id)</code> / <code>timeEnd(id)</code>
+                        <br> Permite medir tiempos de ejecución.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <pre><code data-trim class="javascript">
+console.time("mi-temporizador");
+
+// ...
+// ...
+// ...
+
+console.timeEnd("mi-temporizador");
+    // &rarr; Imprime: "mi-temporizador: 5663.947ms"
+                </code></pre>
+            </section>
+
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline current">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Utilidades y herramientas</h2>
+                <ul>
+                    <li>JSDoc
+                        <br>
+                        <a href="http://usejsdoc.org/">http://usejsdoc.org/</a>
+                    </li>
+                    <li>JSLint
+                        <br>
+                        <a href="http://www.jslint.com/">http://www.jslint.com/</a>
+                    </li>
+                    <li>Depuradores</li>
+                    <li>Herramientas de <em>testing</em></li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>JSDoc</h3>
+                <p>Herramienta de generación de documentación, al estilo de <em>Javadoc</em></p>
+                <pre><code data-trim class="javascript">
+/**
+ * Representa un número complejo representado en forma rectangular
+ * (parte real + parte imaginaria).
+ *
+ * Puede construirse un número a partir de su forma polar mediante
+ * la función {@link Complejo.desdePolar}
+ *
+ * @constructor
+ * @param {number} real - Componente real.
+ * @param {number} imag - Componente imaginaria.
+ */
+function Complejo(real, imag) {
+    this.r = real;
+    this.i = imag;
+}
+...
+                </code></pre>
+            </section>
+
+            <section>
+                <img src="images/03/JSDoc.png" style="width:80%;border:none">
+            </section>
+
+            <section>
+                <h3>JSLint</h3>
+                <p>Herramienta que detecta la existencia de problemas en el código contenido en un fichero de Javascript.</p>
+                <ul>
+                    <li>
+                        <strong>Problemas de estilo:</strong> nombres correctos de constructoras (<code>EstiloCamelCase</code>), variables, espacios en blanco, etc.
+                    </li>
+                    <li>
+                        <strong>Problemas de seguridad en el código:</strong> llamadas a funciones constructoras sin <code>new</code>, uso de estructuras desaconsejables (<code>for...in</code>, <code>with</code>), etc.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <p>Fichero <code>complex_lint.js</code></p>
+                <pre><code data-trim class="javascript">
+/* Constructora de números complejos complejos */
+
+function complejo (real, imag) {
+    this.r = real;
+    this.i = imag;
+}
+                </code></pre>
+                <div class="fragment">
+                    <p>Ejecutando <code>jslint complex_lint.js</code>:</p>
+                    <pre><code data-trim class="no-highlight">
+#1 Unexpected space between 'complejo' and '('.
+    function complejo (real, imag) { // Line 14, Pos 19
+#2 A constructor name 'complejo' should start with an uppercase
+   letter.
+    return new complejo(real, imag); // Line 48, Pos 16
+                </code></pre>
+                </div>
+            </section>
+
+            <section>
+                <p>Corregimos los errores detectados:</p>
+                <pre><code data-trim class="javascript">
+/* Constructora de números complejos complejos */
+
+function Complejo(real, imag) {
+    this.r = real;
+    this.i = imag;
+}
+                </code></pre>
+                <pre class="fragment"><code data-trim class="no-highlight">
+complex_lint.js is OK.
+                </code></pre>
+            </section>
+
+            <section>
+                <h2>Depuradores</h2>
+                <p>Existen herramientas de depuración incorporadas, tanto en el entorno del cliente como en el del servidor.</p>
+                <ul>
+                    <li><strong>Lado del servidor</strong> (Node)
+                        <br> La depuración se realiza mediante un <em>shell</em> lanzado desde la línea de comandos, o bien con  <em>node-inspector</em>, que proporciona una interfaz gráfica:<br> <a href="https://www.npmjs.com/package/node-inspector">https://www.npmjs.com/package/node-inspector</a>
+                        
+                    </li>
+                    <li><strong>Lado del cliente</strong> (Navegador)
+                        <br> Las herramientas para desarrolladores integradas en Firefox y Chrome proporcionan un depurador.
+
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <p>En cualquiera de los dos entornos puede introducirse un punto de ruptura mediante la siguiente sentencia:</p>
+                <pre><code data-trim class="javascript">
+debugger;
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <pre><code data-trim class="javascript">
+// sum_square.js
+// -------------
+// Este programa calcula la suma de cuadrados
+// del array 'arr'.
+
+var sum = 0;
+var arr = [1, 4, 8, 1, 3];
+
+debugger; // Punto de ruptura
+
+for (var i = 0; i &lt; array.length; i++) {
+    sum += arr[i] * arr[i];
+}
+
+console.log(sum);
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Iniciar depuración con Node</h4>
+                <pre><code data-trim class="no-highlight">
+node debug sum_squares.js
+                </code></pre>
+                <div class="fragment">
+                    <h4>Comandos</h4>
+                    <table>
+                        <tr>
+                            <td><code>cont</code></td>
+                            <td>Salta al siguiente punto de ruptura</td>
+                        </tr>
+                        <tr>
+                            <td><code>step</code></td>
+                            <td rowspan="2" style="vertical-align:middle">Avanzar paso (metiéndose dentro de funciones o no)</td>
+                        </tr>
+                        <tr>
+                            <td><code>next</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>repl</code></td>
+                            <td>Arrancar <em>shell</em> para evaluar expresiones</td>
+                        </tr>
+                        <tr>
+                            <td><code>watch("..")</code></td>
+                            <td>Visualizar expresión en cada paso de ejecución</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <section>
+                <h4>Depuración con Node</h4>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/tckK4F38FaU" frameborder="0" allowfullscreen></iframe>
+            </section>
+            
+            <section>
+                <h4>Depuración con Node-inspector</h4>
+                Requiere instalación previa mediante la herramienta <code>npm</code>, distribuida junto con Node (ver Tema 4).
+                <pre><code data-trim class="no-highlight">
+npm install -g node-inspector
+                </code></pre>
+                Tras la instalación ejecutar:
+                <pre><code data-trim data-noescape class="no-highlight">
+node-debug <em>fichero.js</em>
+                </code></pre>
+                y se abrirá un navegador con una interfaz gráfica de depuración.
+            </section>
+            
+            <section>
+                <p>Ejemplo:</p>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/CGGBUdnM3G0" frameborder="0" allowfullscreen></iframe>
+            </section>
+
+            <section>
+                <h4>Depuración con Firefox</h4>
+                <p><em>Desarrollador</em> &rarr; <em>Depurador</em> (Ctrl+Mayús+S)</p>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/fxU3ByrhSmc" frameborder="0" allowfullscreen></iframe>
+            </section>
+
+            <section>
+                <h3>Frameworks de testing</h3>
+                <ul>
+                    <li><strong>Jasmine</strong>
+                        <br>
+                        <a href="http://jasmine.github.io/">http://jasmine.github.io/</a>
+                    </li>
+                    <li><strong>Mocha</strong>
+                        <br>
+                        <a href="https://mochajs.org/">https://mochajs.org/</a>
+                    </li>
+                    <li><strong>Chai</strong>
+                        <br>
+                        <a href="http://chaijs.com/">http://chaijs.com/</a>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Ejemplo: Jasmine</h4>
+                <p>El siguiente módulo contiene un error en la función <code>insert</code></p>
+                <pre><code data-trim data-noescape class="javascript">
+/* Inserta el elemento arr[i] en la porción del array comprendida
+   entre los índices 0 y i-1, suponiendo que dicha porción está
+   ordenada */
+function insert(i, arr) {
+    var j = i;
+    while (j > 1 &amp;&amp; arr[j] &lt; arr[j - 1]) {  <span class="arrow_box_left caja_codigo fragment">¡error!</span>
+        swap(arr, j, j - 1);
+        j = j - 1;
+    }
+}
+
+/* Implementación del algoritmo de ordenación por inserción */
+function insertionSort(arr) {
+    for (var i = 1; i &lt; arr.length; i++) {
+        insert(i, arr);
+    }
+}
+
+module.exports = {
+    insertionSort : insertionSort,
+    insert        : insert
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Inicializamos <em>Jasmine</em> en el proyecto actual</p>
+                <pre><code data-trim class="no-highlight">
+jasmine init
+                </code></pre>
+                <p>Esto crea una carpeta <code>spec</code>, donde el programador coloca sus módulos de test.</p>
+            </section>
+
+            <section>
+                <p>Creamos la especificación en <code>spec/insert_spec.js</code></p>
+                <pre><code data-trim class="javascript">
+//...
+describe("Prueba de ordenación por inserción", function() {
+    it("Ordenación de array ascendente", function() {
+        var arr = [1, 2, 3, 4];
+        insertModule.insertionSort(arr);
+        expect(arr).toEqual([1, 2, 3, 4]);
+    });
+
+    it("Ordenación de array descendente", function() {
+        var arr = [8, 4, 2];
+        insertModule.insertionSort(arr);
+        expect(arr).toEqual([2, 4, 8]);
+    });
+
+    it("Inserción en array desordenado", function() {
+        var arr = [3, 2];
+        insertModule.insert(1, arr);
+        expect(arr).toEqual([2, 3]);
+    });
+
+});
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Ejecutamos los casos de prueba:</p>
+                <pre><code data-trim data-noescape class="no-highlight">
+# <span style="background-color:#C0C0FF">jasmine</span>
+...
+Failures:
+1) Prueba de ordenación por inserción
+   Ordenación de array descendente
+  Message:
+    <span style="background-color:#FFC0C0">Expected [ 8, 2, 4 ] to equal [ 2, 4, 8 ].</span>
+  Stack:
+    Error: Expected [ 8, 2, 4 ] to equal [ 2, 4, 8 ].
+        at Object.&lt;anonymous&gt; (/home/.../debugger_spec.js:16:21)
+
+2) Prueba de ordenación por inserción
+   Inserción en array desordenado
+  Message:
+    <span style="background-color:#FFC0C0">Expected [ 3, 2 ] to equal [ 2, 3 ].</span>
+  Stack:
+    Error: Expected [ 3, 2 ] to equal [ 2, 3 ].
+        at Object.&lt;anonymous&gt; (/home/.../debugger_spec.js:22:21)
+
+3 specs, <span style="background-color:#FFC0C0">2 failures</span>
+Finished in 0.01 seconds
+
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Tras corregir el error:</p>
+                <pre><code data-trim data-noescape class="javascript">
+function insert(i, arr) {
+    ...
+    while (j > 0 &amp;&amp; arr[j] &lt; arr[j - 1]) {
+    ...
+}
+                </code></pre>
+                <pre><code data-trim data-noescape class="no-highlight">
+# <span style="background-color:#C0C0FF">jasmine</span>
+Started
+...
+
+
+ <span style="background-color:#C0FFC0">3 specs, 0 failures</span>
+Finished in 0.005 seconds
+                </code></pre>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline current">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>ECMAScript 6</h2>
+                <p>En junio de 2015 se definió la versión 6 de ECMAScript.</p>
+                <p>Esta nueva versión introdujo importantes mejoras sintácticas. Entre ellas:</p>
+                <ul>
+                    <li>Declaraciones <code>const</code> y <code>let</code>.</li>
+                    <li>Notación funcional.</li>
+                    <li>Parámetros por defecto.</li>
+                    <li>Interpolación de cadenas.</li>
+                    <li>Definiciones de clases.</li>
+                </ul>
+                <p>Más información: <a href="http://es6-features.org/">http://es6-features.org/</a></p>
+                <p>Compatibilidad con navegadores: <a href="http://kangax.github.io/compat-table/es6/">[+]</a></p>
+            </section>
+
+            <section>
+                <h3>Definición de constantes</h3>
+                <pre><code data-trim class="javascript">
+const EXEC_NAME = "program.exe"
+                </code></pre>
+                <p>Las constantes se definen como propiedades de sólo lectura</p>
+            </section>
+
+            <section>
+                <h3>Variables de bloque</h3>
+                <p>Solamente hay dos ámbitos para las declaraciones <code>var</code>: bloque y función.</p>
+                <pre><code data-trim class="javascript">
+for (var i = 0; i &lt; a.length; i++) {
+    var z = ...;
+}
+// 'i' y 'z' siguen en ámbito tras salir del bucle
+                </code></pre>
+                <p>Mediante declaraciones <code>let</code> podemos definir variables cuyo ámbito se extiende solamente al bloque en el que son declaradas:</p>
+                <pre><code data-trim class="javascript">
+for (let i = 0; i &lt; a.length; i++) {
+    let z = ...;
+}
+// 'i' y 'z' ya no están en ámbito aquí
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Expresiones funcionales (arrows)</h3>
+                <p>Las expresiones funcionales pueden simplificarse utilizando la notación <code>=&gt;</code></p>
+                <pre><code data-trim class="javascript">
+var f = function(s) { console.log("¡Hola " + s + "!"); };
+                </code></pre>
+                <p>equivale a:</p>
+                <pre><code data-trim class="javascript">
+var f = s => { console.log("¡Hola " + s + "!"); };
+                </code></pre>
+                <p>Si el cuerpo de la función es de la forma <code>return exp</code>, puede simplificarse aún más:</p>
+                <pre><code data-trim class="javascript">
+arr.map(function(x) { return x * 2; });
+//equivale a:
+arr.map(x => x * 2);
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Parámetros por defecto</h3>
+                <p>La versión 6 de ECMAScript permite declarar valores por defecto para los parámetros que no son especificados al llamar a la función.</p>
+                <pre><code data-trim data-noescape class="javascript">
+function incrementar(x, incremento <span style="background-color:#FFFFA0">= 1</span>) {
+    return x + incremento;
+}
+
+console.log(incrementar(6));      // &rarr; 7
+console.log(incrementar(6, 4));   // &rarr; 10
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Interpolación de cadenas</h3>
+                <p>Nuevo tipo de cadenas delimitadas por símbolo <code>`</code>
+                    <br>(acento grave)</p>
+                <p>Pueden incluir expresiones Javascript en su interior:</p>
+                <pre><code data-trim class="javascript">
+var x = 3;
+var p = { nombre: "Ximena", edad: 36 };
+var s = `La programadora ${p.nombre} establece la variable a ${x}`;
+console.log(s);
+    // &rarr; La programadora Ximena establece la variable a 3
+
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Definiciones de clases</h3>
+                <p>Esta característica permite definir clases en un estilo más familiar para programadores/as de otros lenguajes.</p>
+                <pre><code data-trim class="javascript">
+"use strict";
+
+const EPSILON = 0.0001
+
+class Complejo {
+    constructor(real, imag) {
+        this.r = real;
+        this.i = imag;
+    }
+
+    modulo() {
+        return Math.sqrt(this.r * this.r + this.i * this.i);
+    }
+
+    argumento() {
+        return Math.atan2(this.i, this.r);
+    }
+    ...
+                </code></pre>
+
+            </section>
+
+            <section>
+                <pre><code class="javascript">    ...
+    static desdePolar(mod, arg) {
+        var real = mod * Math.cos(arg),
+            imag = mod * Math.sin(arg);
+        return new Complejo(real, imag);
+    }
+
+    static iguales(c1, c2) {
+        return (Math.abs(c1.r - c2.r) < Complejo.EPSILON)
+            && (Math.abs(c1.i - c2.i) < Complejo.EPSILON);
+    }
+}</code></pre>
+                <p>Esta sintaxis se traduce internamente a los mecanismos vistos anteriormente: funciones constructoras, métodos en <code>Complejo.prototype</code>, etc.</p>
+                <pre><code data-trim class="javascript">
+typeof(Complejo)    // &rarr; 'function'
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Este nuevo estilo también soporta herencia:</p>
+                <pre><code data-trim data-noescape class="javascript">
+class A {
+    constructor(x) { ... }
+}
+
+class B extends A {
+    constructor(x, y) {
+        super(x);        <span class="arrow_box_left caja_codigo">Llamada a la constructora de A</span>
+        ...
+    }
+}
+                </code></pre>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p7">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Javascript es como Java...</a></li>
+                    <li><a href="#/p3" class="outline">...pero no es como Java</a></li>
+                    <li><a href="#/p4" class="outline">Clases estándar</a></li>
+                    <li><a href="#/p5" class="outline">Herramientas</a></li>
+                    <li><a href="#/p6" class="outline">ECMAscript 6</a></li>
+                    <li><a href="#/p7" class="outline current">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Bibliografía</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>A. Rauschmayer
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3513723~S6*spi">Speaking Javascript</a>
+                            <br> O'Reilly (2014)
+                        </li>
+                        <li>E. Brown
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3579629~S6*spi">Learning Javascript, 3rd edition</a>
+                            <br> O'Reilly (2016)
+                        </li>
+                        <li>
+                            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference">Javascript Reference</a>
+                            <br>MDN - Mozilla Developer Network
+                            <br><span style="font-size:50%">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width: 30%">
+                    <img src="http://speakingjs.com/speakingjs_cover.jpg" style="width:50%; border:none">
+                    <img src="http://akamaicovers.oreilly.com/images/0636920035534/cat.gif" style="width:50%; border:none">
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </div>
+
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }]
+        });
+    </script>
+</body>
+
+</html>
