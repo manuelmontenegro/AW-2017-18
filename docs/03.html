@@ -143,7 +143,7 @@
 
 "use strict";
 
-var planetas = [
+let planetas = [
     "Mercurio", "Venus", "Tierra",
     "Marte", "Júpiter", "Saturno",
     "Urano", "Neptuno"
@@ -522,11 +522,11 @@ console.log(`Pero el año que viene tendré ${edad + 1} años`);
                 <ul style="width:100%">
                     <li>Inicialización:
                         <pre><code data-trim data-noescape class="javascript">
-var x = [4, 6, "pepe", 1, 3];   <span class="arrow_box_left caja_codigo fragment">Corchetes en lugar de { }</span>
+let x = [4, 6, "pepe", 1, 3];   <span class="arrow_box_left caja_codigo fragment">Corchetes en lugar de { }</span>
 
-var z = [];   <span class="arrow_box_left caja_codigo fragment" style="position:relative;">Vector vacío</span>
+let z = [];   <span class="arrow_box_left caja_codigo fragment" style="position:relative;">Vector vacío</span>
 
-var m = new Array(3);
+let m = new Array(3);
                     </code></pre>
                     </li>
                     <li class="fragment">Acceso:
@@ -751,7 +751,7 @@ str1 !== str3   // &rarr; true
                     <h4>Comprobación de tipos</h4>
                     <p>La función <code>typeof</code> permite obtener el tipo de un elemento. Devuelve una cadena con el nombre del tipo.</p>
                     <pre><code data-trim class="javascript">
-var x = 3;
+let x = 3;
 console.log(typeof(x));                         // &rarr; number
 console.log(typeof("Hola"));                    // &rarr; string
 console.log(typeof(variable_que_no_existe));    // &rarr; undefined
@@ -795,7 +795,7 @@ p.poblacion = "Barcelona";  <span class="arrow_box_left caja_codigo fragment">¡
                     <h4>Objetos en Javascript</h4>
                     <p>Un <strong>objeto</strong> en Javascript no es más que una colección de <strong style="color:#5050FF">atributos</strong>, cada uno de ellos asociado a un <strong style="color:#5050FF">valor</strong>.</p>
                     <pre><code data-trim class="javascript">
-var x = {
+let x = {
     nombre: "Ana María",
     apellidos: "Gamboa Esteban",
     edad: 54
@@ -805,7 +805,7 @@ var x = {
                     <div class="fragment">
                         <p>El literal <code>{}</code> representa un objeto vacío (sin atributos)</p>
                         <pre><code data-trim class="javascript">
-var y = {};
+let y = {};
                     </code></pre>
                     </div>
                 </section>
@@ -823,7 +823,7 @@ x.apellidos // &rarr; "Gamboa Esteban"
 x["apellidos"] // &rarr; "Gamboa Esteban"
                             </code></pre>
                             <pre class="fragment"><code data-trim class="javascript">
-var atrib = "nombre";
+let atrib = "nombre";
 x[atrib] // &rarr; "Ana María"
                             </code></pre>
                         </li>
@@ -870,7 +870,7 @@ console.log(x);
                 <section>
                     <p>Los nombres de atributos no han de ser necesariamente identificadores válidos de Javascript. En caso de no serlo, han de aparecer entre comillas en la declaración:</p>
                     <pre><code data-trim class="javascript">
-var z = {
+let z = {
     "Atributo con espacios": 21,
     "14": "foo",
     "false": "ok"
@@ -885,7 +885,7 @@ z["Atributo con espacios"] = 22;
                 <section>
                     <p>La función <code>Object.keys()</code> devuelve un array con los nombres de propiedades de un objeto:</p>
                     <pre><code data-trim class="javascript">
-var x = {
+let x = {
     nombre: "Ana María",
     apellidos: "Gamboa Esteban",
     edad: 54
@@ -908,9 +908,9 @@ if ("edad" in x) {
                     <h4>Igualdad de objetos</h4>
                     <p>Cuando se aplica el operador <code>==</code> o <code>===</code> sobre objetos, se comprueba que las referencias a ambos lados del operador apuntan al mismo objeto (igualdad al estilo de Java)</p>
                     <pre><code data-trim data-noescape class="javascript">
-var coords1 = { x: 20, y: 30 };
-var coords2 = { x: 20, y: 30 };
-var coords3 = coords1;
+let coords1 = { x: 20, y: 30 };
+let coords2 = { x: 20, y: 30 };
+let coords3 = coords1;
 
 console.log(coords1 === coords2);
     <span class="fragment">// &rarr; false</span>
@@ -935,8 +935,8 @@ console.log(coords1 === coords3);
                         <h4>El valor indefinido (<code style="text-transform:none">undefined</code>)</h4>
                         <p>Se utiliza para las variables no inicializadas y para atributos no existentes dentro de objetos.</p>
                         <pre><code data-trim class="javascript">
-var coordenadas = { x: 5, y: 6 };
-var v;
+let coordenadas = { x: 5, y: 6 };
+let v;
 console.log(v);                 // &rarr; undefined
 console.log(coordenadas.z);     // &rarr; undefined
                         </code></pre>
@@ -945,7 +945,7 @@ console.log(coordenadas.z);     // &rarr; undefined
                         <h4>El valor nulo (<code style="text-transform:none">null</code>)</h4>
                         <p>Se utiliza para denotar una referencia a objeto nula.</p>
                         <pre><code data-trim class="javascript">
-var x = null;   // La variable 'x' esta inicializada, pero a una
+let x = null;   // La variable 'x' esta inicializada, pero a una
                 // referencia nula.
 console.log(x); // &rarr; null
                         </code></pre>
@@ -1467,7 +1467,7 @@ x => { console.log(`Valor recibido: ${x}`); }
                 </section>
 
                 <section>
-                    <p>Además, si el cuerpo de la función es de la forma <code>return exp</code>, pueden omitirse las llaves y el <code>return:</code></p>
+                    <p>Además, si el cuerpo de la función es de la forma <code>return exp</code>, pueden omitirse las llaves y el <code>return</code>:</p>
                     <p>En lugar de:</p>
                     <pre><code data-trim class="javascript">
 function (x) { return x + 1; }
@@ -1743,7 +1743,7 @@ c1.coordenadasPolares = function() {
                     <p>Se utiliza la función <code>Object.create()</code></p>
                     <p>La siguiente sentencia:</p>
                     <pre><code data-trim class="javascript">
-var y = Object.create(x);
+let y = Object.create(x);
                     </code></pre>
                     <p>crea un objeto <code>y</code> que tiene a <code>x</code> como prototipo:</p>
                     <img src="images/03/PrototiposXY.svg" style="width:50%;border:none;box-shadow:none">
@@ -1752,16 +1752,16 @@ var y = Object.create(x);
                 <section>
                     Ejemplo:
                     <pre><code data-trim class="javascript">
-var circulo = {
+let circulo = {
     centro: { x: 10, y: 20 },
     radio: 5
 };
 
-var circulo_verde = Object.create(circulo);
+let circulo_verde = Object.create(circulo);
 circulo_verde.color = "verde";
 
 
-var circulo_rojo = Object.create(circulo);
+let circulo_rojo = Object.create(circulo);
 circulo_rojo.color = "rojo";
                     </code></pre>
 
@@ -1886,7 +1886,7 @@ c2.coordenadasPolares();
                 <section>
                     <h4>Ejemplos</h4>
                     <pre><code data-trim data-noescape class="javascript">
-var c3 = construirComplejo(1, 3);
+let c3 = construirComplejo(1, 3);
 
 console.log(c3.toString());
     // &rarr; [object Object]
@@ -3067,12 +3067,6 @@ module.exports = {
                 </code></pre>
                 </section>
 
-                <section>
-                    <pre><code data-trim class="no-highlight">
-jasmine init
-                </code></pre>
-                    <p>Esto crea una carpeta <code>spec</code>, donde el programador coloca sus módulos de test.</p>
-                </section>
 
                 <section>
                     <p>Creamos una carpeta <code>test</code> y añadimos el siguiente fichero <code>insert_test.js</code>:
@@ -3080,19 +3074,19 @@ jasmine init
 //...
 describe("Prueba de ordenación por inserción", () => {
     it("Ordenación de array ascendente", () => {
-        var arr = [1, 2, 3, 4];
+        let arr = [1, 2, 3, 4];
         testing.insertionSort(arr);
         assert.deepEqual(arr, [1, 2, 3, 4]);
     });
 
     it("Ordenación de array descendente", () => {
-        var arr = [8, 4, 2];
+        let arr = [8, 4, 2];
         testing.insertionSort(arr);
         assert.deepEqual(arr, [2, 4, 8]);
     });
     
     it("Inserción en array desordenado", () => {
-        var arr = [3, 2];
+        let arr = [3, 2];
         testing.insert(1, arr);
         assert.deepEqual(arr, [2, 3]);
     });
