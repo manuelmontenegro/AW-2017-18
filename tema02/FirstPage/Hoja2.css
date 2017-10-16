@@ -1,0 +1,19 @@
+body {
+    font-family: sans-serif;
+    background-color: #FFF0F0;
+}
+
+h1 {
+    border-left: 5px solid #006000;
+    padding-left: 10px;
+    color:#006000;
+    background: #E0F0E0;
+}
+
+strong {
+    font-family: "Inconsolata", monospace;
+    color: #006000;
+    background: #E0E0E0;
+    padding-left:2px;
+    padding-right:2px;
+}
