@@ -1521,7 +1521,9 @@ console.log(f(2));
                     <pre><code data-trim data-noescape class="javascript">
 var empleado = {
   nombre: "Manuel",
-  saludar: () => { console.log("¡Hola!"); } <span class="arrow_box_left caja_codigo fragment">Función anónima sin parámetros</span>
+  saludar: function() { 
+        console.log("¡Hola!"); <span class="arrow_box_left caja_codigo fragment">¡No utilizar expresiones lambda aquí!</span>
+  } 
 };
 
 empleado.saludar();
@@ -1531,7 +1533,7 @@ empleado.saludar();
                     <div class="fragment">
                         <p>Se puede añadir métodos a un objeto ya construido:</p>
                         <pre><code data-trim class="javascript">
-empleado.despedir = () => { console.log("¡Adios!"); };
+empleado.despedir = function() { console.log("¡Adios!"); };
 empleado.despedir();
                     </code></pre>
                     </div>
@@ -1557,11 +1559,11 @@ empleado.despedir();
 var empleado = {
     nombre: "Manuel",
 
-    saludar: () => {
+    saludar: function() {
         console.log(`¡Hola, ${<span style="background-color:#D4D430; padding:2px; border-radius: 6px">this</span>.nombre}!`);
     }
 
-    cambiarNombre: nuevoNombre => {
+    cambiarNombre: function(nuevoNombre) {
         <span style="background-color:#D4D430; padding:2px; border-radius: 6px">this</span>.nombre = nuevoNombre;
     }
 };
@@ -1599,6 +1601,7 @@ f();
                     </code></pre>
                     </div>
                 </section>
+                
 
                 <section>
                     <p>Podemos encapsular la creación de objetos mediante funciones constructoras:</p>
@@ -1608,11 +1611,11 @@ function construirComplejo(real, imag) {
         r : real,
         i : imag,
 
-        modulo: () => {
+        modulo: function() {
             return Math.sqrt(this.r * this.r + this.i * this.i);
         },
 
-        argumento: () => {
+        argumento: function() {
             return Math.atan2(this.i, this. r);
         }
 
@@ -1668,8 +1671,7 @@ var c2 = construirComplejo(1, 1);
 // ...
 
 c1.coordenadasPolares = function() {
-    console.log("(" + this.modulo() + ", "
-                    + this.argumento() + ")");
+    console.log(`(${this.modulo()}, ${this.argumento()})`);
 }
                     </code></pre>
                     <p>Este método existe solamente dentro de <code>c1</code>.</p>
