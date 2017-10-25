@@ -20,7 +20,7 @@ let pares = a.filter(n => n % 2 === 0);
 
 console.log(dobles); // [2, 6, 10, 4, 2]
 
-console.log(pares); // [2, 6, 10, 4, 2]
+console.log(pares); // [2, 4]
 
 let b = [2, 6, 9, 1];
 let final = b.reduce((acum, n) => 2 * acum + n, 7);
