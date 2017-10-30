@@ -1,0 +1,2192 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 4 - Node.js</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 4</div>
+                <h1 style="height:3em;position:relative;top:0.3em">Javascript en el servidor: Node.js</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Introducción</h2>
+                <p>Node.js (o simplemente Node) es un entorno de ejecución que permite ejecutar <strong>Javascript</strong> fuera del navegador.</p>
+                <p><a href="https://nodejs.org/">https://nodejs.org/</a></p>
+                <p>Se distribuye bajo una <a href="https://es.wikipedia.org/wiki/Licencia_MIT">licencia MIT</a>.</p>
+                <p class="fragment">Principalmente dirigido a servidores web, pero puede utilizarse para implementar cualquier tipo de aplicación.</p>
+                <p class="fragment">En este curso utilizaremos Node para implementar la funcionalidad del <strong>lado del servidor</strong> en las aplicaciones web.</p>
+            </section>
+
+            <section>
+                <h3>Versiones</h3>
+                <ul>
+                    <li><strong>v6.11.4 LTS</strong>, que utilizaremos en este curso.</li>
+                    <li><strong>v8.7.0</strong>, que es la versión más reciente.</li>
+                </ul>
+                <p>LTS = <em>Long Term Support</em></p>
+                <p>Las versiones LTS tienen suporte garantizado durante 18 meses a partir del momento en el que se convierten en LTS.</p>
+                <p>Las versiones 8.x.x rompen la compatibilidad con las 6.x.x. Algunos programas escritos en Node 6 pueden requerir modificaciones para ejecutarse bajo Node 8.</p>
+            </section>
+
+            <section>
+                <h3>Instalación</h3>
+                <p>Puede descargarse desde:</p>
+                <p><a href="https://nodejs.org/en/download/releases/">https://nodejs.org/en/download/releases/</a></p>
+                <ul>
+                    <li class="fragment">Las versiones para Windows y Mac incluyen un instalador.</li>
+                    <li class="fragment">Desde GNU/Linux se puede:
+                        <ul>
+                            <li>Descargar los binarios desde la URL anterior.</li>
+                            <li>Utilizar el gestor de paquetes de la distribución.</li>
+                            <li>Utilizar <strong>nvm</strong> (<a href="http://nvm.sh">http://nvm.sh</a>), que permite mantener varias versiones de Node en un mismo sistema.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Ejecución de un script</h3>
+                    <p>Basta con teclear:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# node <em>nombre_script.js</em>
+                </code></pre>
+                    <div class="fragment">
+                        <p>Si se desea ejecutar el intérprete (REPL):</p>
+                        <pre><code data-trim data-noescape class="no-highlight">
+# node
+                </code></pre>
+                    </div>
+                    <div class="fragment">
+                        <p>REPL = <em>Read-Eval-Print Loop</em></p>
+                        <p>El intérprete permite evaluar las expresiones Node que se introduzcan por teclado.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Ejemplo de sesión con el intérprete</h4>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# <span class="hl">node</span>
+> <span style="color:#720">5 + 6</span>
+11
+> <span style="color:#720">var x = 4 + 5</span>
+undefined
+> <span style="color:#720">console.log("Hola");</span>
+Hola
+undefined
+> <span style="color:#720">x</span>
+9
+> <span style="color:#720">function suma(x,y) {</span>
+..... <span style="color:#720">return x + y;</span>
+..... <span style="color:#720">}</span>
+undefined
+> <span style="color:#720">suma(4, 5)</span>
+9
+> <span style="color:#720">.exit</span>
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Comandos del intérprete</h4>
+                    <ul>
+                        <li>
+                            <code>.exit</code><br> Sale del intérprete.
+                        </li>
+                        <li>
+                            <code>.load <em>script.js</em></code><br> Ejecuta las sentencias del fichero dado.
+                        </li>
+                        <li>
+                            <code>.save <em>script.js</em></code><br> Guarda todas las expresiones evaluadas en un fichero.
+                        </li>
+                        <li>
+                            <code>.break</code><br> Cancelar introducción de expresión actual. Útil cuando se queda algún paréntesis abierto en la entrada.
+                        </li>
+                    </ul>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h3>Proyectos Node</h3>
+                    <p>
+                        El uso del ejecutable <code>node</code> para proyectos grandes resulta algo tediosa, porque estos requieren, entre otras cosas:
+                    </p>
+                    <ul>
+                        <li>Gestión de dependencias (librerías externas).</li>
+                        <li>Arranque y parada del sistema.</li>
+                    </ul>
+                    <div class="fragment">
+                        <h4 style="margin-top: 30px">Herramientas para gestionar proyectos</h4>
+                        <ul style="width:75%">
+                            <li>Desde la línea de comandos: <code>npm</code>.</li>
+                            <li>Desde un IDE: <em>Netbeans</em>.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>NPM (Node Package Manager)</h4>
+                    <p>
+                        Es una herramienta que se incluye con la distribución de Node. Permite:
+                    </p>
+                    <ul>
+                        <li>Crear proyectos vacíos.</li>
+                        <li>Gestionar las librerías de las que hace uso un proyecto, consultando una base de datos pública (<a href="https://registry.npmjs.org/">NPM Registry</a>) que indica desde dónde descargarlas.</li>
+                        <li>Gestionar <em>scripts</em>: arranque del sistema, parada, ejecución de tests, etc.</li>
+                    </ul>
+                    <p>
+                        Más información: <a href="https://www.npmjs.com/">https://www.npmjs.com/</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h4>Creación de un proyecto con <code>npm</code></h4>
+                    <p>Ejecutar desde la línea de comandos:</p>
+                    <pre><code data-trim class="no-highlight">
+# npm init
+                </code></pre>
+                    <p>Se solicitará información sobre los datos del proyecto:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+...
+
+name: (project-test) <span class="hl" style="color:#20A">miproyecto</span>
+version: (1.0.0) <span class="hl" style="color:#20A">&#x21b2; (Pulsar intro)</span>
+description: <span class="hl" style="color:#20A">Esto es un proyecto de prueba</span>
+entry point: (index.js) <span class="hl" style="color:#20A">app.js</span>
+test command: <span class="hl" style="color:#20A">&#x21b2;</span>
+git repository: <span class="hl" style="color:#20A">&#x21b2;</span>
+keywords: <span class="hl" style="color:#20A">node proyecto aw prueba</span>
+author: <span class="hl" style="color:#20A">Manuel Montenegro</span>
+license: (ISC) <span class="hl" style="color:#20A">MIT</span>
+About to write to /home/manuel/Docencia/AW/Pruebas/project-test
+/package.json:
+...
+Is this ok? (yes) <span class="hl" style="color:#20A">yes</span>
+
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Se creará un fichero <code>package.json</code> con el siguiente contenido:</p>
+                    <pre><code data-trim class="json">
+{
+  "name": "miproyecto",
+  "version": "1.0.0",
+  "description": "Esto es un proyecto de prueba",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "proyecto",
+    "aw",
+    "prueba"
+  ],
+  "author": "Manuel Montenegro",
+  "license": "MIT"
+}
+                </code></pre>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            Atributo <code>scripts</code>: permite añadir comandos para arrancar el programa, detenerlo, etc.<br> Por ejemplo, podemos añadir:
+                            <pre><code data-trim data-noescape class="json">
+...
+  "scripts": {
+    <span class="hl">"test": "mocha",</span>
+    <span class="hl">"start": "node app.js"</span>
+  }, 
+...
+                        </code></pre> para poder arrancar el sistema mediante
+                            <pre><code data-trim class="no-highlight">
+# npm start                        
+                        </code></pre> o ejecutar los test mediante
+                            <pre><code data-trim class="no-highlight">
+# npm test
+                        </code></pre>
+
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Si no se introduce un nombre para repositorio Git, es posible declarar el paquete como privado añadiendo:</p>
+                    <pre><code data-trim data-noescape class="json">
+{ 
+  ...
+  "author": "Manuel Montenegro",
+  "license": "MIT",
+  <span class="hl">"private": true</span>
+}
+                </code></pre>
+                    <p>De este modo evitaremos <em>warnings</em> sobre la ausencia de un repositorio.</p>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h3>Uso de Visual Studio Code</h3>
+                    <p><a href="https://code.visualstudio.com/">https://code.visualstudio.com</a></p>
+                    <p>Es un IDE multiplataforma con licencia GPL.</p>
+                    <p>Incorpora herramientas para la edición de código en Javascript y la gestión de proyectos en Node.</p>
+                </section>
+                
+                <section>
+                    <img src="images/04/VSCode.png" width="80%" class="noborder">
+                </section>
+                
+                <section>
+                    <p>VS Code se apoya en <code>npm</code> para gestionar los proyectos Node.</p>
+                    <p>Basta con abrir la carpeta donde se encuentre el fichero <code>package.json</code> de nuestro proyecto Node.</p>
+                    <p><em>Archivo &rarr; Abrir carpeta...</em> (Ctrl+K  Ctrl+O)</p>
+                    <img src="images/04/VSCode2.png" width="60%" class="noborder">
+                </section>
+                
+                <section>
+                    <p>Podemos ejecutar el proyecto y los tests mediante la opción <em>Tareas &rarr; Ejecutar tarea</em>, o bien introduciendo en la paleta de comandos (<em>Ctrl+Shift+P</em>) la orden <code>task</code> seguida del nombre de la tarea a ejecutar:</p>
+                    <img src="images/04/VSCode3.png" width="80%" class="noborder">
+                </section>
+                
+                <section>
+                    <p>VS Code incluye un depurador de Javascript.</p>
+                    <p>Introducimos puntos de ruptura utilizando el margen izquierdo del editor.</p>
+                    <img src="images/04/VSCode4.png" width="80%" class="noborder">
+                    <p>Después utilizamos la opción del menú <em>Depurar &rarr; Iniciar depuración</em> (F5)</p>
+                </section>
+                
+                <section>
+                    <img src="images/04/VSCode5.png" width="80%" class="noborder">
+                </section>
+            </section>
+
+            <section>
+
+                <section>
+                    <h3>Uso de Netbeans</h3>
+                    <p>Netbeans dispone un <em>plugin</em> para Node.</p>
+                    <p>Se requiere Netbeans 8.1 o versión posterior.</p>
+                    <p>Al descargarlo de la página web <a href="https://netbeans.org">https://netbeans.org</a> es necesario seleccionar la versión <em>HTML5/Javascript</em> o <em>All</em>.</p>
+                </section>
+
+                <section>
+                    <img src="images/04/NetbeansDownload.png" style="width:80%">
+                </section>
+
+
+                <section>
+                    <h4>Configuración de Netbeans</h4>
+                    <p>Para utilizar el <em>plugin</em> de Netbeans es necesario indicar el directorio de los ejecutables de Node, NPM, etc. </p>
+                    <p>Menú <em>Tools</em> &rarr; <em>Options</em> &rarr; Pestaña <em>HTML/JS</em> &rarr; Pestaña <em>Node</em></p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CSh2Whhcnms" frameborder="0" allowfullscreen></iframe>
+                </section>
+
+                <section>
+                    <img src="images/04/NetbeansOptions.png" style="width:90%">
+                </section>
+
+                <section>
+                    <h4>Crear un proyecto en Netbeans</h4>
+                    <p><em>File</em> &rarr; <em>New Project...</em></p>
+                    <p>Seleccionar categoría <em>HTML5/Javascript</em> y tipo de aplicación <em>Node.js application</em>.</p>
+                    <img src="images/04/NewProject.png" style="width:50%">
+                </section>
+
+                <section>
+                    <p>Especificar nombre de proyecto y pulsar <em>Next &gt;</em></p>
+                    <img src="images/04/ProjectName.png" style="width:80%">
+                </section>
+
+                <section>
+                    <p>Aceptar opciones por defecto y pulsar <em>Finish</em></p>
+                    <img src="images/04/ProjectOptions.png" style="width:80%">
+                </section>
+
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline current">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+
+
+            <section>
+                <h2>Módulos en Node</h2>
+                <p>Existen tres tipos de módulos:</p>
+                <ol>
+                    <li class="fragment">Módulos <strong>basados en ficheros</strong>.<br> Forman parte de un proyecto, pero no están pensados para ser reutilizados como librerías.
+                    </li>
+                    <li class="fragment">Módulos <strong>core</strong>.<br> Vienen incluidos con Node. Proporcionan operaciones básicas (ficheros, servidores web, sistema operativo, etc.).
+                    </li>
+                    <li class="fragment">Módulos de tipo <strong>paquete</strong>.<br> Librerías externas, gestionadas por <em>npm</em>.
+                    </li>
+
+                </ol>
+
+            </section>
+
+            <section>
+                <h3>Crear un módulo de fichero con una única función</h3>
+                <p>Se crea un fichero Javascript con la función a definir y ésta se asigna a la variable <code>module.exports</code>:</p>
+                <pre><code data-trim data-noescape class="javascript">
+function fibAux(n) {
+    if (n === 0) {
+        return 0;
+    } else if (n === 1) {
+        return 1;
+    } else {
+        return fib(n-1) + fib(n-2);
+    }
+}
+
+function fib(n) {
+    console.assert(typeof(n) === "number", `${n} is not a number`);
+    return fibAux(n);
+}
+
+<span class="hl">module.exports = fib;</span>
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Suponemos que el código anterior está contenido en un fichero <code>moduloFib.js</code>.</p>
+                <p>Ahora hacemos uso de la función <code>fib</code> desde otro fichero:</p>
+                <pre><code data-trim data-noescape class="javascript">
+// testModules.js
+// --------------
+
+var fib = require("./moduloFib.js");
+
+console.log(fib(10));                
+                </code></pre>
+                <div class="fragment">
+                    <p>Imprime:</p>
+                    <pre>55</pre>
+                </div>
+            </section>
+
+            <section>
+                <div style="background-color:#B0F0B0; padding:10px 10px 25px  15px">
+                    <p>La función <code>require</code>:</p>
+                    <ol>
+                        <li>Ejecuta el script contenido en el fichero pasado como parámetro.</li>
+                        <li>Devuelve el objeto asignado a <code>module.exports</code> (en este caso, la función <code>fib</code>)</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section>
+                <p>El objeto devuelto por <code>require</code> se guarda en una variable que no ha de coincidir necesariamente con el nombre de la función exportada.</p>
+                <pre><code data-trim data-noescape class="javascript">
+var <span class="hl">myFib</span> = require("./moduloFib.js");
+
+console.log(<span class="hl">myFib</span>(10));                
+                </code></pre>
+                <div class="fragment">
+                    <p>Esto es útil para prevenir conflictos de nombres entre los distintos módulos. Supongamos otro módulo <code>otroModuloFib.js</code> que también exporta una función <code>fib</code>:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var <span class="hl">myFib</span> = require("./moduloFib.js");
+var <span class="hl">otroFib</span> = require("./otroModuloFib.js");
+
+console.log(myFib(10));
+console.log(otroFib(10));
+                </code></pre>
+                </div>
+
+            </section>
+
+            <section>
+                <h3>Exportar más de una función</h3>
+                <p>
+                    Hasta ahora hemos asignado una función a la variable <code>module.exports</code>.
+                </p>
+                <p>Pero puede asignarse cualquier otro tipo de valor: enteros, arrays, objetos, etc.</p>
+                <p>Lo más frecuente es que un módulo quiera exportar varias funciones. Para ello se exporta un único <strong>objeto</strong> que contenga todas las funciones a exportar. </p>
+            </section>
+
+            <section>
+                <p>Ejemplo: <code>geometria.js</code></p>
+                <pre><code data-trim class="javascript">
+function areaCuadrado(lado) {
+    return lado * lado;
+}
+
+function areaCirculo(radio) {
+    return Math.PI * radio * radio;
+}
+
+function perimetroCuadrado(lado) {
+    return 4 * lado;
+}
+
+function perimetroCirculo(radio) {
+    return 2 * Math.PI * radio;
+}
+
+module.exports = {
+    areaCuadrado: areaCuadrado,
+    areaCirculo: areaCirculo,
+    perimetroCuadrado: perimetroCuadrado,
+    perimetroCirculo: perimetroCirculo
+}                
+                </code></pre>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+...
+module.exports = {
+    areaCuadrado: areaCuadrado,
+    areaCirculo: areaCirculo,
+    perimetroCuadrado: perimetroCuadrado,
+    perimetroCirculo: perimetroCirculo
+}                
+                </code></pre>
+                <p>El objeto exportado contiene cuatro atributos, cada uno asociado a su función correspondiente.</p>
+                <p>Los nombres de estos atributos serán los que se utilicen cuando se haga uso de este módulo.</p>
+            </section>
+
+            <section>
+                <p>Ejemplo de uso:</p>
+                <pre><code data-trim data-noescape class="javascript">
+var <span class="hl">geometria</span> = require("./geometria.js");
+
+console.log(<span class="hl">geometria</span>.areaCuadrado(10));
+console.log(<span class="hl">geometria</span>.areaCirculo(10));                
+                </code></pre>
+                <div class="fragment">
+                    <p>De nuevo, el nombre de la variable devuelta por el <code>require</code> puede ser cualquiera:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var <span class="hl">g</span> = require("./geometria.js");
+
+console.log(<span class="hl">g</span>.areaCuadrado(10));
+console.log(<span class="hl">g</span>.areaCirculo(10));             
+                </code></pre>
+                </div>
+                <p class="fragment">Aunque por convenio suele utilizarse el nombre del módulo (es decir, <code>geometria</code>)</p>
+            </section>
+
+            <section>
+                <p>Otra posible forma de definir un módulo: definir directamente las funciones en el objeto asignado a <code>module.exports</code>.</p>
+                <pre><code data-trim class="javascript">
+module.exports = {
+    areaCuadrado: function(lado) {
+        return lado * lado;
+    },
+
+    areaCirculo: function(radio) {
+        return Math.PI * radio * radio;
+    },
+
+    perimetroCuadrado: function(lado) {
+        return 4 * lado;
+    },
+    
+    perimetroCirculo: function(radio) {
+        return 2 * Math.PI * radio;
+    }
+}                
+                </code></pre>
+            </section>
+
+
+            <section>
+                <p>Lo que no se exporte dentro de un módulo se considera privado al mismo. Esto nos permite modificar la implementación sin alterar la interfaz.</p>
+                <pre><code data-trim class="javascript">
+// moduloFib.js
+// ------------
+
+var PHI = (1 + Math.sqrt(5)) / 2;
+
+// Cambio la función fibAux por esta:
+function fibMasEficiente(n) {
+    var p1 = Math.pow(PHI, n);
+    var p2 = Math.pow(1 - PHI, n);
+    return Math.round((p1 - p2) / Math.sqrt(5));
+}
+
+function fib(n) {
+    console.assert(typeof(n) === "number",
+        `fib: ${n} is not a number`);
+    return fibMasEficiente(n);
+}
+
+module.exports = fib;                
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Importante</h4>
+                <p>A la hora de importar un módulo de tipo fichero mediante <code>require</code>, es necesario indicar el <strong>path</strong> del fichero que se importa, <strong>aunque se encuentre en el mismo directorio</strong>.</p>
+                <pre><code data-trim data-noescape class="javascript">
+// Correcto:
+var geometria = require("<span class="hl">./</span>geometria.js");
+
+// Correcto:
+var geometria = require("<span class="hl">./aw/librerias/</span>geometria.js");
+
+// Correcto:
+var geometria = require("<span class="hl">../</span>geometria.js");
+
+// Incorrecto:
+var geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");
+                </code></pre>
+
+                <div class="fragment">
+                    <p>No obstante, puede omitirse la extensión <code>.js</code></p>
+                    <pre><code data-trim class="javascript">
+// Correcto:
+var geometria = require("./geometria");
+                </code></pre>
+                </div>
+            </section>
+
+            <section>
+                <pre><code data-trim data-noescape class="javascript">
+// Incorrecto:
+var geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");                
+                </code></pre>
+                <p>Si no se especifica un <em>path</em> Node entiende que se quiere importar un módulo de otro tipo:</p>
+                <ul>
+                    <li>Módulo core.</li>
+                    <li>Módulo de tipo paquete.</li>
+                </ul>
+            </section>
+
+
+            <section>
+                <h3>Módulos Core</h3>
+                <p>Forman parte de la distribución de Node.</p>
+                <p>También se importan mediante <code>require</code>, pero sin indicar un path relativo.</p>
+                <pre><code data-trim class="javascript">
+var os = require("os");
+console.log(`Nombre del host: ${os.hostname()}`);
+console.log(`Directorio personal: ${os.homedir()}`);
+
+var util = require("util");
+var mensaje = util.format("Tienes %d años", 45);
+                </code></pre>
+                <p>Nombres de módulos core: <code>os</code>, <code>fs</code>, <code>path</code>, <code>http</code>, <code>util</code>, etc.</p>
+            </section>
+
+            <section>
+                <h3>Módulos de tipo paquete</h3>
+                <p>Son módulos pensados para ser reutilizados e incorporados a otros proyectos.</p>
+                <p>Se instalan dentro la propia carpeta del proyecto, en una subcarpeta llamada <code>node_modules</code>.</p>
+                <p>La información de la mayoría de ellos se encuentra en una base de datos pública: <em>NPM Registry</em>.</p>
+                <p>Se importan con <code>require</code> y, al igual que los módulos core, no se indica el path relativo.</p>
+            </section>
+
+            <section>
+                <h3>Búsqueda de un módulo de tipo paquete</h3>
+                <pre><code data-trim class="javascript">
+var foo = require("foo");
+                </code></pre>
+                <div class="fragment">
+                    <p>Se busca <code>foo</code> en los siguientes directorios:</p>
+                    <ul>
+                        <li><code>node_modules/foo.js</code></li>
+                        <li><code>../node_modules/foo.js</code></li>
+                        <li><code>../../node_modules/foo.js</code></li>
+                        <li><code>../../../node_modules/foo.js</code></li>
+                        <li>y así sucesivamente, hasta llegar al directorio raíz</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <p>Por ejemplo, supongamos que en el fichero <code>/home/manuel/aw/ejemplo.js</code><br>buscamos el siguiente paquete:</p>
+                <pre><code data-trim class="javascript">
+var mimodulo = require("mimodulo");
+                </code></pre>
+                <div class="fragment">
+                    <p>Se buscará en los siguientes directorios:</p>
+                    <ul>
+                        <li class="fragment"><code>/home/manuel/aw/node_modules/mimodulo.js</code></li>
+                        <li class="fragment"><code>/home/manuel/node_modules/mimodulo.js</code></li>
+                        <li class="fragment"><code>/home/node_modules/mimodulo.js</code></li>
+                        <li class="fragment"><code>/node_modules/mimodulo.js</code></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h3>Paquetes con varios módulos</h3>
+                <p>Un paquete puede contener más de un fichero <code>.js</code></p>
+                <p>En este caso han de agruparse todos los <code>.js</code> en la misma carpeta, y guardar en esta carpeta un módulo <code>index.js</code> que exporte las funciones necesarias de cada uno de los módulos del paquete.</p>
+                <p>Para importar este paquete mediante <code>require</code> se debe indicar el nombre de la carpeta.</p>
+            </section>
+
+            <section>
+                <p>Partimos de esta estructura de directorios:</p>
+                <p><img src="images/04/FolderStructure.svg" style="border:none;width:30%;box-shadow:none"></p>
+            </section>
+
+            <section>
+                <p style="float:left;width:30%"><img src="images/04/FolderStructure.svg" style="border:none;width:100%;box-shadow:none"></p>
+                <div style="width:70%;float:right;">
+                    <p><code>fib.js</code></p>
+                    <pre><code data-trim class="javascript">
+"use strict";
+
+function fib(n) { ... }
+
+module.exports = fib;                    
+                    </code></pre>
+                    <p><code>fact.js</code></p>
+                    <pre><code data-trim class="javascript">
+"use strict";
+
+function fact(n) { ... }
+
+module.exports = fact;
+                    </code></pre>
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+
+            <section>
+                <p style="float:left;width:30%"><img src="images/04/FolderStructure.svg" style="border:none;width:100%;box-shadow:none"></p>
+                <div style="width:70%;float:right;">
+                    <p><code>index.js</code></p>
+                    <pre><code data-trim class="javascript">
+"use strict";
+
+module.exports = {
+    fib: require("./fib"),
+    fact: require("./fact")
+}
+                    </code></pre>
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+
+            <section>
+                <p style="float:left;width:30%"><img src="images/04/FolderStructure.svg" style="border:none;width:100%;box-shadow:none"></p>
+                <div style="width:70%;float:right;">
+                    <p><code>ejemplo.js</code></p>
+                    <pre><code data-trim data-noescape class="javascript">
+"use strict";
+
+<span class="hl">var math = require("math");</span>
+
+console.log(`fib(6) = ${math.fib(6)}`);
+console.log(`fact(6) = ${math.fact(6)}`);                    </code></pre>
+                </div>
+                <p style="clear:both">Resultado:</p>
+                <pre><code data-trim data-noescape class="no-highlight">
+$ <span class="hl">node ejemplo.js</span>
+fib(6) = 8
+fact(6) = 720
+                </code></pre>
+            </section>
+
+
+            <section>
+                <h3>Árbol de dependencias</h3>
+                <p>A menudo, la implementación de un proyecto Node requiere la instalación de unos determinados paquetes.</p>
+                <p class="fragment">Cada uno de estos últimos pueden requerir la instalación de otros paquetes que, a su vez, requieren de otros paquetes.</p>
+                <p class="fragment">Cuando la presencia del paquete X es un requisito para el funcionamiento del paquete Y, decimos que <strong>Y depende de X</strong>.</p>
+                <p class="fragment">La relación de dependencia entre paquetes es transitiva, de modo que se tiene un <strong>árbol de dependencias</strong>.</p>
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <img src="images/04/Depende.svg" style="width:90%;border:none;box-shadow:none">
+            </section>
+
+            <section>
+                <h3>Instalar dependencias con <code>npm</code></h3>
+                <p>La herramienta <code>npm</code> permite gestionar las dependencias de un proyecto. De hecho, <code>npm</code> fue inicialmente concebido como un instalador de paquetes.</p>
+                <p>Esta herramienta puede descargar paquetes desde un repositorio, e incorporarlos en nuestro proyecto. <a href="https://www.npmjs.com/">https://www.npmjs.com/</a></p>
+            </section>
+
+            <section>
+                <p>Para descargar e instalar un paquete en un proyecto, ejecutar lo siguiente desde el directorio raíz del proyecto:</p>
+                <pre><code data-trim data-noescape class="no-highlight">
+# npm install <em>nombre_paquete</em> 
+                </code></pre>
+                <div class="fragment">
+                    <p>Por ejemplo, para incorporar el paquete <code>underscore</code> en nuestro proyecto:</p>
+                    <pre><code data-trim class="no-highlight">
+# npm install underscore
+                </code></pre>
+                </div>
+                <p class="fragment">Descargará la versión más reciente del paquete y la instalará bajo la carpeta <code>node_modules</code> del proyecto (creándola si es necesario)</p>
+            </section>
+
+            <section>
+                <p>El comando <code>npm install</code> no solo instala el paquete especificado, sino también sus dependencias.</p>
+                <div class="fragment">
+                    <p>Por ejemplo al instalar <code>express</code>:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# npm install express
+                </code></pre>
+                    <p>Se instala el paquete <code>express</code> y todo su árbol de dependencias bajo la carpeta <code>node_modules</code>:</p>
+                    <pre><code data-trim class="no-highlight" style="background:#F0F0F0;color:blue">
+node_modules
+├── express
+├── accepts
+├── array-flatten
+├── content-disposition
+├── content-type
+├── cookie
+...                
+                </code></pre>
+                </div>
+            </section>
+
+            <section>
+                <h4>Incluir dependencias en <code>package.json</code></h4>
+                <p>Podemos (y es recomendable) especificar las dependencias de un proyecto en su fichero <code>package.json</code> mediante la propiedad <code>dependencies</code>:</p>
+                <pre><code data-trim data-noescape class="json">
+{
+  "name": "mi_proyecto",
+  "version": "1.0.0",
+  "description": "Prueba de uso de paquetes",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "dependencies": {
+    <span class="hl">"underscore": "^1.8.3"</span>,
+    <span class="hl">"express": "^4.14.0"</span>
+  },
+  "private": true
+}                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Por defecto, <code>npm</code> no modifica el fichero <code>package.json</code> tras añadir un paquete a nuestro proyecto.</p>
+                <p>No obstante, al instalar un paquete podemos indicar a <code>npm</code> que añada la dependencia correspondiente a <code>package.json</code>. Esto se hace mediante la opción <code>--save</code>.</p>
+                <pre><code data-trim class="no-highlight">
+# npm install underscore --save
+# npm install express --save
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Instalación global de paquetes</h4>
+                <p>A veces un paquete incorpora ficheros ejecutables diseñados para su uso en cualquier proyecto del sistema (<code>mocha</code>, <code>nodemon</code>, <code>grunt</code>, <code>jshint</code>, etc.)</p>
+                <p>Para poder ser invocados desde cualquier proyecto, estos ejeutables han de instalarse de manera global.</p>
+                <p>La instalación de un paquete de forma global puede requerir <strong>permisos de administrador</strong> en el sistema.</p>
+            </section>
+
+            <section>
+                <p>Para instalar un paquete de manera global se ha de especificar la opción <code>-g</code> a <code>npm</code>.</p>
+                <p>Por ejemplo:</p>
+                <pre><code data-trim class="no-highlight">
+# npm install -g jshint                
+                </code></pre>
+                <p>Además del paquete correspondiente, instalará el ejecutable <code>jshint</code> en la carpeta <code>${prefix}/bin</code>.</p>
+            </section>
+
+            <section>
+                <h3>Distribución de un proyecto</h3>
+                <p>
+                    Cuando se quiere distribuir un proyecto o publicar en un repositorio (p.ej. <em>GitHub</em>), <strong>no es necesario</strong> incluir el directorio
+                    <code>node_modules</code> con las dependencias.
+                </p>
+                <p>
+                    Basta con indicar las dependencias en el <code>package.json</code>, y distribuir este último junto con el proyecto.
+                </p>
+                <div class="fragment">
+                    <p>Mediante el comando:</p>
+                    <pre><code data-trim class="no-highlight">
+# npm install
+                </code></pre>
+                    <p>se reconstruirá la carpeta <code>node_modules</code> a partir de la información contenida en <code>package.json</code>, descargando los paquetes que sean necesarios.</p>
+                </div>
+            </section>
+
+            <section>
+                <h3>Otras opciones de <code>npm</code></h3>
+                <ul>
+                    <li>
+                        <code>npm ls</code><br> Muestra el árbol de dependencias del proyecto actual.
+                    </li>
+                    <li>
+                        <code>npm search <em>term</em></code><br> Busca los paquetes del repositorio <em>node</em> cuyo nombre contenga <code>term</code>.
+                    </li>
+                    <li>
+                        <code>npm update <em>nombre_paquete</em></code><br> Actualiza un paquete a la útima versión disponible.
+                    </li>
+                    <li>
+                        <code>npm dedupe</code><br> Reorganiza la carpeta <code>node_modules</code> para evitar duplicidades.
+                    </li>
+                    <li>
+                        <code>npm publish</code><br> Sube los datos del proyecto actual en el <em>NPM Registry</em>.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Ejemplo: listar árbol de dependencias</h4>
+                <pre><code data-trim data-noescape class="no-highlight">
+# <span class="hl">npm ls</span>
+mimodulo@1.0.0
+├─┬ express@4.14.0
+│ ├─┬ accepts@1.3.3
+│ │ ├─┬ mime-types@2.1.12
+│ │ │ └── mime-db@1.24.0
+│ │ └── negotiator@0.6.1
+│ ├── array-flatten@1.1.1
+│ ├── content-disposition@0.5.1
+│ ├── content-type@1.0.2
+│ ├── cookie@0.3.1
+│ ├── cookie-signature@1.0.6
+│ ├─┬ debug@2.2.0
+│ │ └── ms@0.7.1
+│ ├── depd@1.1.0
+│ ├── encodeurl@1.0.1
+│ ├── escape-html@1.0.3
+│ ...
+└── underscore@1.8.3
+                </code></pre>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline current">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Modelo asíncrono</h2>
+                <p>Node utiliza un modelo de entradas y salidas <strong>asíncronas</strong> con el fin de permitir el desarrollo de aplicaciones altamente concurrentes.</p>
+                <p>Este modelo resulta muy útil en un contexto de aplicaciones web, donde un servidor web ha de procesar miles de peticiones por segundo.</p>
+            </section>
+
+            <section>
+                <h3>Modelos síncrono vs asíncrono</h3>
+                <p>
+                    Cuando ejecutamos una operación <strong>síncrona</strong>, la ejecución del programa <strong>se detiene</strong> hasta que dicha operación haya terminado.
+                </p>
+                <p>Ej: Lectura de fichero síncrona</p>
+                <img src="images/04/Sincrona.svg" width="80%" style="border:none;box-shadow:none">
+            </section>
+
+            <section>
+                <p>
+                    Cuando ejecutamos una operación <strong>asíncrona</strong>, la ejecución del programa <strong>continúa</strong>, mientras la operación se realiza de manera &laquo;<strong>concurrente</strong>&raquo;.
+                </p>
+                <p>Ej: Lectura de fichero asíncrona</p>
+                <img src="images/04/Asincrona.svg" width="80%" style="border:none;box-shadow:none">
+            </section>
+
+            <section>
+                <h3>Un ejemplo: lectura de fichero</h3>
+                <p>El módulo core <code>fs</code> proporciona operaciones para manejar ficheros. Dentro de este módulo hay dos funciones para leer el contenido de un fichero:</p>
+                <ul>
+                    <li><code>readFileSync(fichero, opcs)</code><br> Lectura síncrona.</li>
+                    <li><code>readFile(fichero, opcs, callback)</code><br> Lectura asíncrona.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Lectura síncrona</h4>
+                <pre><code data-trim class="javascript">
+"use strict";
+
+var fs = require("fs");
+
+try {
+    var contenido = fs.readFileSync("FichTexto.txt", 
+                                    { encoding: "utf-8" });
+    console.log("Fichero leído correctamente:");
+    console.log(contenido);
+} catch (err) {
+    console.log("Se ha producido un error:");
+    console.log(err.message);
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Las operaciones síncronas:</p>
+                <div style="background:#EDF; padding:20px 2px 20px 20px">
+                    <ul>
+                        <li>Bloquean la ejecución del programa mientras se realizan.</li>
+                        <li><strong>Devuelven</strong> el resultado de la operación.</li>
+                        <li>En caso de error, lanzan <strong>excepciones</strong>.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h4>Lectura asíncrona</h4>
+                <img src="images/04/Asincrona.svg" width="80%" style="border:none;box-shadow:none">
+                <p>Si la operación de lectura asíncrona se realiza de manera ajena al hilo de ejecución principal del programa, ¿cómo sabemos cuándo ha finalizado?
+                </p>
+                <p class="fragment">Mediante el uso de funciones <strong>callback</strong>.</p>
+            </section>
+
+            <section>
+                <h4>Funciones callback</h4>
+                <p style="background: #AFA; padding:20px 2px 20px 20px">Una función <strong>callback</strong> es una función definida por el programador, pero que no está pensada para ser llamada directamente por este, sino por otro componente del sistema.</p>
+            </section>
+
+            <section>
+                <h4>Funciones callback: <code>readFile</code></h4>
+                <p>La función <code>readFile</code> (módulo <code>fs</code>), además de recibir el nombre del fichero y las opciones de lectura, recibe un tercer parámetro, que es una función.</p>
+                <p>Esta función será definida por el programador.</p>
+                <p>Sin embargo, será llamada por <code>readFile</code>.</p>
+                <p>Es, por tanto, una función callback.</p>
+            </section>
+
+            <section>
+                <p>La función callback recibe dos parámetros:</p>
+                <ul>
+                    <li>Un objeto de la clase <code>Error</code>, en el caso en que la lectura haya fallado.<br>
+                        <span style="font-size:70%">Si no ha fallado, toma el valor <code>null</code>.</span>
+                    </li>
+                    <li>El contenido del fichero leído, en el caso en que se haya leído correctamente.<br>
+                        <span style="font-size:70%">Si ha fallado, toma el valor <code>undefined</code>.</span></li>
+                </ul>
+            </section>
+
+            <section>
+                <pre><code data-trim data-noescape class="javascript">
+"use strict";
+
+var fs = require("fs");
+
+fs.readFile("FichTexto.txt", { encoding:"utf-8" }, <span class="hl">ficheroLeido</span>);
+
+// Función callback
+function <span class="hl">ficheroLeido</span>(err, contenido) {
+    if (err) {
+        console.log("Se ha producido un error:");
+        console.log(err.message);
+    } else {
+        console.log("Fichero leído correctamente:");
+        console.log(contenido);
+    }
+}
+                </code></pre>
+                <p>Tras la lectura, <code>readFile</code> llamará a la función <code>ficheroLeido</code>.</p>
+            </section>
+
+            <section>
+                <p>Las funciones callback suelen definirse directamente como funciones anónimas en la llamada a <code>readFile</code>.</p>
+                <pre><code data-trim class="javascript">
+"use strict";
+
+var fs = require("fs");
+
+fs.readFile("FichTexto.txt", 
+            { encoding: "utf-8" },
+            function(err, contenido) {
+                if (err) {
+                    console.log("Se ha producido un error:");
+                    console.log(err.message);
+                } else {
+                    console.log("Fichero leído correctamente:");
+                    console.log(contenido);
+                }        
+            }
+);                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Las operaciones de lectura asíncrona:</p>
+                <div style="background:#EDF; padding:20px 2px 20px 20px">
+                    <ul>
+                        <li><strong>No bloquean</strong> la ejecución del programa.<br>
+                            <span style="font-size:60%">Porque se ejecutan de manera concurrente.</span>
+                        </li>
+                        <li><strong>No devuelven</strong> el resultado de la operación.<br>
+                            <span style="font-size:60%">El resultado de la lectura se pasa como parámetro a la función <em>callback</em>.</span>
+                        </li>
+                        <li><strong>No</strong> lanzan <strong>excepciones</strong>.<br>
+                            <span style="font-size:60%">En caso de error, es la función <em>callback</em> quien recibe la excepción como primer parámetro.</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section>
+                <h3>Error frecuente</h3>
+                <p>¡Cuidado con el siguiente código!</p>
+                <pre><code data-trim class="javascript">
+var contenidoFichero;
+
+fs.readFile("FichTexto.txt", 
+            { encoding: "utf-8" },
+            function(err, contenido) {
+                if (!err) {
+                    // Asignamos el contenido a la variable
+                    // externa
+                    contenidoFichero = contenido;
+                }        
+            });
+
+console.log(contenidoFichero); // ¿Qué se imprime aquí?               
+                </code></pre>
+            </section>
+            
+            <section>
+                <p>En el mejor de los casos, la última línea se ejecutaría después de que la lectura haya finalizado.</p>
+                <img src="images/04/AsincronaBien.svg" style="width:80%; border:none">
+            </section>
+
+            <section>
+                <p>Pero también podría ejecutarse antes de que la lectura termine:</p>
+                <img src="images/04/AsincronaMal.svg" style="width:70%; border:none">
+                <p class="fragment">En este caso se imprimiría <code>undefined</code>, ya que <code>contenidoFichero</code> no habría sido inicializada en el momento de ejecutar <code>console.log</code>.</p>
+            </section>
+            
+            <section>
+                <p>Si un fragmento del programa depende del resultado de una llamada asíncrona, no debe ir tras dicha llamada:</p>
+                <pre><code data-trim data-noescape class="javascript">
+fs.readFile("fich.txt", function(err, contenido) {
+    ...
+});
+<span class="hl" style="background-color:#FBB">// hacer algo con el contenido</span>
+                            </code>
+                            </pre>
+                            <div class="fragment">
+                                Debe ir dentro de la función callback:
+                                <pre><code data-trim data-noescape class="javascript">
+fs.readFile("fich.txt", function(err, contenido) {
+    <span class="hl" style="background-color:#BFB">// hacer algo con el contenido</span>
+    ...
+});
+
+                </code></pre>
+                            </div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline current">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Módulos core</h2>
+                <ul>
+                    <li>Variables y funciones predefinidas</li>
+                    <li>Nombres de ficheros: módulo <code>path</code></li>
+                    <li>Manejo de ficheros: módulo <code>fs</code></li>
+                </ul>
+            </section>
+
+
+            <section>
+                <h3>Variables predefinidas</h3>
+                <p>Las siguientes variables son accesibles desde cualquier módulo o script, pero no desde la <em>shell</em> de Node:</p>
+                <ul>
+                    <li><code>__filename</code>: Fichero .js que se está ejecutando (incl. directorio).</li>
+                    <li><code>__dirname</code>: Directorio en el que se encuentra el fichero que se está ejecutando.</li>
+                </ul>
+
+                <pre><code data-trim class="javascript">
+// globals.js
+// ----------
+
+console.log(__dirname);
+    // &rarr; /home/manuel/AW/core-modules/
+
+console.log(__filename);
+    // &rarr; /home/manuel/AW/core-modules/globals.js
+                </code></pre>
+
+            </section>
+
+
+
+            <section>
+                <h3>Módulo <code>path</code></h3>
+                <p>Contiene funciones de utilidad para trabajar con nombres de ficheros de manera independiente del SO.</p>
+                <p>Funciones más importantes:</p>
+                <ul>
+                    <li><code>path.parse(filename)</code><br> Obtiene las distintas componentes (path, fichero, extensión, etc.)
+                    </li>
+                    <li><code>path.join(dir1, dir2, ...)</code> Concatena varios directorios utilizando el separador del sistema operativo: <code>/</code> en sistemas UNIX (Linux), <code>\</code> en Windows.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+var path = require("path");
+
+var infoFichero = path.parse(__filename);
+
+console.log(infoFichero);
+// &rarr; { root: '/',
+//     dir: '/home/manuel/AW/core-modules',
+//     base: 'paths.js',
+//     ext: '.js',
+//     name: 'paths' }
+
+var nuevoFichero = path.join(infoFichero.dir, "nuevo",
+                             infoFichero.base);
+console.log(nuevoFichero);
+// &rarr; /home/manuel/AW/core-modules/nuevo/paths.js
+                </code></pre>
+                <p>Más información: <a href="https://nodejs.org/docs/v4.6.1/api/path.html">https://nodejs.org/docs/v4.6.1/api/path.html</a></p>
+            </section>
+
+            <section>
+                <h3>Módulo <code>fs</code></h3>
+                <p>Funciones relacionadas con el sistema de ficheros.</p>
+                <ul>
+                    <li>
+                        <code>readFile(fichero, options, callback)</code><br> Lectura asíncrona de un fichero.
+                        <p style="font-size:70%">La función callback recibe como primer parámetro un objeto <code>Error</code> (si se produce error) y como segundo parámetro el contenido del fichero.</p>
+                    </li>
+                    <li>
+                        <code>writeFile(fichero, datos, options, callback)</code><br> Escritura asíncrona de un fichero.
+                        <p style="font-size:70%">La función callback recibe como primer parámetro un objeto <code>Error</code> (si se produce error).</p>
+
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+var fs = require("fs");
+
+var texto = "Nadi puede ser dichoso,\n" +
+            "señora, ni desdichado,\n" +
+            "sino que os haya mirado";
+
+fs.writeFile("Poema.txt", texto, {encoding: "utf-8"}, 
+    function(err) {
+        if (err) {
+            console.log("Error al escribir el fichero.");
+        } else {
+            console.log("Fichero escrito correctamente.");
+            fs.readFile("Poema.txt", {encoding: "utf-8"},
+                function(err, contenido)  {
+                    if (!err) {
+                        console.log(contenido);
+                    }
+                });
+        }
+    });                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Si no se indica la opción <code>encoding</code>, estas funciones trabajan con objetos de tipo <code>Buffer</code>, en lugar de cadenas. Un buffer representa una secuencia de bytes.</p>
+                <div class="fragment">
+                    <p>Esto sirve para trabajar con ficheros binarios.</p>
+                    <pre><code data-trim class="javascript">
+var fs = require("fs");
+
+fs.readFile("thymeleaf.pdf", function(err, buffer) {
+    // Obtenemos los cuatro primeros bytes
+    var mark = buffer.slice(0, 4);
+    
+    // Y los imprimimos con la codificación ASCII
+    console.log(mark.toString("ascii"));
+});                
+                </code></pre>
+                </div>
+            </section>
+
+            <section>
+                <h4>Otras funciones de <code>fs</code></h4>
+                <ul>
+                    <li>Leer y escribir de manera segmentada: <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code>.</li>
+                    <li>
+                        Manejo del sistema de ficheros: <code>mkdir</code>, <code>fstat</code>, <code>rename</code>, <code>unlink</code>, etc.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Variantes síncronas</h4>
+                <p>Son bloqueantes y (posiblemente) devuelven un resultado, en lugar de utilizar funciones callback.<code></code></p>
+                <ul>
+                    <li><code>readFileSync</code>, <code>writeFileSync</code></li>
+                    <li><code>openSync</code>, <code>closeSync</code>, <code>readSync</code>, <code>writeSync</code>.</li>
+                    <li><code>mkdirSync</code>, <code>fstatSync</code>, <code>renameSync</code>, etc.</li>
+                </ul>
+                <div style="background-color:#FBB; margin-top:1em" class="fragment">
+                    Prohibido utilizarlas en las prácticas
+                </div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline current">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Acceso a bases de datos</h2>
+                <p>Paquetes para conexión a un SGBD:</p>
+                <ul>
+                    <li class="fragment">Bases de datos <strong>relacionales</strong>:
+                        <ul>
+                            <li><code>mysql</code>: MySQL, MariaDB. <span class="arrow_box_left caja_codigo fragment" style="position:relative;left:20px">Este tema</span></li>
+                            <li><code>node-oracledb</code>: Oracle.</li>
+                            <li><code>sequelize</code>: ORM para MySQL.</li>
+                        </ul>
+                    </li>
+                    <li class="fragment">
+                        Bases de datos <strong>documentales</strong>:
+                        <ul>
+                            <li><code>mongodb</code>: MongoDB (JSON)</li>
+                            <li><code>mongoose</code>: ODM para MongoDB</li>
+                            <li><code>node-exist</code>: eXist-db (XML)</li>
+                            <li><code>basex</code>: BaseX (XML)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Base de datos de ejemplo</h3>
+                <p>Agenda de contactos</p>
+                <img src="images/04/TelefonosER.png" width="90%" style="border:none;box-shadow:none">
+            </section>
+
+            <section>
+                <p>Tabla <code>Contacto</code></p>
+                <img src="images/04/TelefonosContactos.png" width="60%" style="border:none;box-shadow:none">
+
+                <div style="float:left; width:45%">
+                    <p>Tabla <code>Tiene_Telefono</code></p>
+                    <img src="images/04/TelefonosTieneTelefono.png" width="50%" style="border:none;box-shadow:none">
+                </div>
+                <div style="float:right; width:45%">
+                    <p>Tabla <code>Tiene_Correo</code></p>
+                    <img src="images/04/TelefonosTieneCorreo.png" width="80%" style="border:none;box-shadow:none">
+                </div>
+
+                <div style="clear:both"></div>
+
+            </section>
+
+            <section>
+                <h4>Ejercicio</h4>
+                <p>Realizar una consulta SQL que muestre, para cada contacto, su nombre y apellidos, y el número de direcciones de correo electrónico asociadas al mismo.</p>
+            </section>
+
+
+            <section>
+                <h3>Paquete <code>mysql</code></h3>
+                <p>Instalación mediante <code>npm</code></p>
+                <pre><code data-trim class="no-highlight">
+npm install mysql --save                
+                </code></pre>
+                <div class="fragment">
+                    <p>Pasos para acceder a la BD:</p>
+                    <ol>
+                        <li>Crear e inicializar un objeto <code>Connection</code>.</li>
+                        <li>Realizar la conexión.</li>
+                        <li>Realizar consulta o modificación.</li>
+                        <li>Cerrar la conexión.</li>
+                    </ol>
+                </div>
+                <p class="fragment">Salvo la primera, todas las operaciones son <strong>asíncronas</strong>.</p>
+            </section>
+
+            <section>
+                <h4>Inicializar una conexión</h4>
+                <pre><code data-trim data-noescape class="javascript">
+var mysql = require("mysql");
+
+var conexion = mysql.createConnection({
+    host:  "localhost",
+    user:  "root",    <span class="arrow_box_left caja_codigo">Datos de acceso al SGBD</span>
+    password: "",
+    database: "miBD"  <span class="arrow_box_left caja_codigo">Nombre de la BD</span>
+});
+                </code></pre>
+                <p class="fragment">La función <code>createConnection</code> solamente configura los atributos de una conexión. La conexión propiamente dicha no se realiza hasta que se llame a <code>connect</code>.</p>
+            </section>
+
+            <section>
+                <h4>Realizar la conexión</h4>
+                <p>Método <code>connect(callback)</code></p>
+                <pre><code data-trim class="javascript">
+conexion.connect(function(err) {
+    if (err) {
+        console.log("Error al realizar la conexión: " + err);
+    } else {
+        // ... realizar consulta ...
+    }
+});
+                </code></pre>
+                <p>Con la conexión abierta ya pueden ejecutarse consultas y modificaciones mediante SQL.</p>
+            </section>
+
+            <section>
+                <h4>Ejecutar consultas</h4>
+                <p>Método <code>query(consulta, callback)</code></p>
+                <p>La función callback recibe, además del objeto error, el resultado de la consulta.</p>
+
+                <pre><code data-trim class="javascript">
+connetion.query(
+    "SELECT Nombre, Apellidos, FechaNac, Foto FROM Contactos",
+    function(err, filas) {
+        if (!err) {
+            // Recorrer y procesar las filas
+        }
+    }
+);                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>El resultado de una consulta es un array de objetos.</p>
+                <p>Cada objeto representa una fila. Los atributos de cada objeto son los nombres de las columnas sobre los que se hace el <code>SELECT</code>. Los valores asociados a cada atributo dependen del tipo de la columna correspondiente:</p>
+                <table>
+                    <tr>
+                        <th>Tipo Node</th>
+                        <th>Tipo SQL</th>
+                    </tr>
+                    <tr>
+                        <td><code>number</code></td>
+                        <td><code>INT</code>, <code>SMALLINT</code>, <code>FLOAT</code>, <code>DOUBLE</code>, ...</td>
+                    </tr>
+                    <tr>
+                        <td><code>string</code></td>
+                        <td><code>CHAR</code>, <code>VARCHAR</code>, <code>TEXT</code>, <code>ENUM</code>, ...</td>
+                    </tr>
+                    <tr>
+                        <td><code>Date</code></td>
+                        <td><code>TIMESTAMP</code>, <code>DATE</code>, <code>DATETIME</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Buffer</code></td>
+                        <td><code>BLOB</code>, <code>BINARY</code>, <code>DATETIME</code>, ...</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+conexion.query(
+    "SELECT Nombre, Apellidos FROM Contactos",
+    function(err, filas) {
+        if (!err) {
+            filas.forEach(function(fila) {
+                console.log(`${fila.Nombre} ${fila.Apellidos}`);
+            });
+            // ...
+        }
+    }
+);                
+                </code></pre>
+                <pre class="fragment"><code data-trim class="no-highlight">
+Javier Fernández Montoro
+Estela Hernández de la Fuente
+Gloria Ruiz Sánchez
+Fermín Córdoba Moreno
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Un SGBD admite un número limitado de conexiones abiertas simultáneamente.</p>
+                <p>Por tanto, conviene cerrar la conexión mediante el método <code>end()</code> una vez obtenidos los resultados de la consulta.</p>
+                <pre><code data-trim data-noescape class="javascript">
+conexion.query(
+    "SELECT Nombre, Apellidos FROM Contactos",
+    function(err, filas) {
+        if (!err) {
+            filas.forEach(function(fila) {
+                console.log(`${fila.Nombre} ${fila.Apellidos}`);
+            });
+            <span class="hl">conexion.end();</span>
+        }
+    }
+);                
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Inserciones, borrados y actualizaciones</h3>
+                <p>Al igual que en las consultas, se utiliza <code>query()</code></p>
+                <p>En estos casos, la función callback recibe un objeto con información sobre el resultado de la operación.</p>
+                <p>Atributos del objeto resultado:</p>
+                <ul>
+                    <li><code>affectedRows</code>: número de filas insertadas, actualizadas o borradas.</li>
+                    <li><code>insertId</code>: identificador de la última fila insertada, en caso de ser de tipo <code>AUTO_INCREMENT</code>.</li>
+                </ul>
+
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <pre><code data-trim class="javascript">
+conexion.connect(function(err) {
+    if (err) return;
+    var sql = "INSERT INTO Contactos(Nombre, Apellidos) "
+            + "VALUES ('Diana', 'Díaz')"
+    conexion.query(sql, function(err, resultado) {
+        if (err) {
+            console.log("Error de inserción: " + err);
+        } else {
+            // Imprime el identificador de la nueva fila
+            console.log(resultado.insertId);
+            
+            // Imprime el número de filas insertadas
+            console.log(resultado.affectedRows);
+        }
+    });
+});                
+                </code></pre>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline current">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Servidores web con Node</h2>
+                <p>Recordemos el modelo cliente-servidor aplicado a la web:</p>
+                <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+                    <defs>
+                        <style id="bx-google-fonts">
+                            @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500,700,900,100italic,300italic,400,400italic,500italic,700italic,900italic);
+                        </style>
+                    </defs>
+                    <rect x="4.588" y="7.857" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <image width="27.841" height="27.841" x="34.773" y="17.735" preserveAspectRatio="none" xlink:href="images/chrome.png"/>
+                    />
+                    <text x="25.366" y="100.704" style="font-size: 16px; word-spacing: 0px;">Cliente</text>
+                    <rect x="213.981" y="6.558" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <text x="230.863" y="100.054" style="font-size: 16px; word-spacing: 0px;">Servidor</text>
+                    <image width="28.985" height="28.769" x="34.836" y="47.291" preserveAspectRatio="none" xlink:href="images/firefox.png"/>
+                    <path d="M 200.69 31.733 L 218.714 31.21 L 223.024 36.435 L 219.106 41.92 L 200.69 42.312 L 200.69 31.733 Z" style="stroke: rgb(0, 0, 0); fill: rgb(206, 27, 27);" bx:origin="0.5 0.5" />
+                    <path d="M 189.564 48.141 Z" style="stroke: black; fill: none;" />
+                    <text x="203.586" y="39.898" style="font-size: 8px; font-family: Roboto; text-transform: none; font-weight: 700; word-spacing: 0px; fill: rgb(255, 255, 255);">80</text>
+                    <path d="M 75.198 31.71 C 75.198 31.71 96.509 14.661 143.393 13.383 C 190.277 12.105 207.753 28.726 207.753 28.7bo26" style="stroke: black; fill: none;" bx:origin="0.5 0.5" />
+                    <text x="90.771" y="9.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">GET /index.html HTTP/1.1</text>
+                    <text x="90.771" y="17.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 72.854 64.103 C 72.854 64.103 94.165 47.054 141.049 45.776 C 187.933 44.498 205.409 61.119 205.409 61.119" style="stroke: black; fill: none;" transform="matrix(-1, 0, 0, -1, 278.263002, 108.600994)" bx:origin="0.5 0.5" />
+                    <text x="110.809" y="73.691" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">HTTP/1.0 200 OK</text>
+                    <text x="110.809  " y="81.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(-0.485708, 0.874123, -0.874124, -0.485707, 307.31737, -68.032037)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="-3.223 -3.773" />
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(0.550459, -0.834863, 0.834862, 0.550459, -35.392201, 135.428704)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="0.53 0.609" />
+                </svg>
+
+            </section>
+
+            <section>
+                <p>El <strong>cliente</strong> es un navegador web.</p>
+                <p>El <strong>servidor</strong> es un programa que está escuchando en el puerto TCP 80.</p>
+                <p>Cuando el usuario introduce una URL en el cliente se envía una petición HTTP al servidor correspondiente.</p>
+                <div style="font-family:monospace;font-size:27px">
+                    <div style="background-color:rgb(145, 209, 255);text-align:left">
+                        GET /index.html HTTP/1.1
+                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:100px">Línea de petición</span>
+                    </div>
+                    <div style="background-color:rgb(255, 232, 153);text-align:left">
+                        Host: www.foo.com
+                        <br/> Accept: text/html
+                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:212px">Cabeceras</span>
+                        <br>...
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <p>El servidor analiza la petición y la responde.</p>
+                <p>En este caso, la respuesta sería:</p>
+                <div style="font-family:monospace;font-size:25px">
+                    <div style="background-color:rgb(145, 209, 255);text-align:left">
+                        HTTP/1.1 200 OK
+                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:400px">Línea de estado</span>
+                    </div>
+                    <div style="background-color:rgb(255, 232, 153);text-align:left">
+                        Date: Mon, 15 Aug 2016 14:05:30 GMT
+                        <br/> Content-Type: text/html
+                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:215px">Cabeceras de la respuesta</span>
+                        <br/>...
+                    </div>
+                    <div>
+                        <span style="color:#A0A0A0;font-style:italic"> (línea en blanco) </span>
+                    </div>
+                    <div style="background-color:rgb(236, 255, 170);text-align:left">
+                        &lt;!DOCTYPE html&gt;
+                        <br/> &lt;html lang="es"&gt;
+                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:385px">Cuerpo de la respuesta</span>
+                        <br/> &lt;head&gt;
+                        <br/> &nbsp; &lt;title&gt;...&lt;/title&gt;
+                        <br/> ...
+                    </div>
+                </div>
+                <p>Referencias: <a href="./01.html#/44">peticiones HTTP</a>, <a href="./01.html#/51">respuestas HTTP</a>.</p>
+            </section>
+
+            <section>
+                <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+                    <defs>
+                        <style id="bx-google-fonts">
+                            @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500,700,900,100italic,300italic,400,400italic,500italic,700italic,900italic);
+                        </style>
+                    </defs>
+                    <rect x="4.588" y="7.857" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <image width="27.841" height="27.841" x="34.773" y="17.735" preserveAspectRatio="none" xlink:href="images/chrome.png"/>
+                    />
+                    <text x="25.366" y="100.704" style="font-size: 16px; word-spacing: 0px;">Cliente</text>
+                    <rect x="213.981" y="6.558" width="89.601" height="101.288" style="fill: rgb(216, 216, 216);" />
+                    <text x="230.863" y="100.054" style="font-size: 16px; word-spacing: 0px;">Servidor</text>
+                    <image width="28.985" height="28.769" x="34.836" y="47.291" preserveAspectRatio="none" xlink:href="images/firefox.png"/>
+                    <path d="M 200.69 31.733 L 218.714 31.21 L 223.024 36.435 L 219.106 41.92 L 200.69 42.312 L 200.69 31.733 Z" style="stroke: rgb(0, 0, 0); fill: rgb(206, 27, 27);" bx:origin="0.5 0.5" />
+                    <path d="M 189.564 48.141 Z" style="stroke: black; fill: none;" />
+                    <text x="203.586" y="38.898" style="font-size: 6px; font-family: Roboto; text-transform: none; font-weight: 700; word-spacing: 0px; fill: rgb(255, 255, 255);">3000</text>
+                    <path d="M 75.198 31.71 C 75.198 31.71 96.509 14.661 143.393 13.383 C 190.277 12.105 207.753 28.726 207.753 28.7bo26" style="stroke: black; fill: none;" bx:origin="0.5 0.5" />
+                    <text x="90.771" y="9.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">GET /index.html HTTP/1.1</text>
+                    <text x="90.771" y="17.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 72.854 64.103 C 72.854 64.103 94.165 47.054 141.049 45.776 C 187.933 44.498 205.409 61.119 205.409 61.119" style="stroke: black; fill: none;" transform="matrix(-1, 0, 0, -1, 278.263002, 108.600994)" bx:origin="0.5 0.5" />
+                    <text x="110.809" y="73.691" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">HTTP/1.0 200 OK</text>
+                    <text x="110.809  " y="81.973" style="font-size: 8px; font-family: monospace; word-spacing: 0px;">...</text>
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(-0.485708, 0.874123, -0.874124, -0.485707, 307.31737, -68.032037)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="-3.223 -3.773" />
+                    <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(0.550459, -0.834863, 0.834862, 0.550459, -35.392201, 135.428704)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
+                        bx:origin="0.53 0.609" />
+                </svg>
+                <p>
+                    Implementaremos la funcionalidad del
+                    <strong>servidor</strong>.
+                </p>
+                <p>
+                    En la fase de desarrollo de una aplicación web se suele utilizar otro puerto distinto del 80. Utilizaremos el puerto 3000.
+                </p>
+            </section>
+
+            <section>
+                <h3>Servidores Web con Node</h3>
+                <p>El módulo core <code>http</code> implementa un servidor web.
+                </p>
+                <pre><code data-trim class="javascript">
+var http = require("http");
+                </code></pre>
+                <p>Los objetos de la clase <code>Server</code> representan servidores web, y son creados mediante la función <code>createServer</code>, que recibe una función callback:</p>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+        ...
+});
+                </code></pre>
+            </section>
+
+            <section>
+                <p>La función callback es definida por el programador, y llamada por el módulo <code>http</code> cada vez que algún cliente realiza una petición HTTP.
+                </p>
+                <p class="fragment">
+                    El parámetro <code>request</code> de esta función callback contiene un objeto de la clase <code>IncomingMessage</code>, con atributos y métodos para acceder a cada componente de la petición: método, URL, cabeceras, etc.
+                </p>
+                <p class="fragment">
+                    El parámetro <code>response</code> (clase <code>ServerResponse</code>) contiene métodos y atributos que especifican la respuesta HTTP que se devolverá al cliente.
+                </p>
+            </section>
+
+            <section>
+                <h3>El objeto <code>request</code></h3>
+                <p>Atributos más importantes de <code>request:</code></p>
+                <ul>
+                    <li><code>method</code>: método HTTP utilizado (GET, POST, PUT, etc.).</li>
+                    <li><code>url</code>: URL a la que se accede, excluyendo el nombre del servidor.</li>
+                    <li><code>headers</code>: Objeto con las cabeceras de la petición.</li>
+                </ul>
+
+                <pre class="fragment"><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    console.log(`Método: ${request.method}`);
+    console.log(`URL: ${request.url}`);
+    console.log(request.headers);
+});
+                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>La función <code>createServer</code> tan solo sirve para especificar cómo queremos que se procesen las peticiones. Esta función no arranca el servidor creado.</p>
+                <div class="fragment">
+                    <p>Para iniciar el servidor debemos utilizar el método <code>listen()</code> del servidor recién creado, indicando el puerto en el que queremos escuchar y (opcionalmente) una función callback que será llamada cuando comience la escucha.</p>
+                </div>
+            </section>
+
+            <section>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    // ...
+});
+servidor.listen(3000, function(err) {
+    if (err) {
+        console.log("Error al abrir el puerto 3000: " + err);
+    } else {
+        console.log("Servidor escuchando en el puerto 3000.");
+    }
+});
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Arrancamos el navegador e introducimos la dirección</p>
+                <pre><code data-trim class="no-highlight">
+http://localhost:3000/index.html
+                </code></pre>
+                <div class="fragment">
+                    <p>se imprime lo siguiente:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+Método: <span class="hl">GET</span>
+URL: <span class="hl">/index.html</span>
+{ host: 'localhost:3000',
+  'user-agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64;rv:49.0) 
+                 Gecko/20100101 Firefox/49.0',
+  ...
+ }                </code></pre>
+                </div>
+                <div class="fragment">
+                    <p>Si hubiésemos introducido</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+http://localhost:3000/index.html?x=25&amp;y=34
+                </code></pre>
+                </div>
+                <div class="fragment">
+                    <p>tendríamos:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+...
+URL: <span class="hl">/index.html?x=25&amp;y=34</span>
+...
+            </code></pre>
+                </div>
+            </section>
+
+            <section>
+                <h3>El objeto <code>response</code></h3>
+                <p>Hasta ahora, cuando introducimos una URL en el navegador, éste se queda &laquo;colgado&raquo; esperando una respuesta del servidor. Utilizaremos el objeto <code>response</code> de la función callback para responder al servidor. Sus atributos y métodos más importantes son:
+                </p>
+                <ul>
+                    <li><code>statusCode</code>: indica el código de respuesta: 200, 404, etc.</li>
+                    <li><code>setHeader(clave, valor)</code>: añade un par clave-valor a la cabecera de la respuesta.</li>
+                    <li><code>write(str)</code>: envia la cadena <code>str</code> en el cuerpo de la respuesta.</li>
+                    <li><code>end([str])</code>: delimita el final de la respuesta.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>Ejemplo</h4>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    response.statusCode = 200;
+    response.setHeader("Content-Type", "text/html");
+    response.write('&lt;!DOCTYPE html&gt;');
+    response.write('&lt;html&gt;');
+    response.write('&lt;head&gt;');
+    response.write('&lt;title>Página de prueba&lt;/title&gt;');
+    response.write('&lt;meta charset="utf-8"&gt;');
+    response.write('&lt;/head&gt;');
+    response.write('&lt;body>&lt;/ul&gt;');
+    for (var i = 0; i &lt; 10; i++) {
+        response.write(`&lt;li&gt;Item ${i}&lt;/li&gt;`);
+    }
+    response.write('&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;');
+    response.end();
+});                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Al acceder a <code>http://localhost:3000</code>:</p>
+                <img src="images/04/ItemsServidor.png" style="width:70%">
+            </section>
+
+            <section>
+                <p>La función callback del servidor devuelve una respuesta en función de la petición recibida.</p>
+                <p>Una función callback típica tendría la siguiente forma:</p>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    var method = request.method;
+    var url = request.url;
+    if (method === "GET" &amp;&amp; url === "/index.html") {
+        // Servir página principal.
+    } else if (method === "GET" &amp;&amp; url === "/index.css") {
+        // Servir hoja de estilo.
+    } else if (...) {
+    // ...
+    // ...
+    // ...
+    } else {
+        response.statusCode = 404;
+    }
+});
+                </code></pre>
+                <p>Obviamente, hay soluciones mejores.</p>
+            </section>
+
+            <section>
+                <h3>Páginas estáticas y dinámicas</h3>
+                <ul>
+                    <li>
+                        <p>Las páginas <strong>estáticas</strong> son aquellas cuyo contenido es &laquo;fijo&raquo;, en tanto que no dependen de la petición HTTP realizada, o de otros recursos (por ejemplo, BD).</p>
+                        <p>Las páginas estáticas se almacenan como archivos independientes en el servidor, y se devuelven al cliente tal y como están almacenadas (sin modificaciones).</p>
+                        <p>Las hojas de estilo, imágenes, etc. de una página también se consideran recursos estáticos.</p>
+                    </li>
+
+                    <li class="fragment">
+                        <p>Las páginas <strong>dinámicas</strong> son generadas total o parcialmente mediante código Javascript, porque su contenido depende de la petición o de otros recursos.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <p>Al recibir una petición de una página estática, el servidor tan solo lee el fichero correspondiente y lo devuelve al cliente:</p>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    var method = request.method;
+    var url = request.url;
+    if (url corresponde a una página estática) {
+        // Leer página estática de disco
+        // Devolverla al cliente.
+    } else {
+        // ...
+        // Es una página web dinámica
+        // Generar y devolver su contenido.
+        // Si la URL no es válida, devolver un error 404.
+        // ...
+    }
+});
+                </code></pre>
+
+            </section>
+
+            <section>
+                <h3>Página web dinámica</h3>
+                <p>Utilizando la base de datos vista anteriormente, queremos una página que devuelva, para cada usuario, su nombre, apellidos y el número de direcciones de correo asociadas.</p>
+                <img src="images/04/BDTelefonosNavegador.png" width="60%">
+            </section>
+
+
+            <section>
+                <p>Implementamos una función <code>consultaBD</code>, que realiza la consulta SQL correspondiente y pasa los resultados a la función callback pasada como parámetro:</p>
+                <pre><code data-trim class="javascript" style="font-size:90%">
+function consultaBD(callback) {
+    var conexion = mysql.createConnection({
+        host: "localhost",
+        user: "root", password: "",
+        database: "miBD"
+    });
+    
+    conexion.connect(function(err) {
+      if (err) { callback(err); }
+      else {
+        conexion.query(
+          "SELECT Nombre, Apellidos, COUNT(tc.Correo) as NumCorreos " +
+          "FROM Contactos c LEFT JOIN Tiene_Correo tc ON c.Id = tc.Id " +
+          "GROUP BY c.id",
+          function(err, rows) {
+                conexion.end();
+                callback(null, rows);
+          });
+      }
+    });  
+}
+                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Función callback del servidor:</p>
+                <pre><code data-trim class="javascript">
+var servidor = http.createServer(function(request, response) {
+    consultaBD(function(err, filasBD) {
+        if (err) {
+            response.statusCode = 500;
+            console.error(err);
+        } else {
+            response.statusCode = 200;
+            devolverPagina(response, filasBD);
+        }
+    });
+});
+                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>La función <code>devolverPagina</code> es la que se encarga de generar el código HTML correspondiente:</p>
+                <pre><code data-trim class="javascript" style="font-size:90%;line-height:120%">
+function devolverPagina(response, filasBD) {
+    response.setHeader("Content-Type", "text/html");
+    response.write('&lt;html&gt;');
+    response.write('&lt;head&gt;');
+    response.write('&lt;title&gt;Base de datos de teléfonos&lt;/title&gt;');
+    response.write('&lt;meta charset="utf-8">');
+    response.write('&lt;style&gt;th, td { border: 1px solid }&lt;/style&gt;');
+    response.write('&lt;/head&gt;');
+    response.write('&lt;body&gt;');
+    response.write('&lt;table&gt;');
+    response.write('&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Apellidos&lt;/th&gt;' + 
+                   '&lt;th&gt;Número direcciones&lt;/th&gt;&lt;/tr&gt;');
+    filasBD.forEach(function(fila) {
+        response.write('&lt;tr&gt;');
+        response.write(`&lt;td&gt;${fila.Nombre}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.Apellidos}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.NumCorreos}&lt;/td&gt;`);
+        response.write('&lt;/tr&gt;');
+    });
+    response.write('&lt;/table&gt;');
+    response.write('&lt;/body&gt;');
+    response.end();
+}                
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Procesadores de plantillas</h3>
+                <p>La tarea de generar el documento HTML directamente en el código Javascript, incluso en páginas dinámicas, es tediosa.</p>
+
+                <p>Aunque un documento HTML puede tener contenido generado dinámicamente, una buena parte del documento consiste en código invariable: Etiquetas <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>, encabezado de la página, etc.</p>
+
+            </section>
+
+            <section>
+                <p>Una <strong>plantilla</strong> es un documento HTML con &laquo;huecos&raquo;. Un <strong>procesador de plantillas</strong> se encarga de colocar el contenido dinámico en estos huecos.</p>
+                <img src="images/04/Plantillas.svg" width="70%" style="border:none; box-shadow:none">
+            </section>
+
+            <section>
+                <h4>Procesadores de plantillas en Node</h4>
+                <p>Información: <a href="https://garann.github.io/template-chooser/">https://garann.github.io/template-chooser/</a></p>
+                <ul>
+                    <li>Mustache.js - <a href="http://mustache.github.io/">http://mustache.github.io</a></li>
+                    <li>Pug (aka. Jade) - <a href="https://pugjs.org/">https://pugjs.org</a></li>
+                    <li>Handlebars - <a href="http://handlebarsjs.com/">http://handlebarsjs.com</a></li>
+                    <li>doT.js - <a href="http://olado.github.io/doT/">http://olado.github.io/doT/</a></li>
+                    <li>EJS - <a href="http://ejs.co/">http://ejs.co/</a>
+                        <span class="arrow_box_left caja_codigo fragment" style="font-size: 80%; position:relative; left: 50px">Esta asignatura</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h4>EJS</h4>
+                <p>Es un paquete externo que se instala mediante <code>npm</code>: </p>
+                <pre><code data-trim class="no-highlight">
+npm install ejs --save        
+                </code></pre>
+                <p>Las plantillas de EJS son documentos HTML con marcadores especiales de varios tipos:</p>
+                <ul>
+                    <li>Marcadores de <strong>programa</strong>, delimitados por <code>&lt;%</code> y <code>%&gt;</code></li>
+                    <li>Marcadores de <strong>expresión</strong>, delimitados por <code>&lt;%=</code> y <code>%&gt;</code></li>
+                </ul>
+            </section>
+
+            <section>
+                <p>Los marcadores de expresión evalúan la expresión Javascript dada, la convierten en cadena, y se reemplazan por dicha cadena.</p>
+                <pre><code data-trim data-noescape class="html">
+&lt;h1&gt;¡Bienvenido, <span class="hl">&lt;%= usuario.nombre %&gt;</span>!&lt;/h1&gt;
+                </code></pre>
+
+                <div class="fragment">
+                    <p>Los marcadores de programa contienen sentencias (o fragmentos de sentencias) Javascript. Suelen utilizarse con bucles, condicionales, etc.</p>
+
+                    <pre><code data-trim data-noescape class="html">
+<span class="hl">&lt;% if (!usuario.nombre) { %&gt;</span>
+   &lt;p&gt;No est&aacute;s identificado.&lt;/p&gt;
+<span class="hl">&lt;% } else { %&gt;</span>
+   &lt;p&gt;&iexcl;Bienvenido, <span class="hl">&lt;%= usuario.nombre %&gt;</span>!&lt;/p&gt;
+<span class="hl">&lt;% } %&gt;</span>
+                </code></pre>
+                </div>
+
+            </section>
+
+            <section>
+                <p>Volviendo a nuestro ejemplo:</p>
+                <pre><code data-trim class="javascript" style="font-size:90%;line-height:120%">
+function devolverPagina(response, filasBD) {
+    response.write('&lt;html&gt;');
+    response.write('&lt;head&gt;');
+    response.write('&lt;title&gt;Base de datos de teléfonos&lt;/title&gt;');
+    response.write('&lt;meta charset="utf-8">');
+    response.write('&lt;style&gt;th, td { border: 1px solid }&lt;/style&gt;');
+    response.write('&lt;/head&gt;');
+    response.write('&lt;body&gt;');
+    response.write('&lt;table&gt;');
+    response.write('&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Apellidos&lt;/th&gt;' + 
+                   '&lt;th&gt;Número direcciones&lt;/th&gt;&lt;/tr&gt;');
+    filasBD.forEach(function(fila) {
+        response.write('&lt;tr&gt;');
+        response.write(`&lt;td&gt;${fila.Nombre}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.Apellidos}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.NumCorreos}&lt;/td&gt;`);
+        response.write('&lt;/tr&gt;');
+    });
+    response.write('&lt;/table&gt;');
+    response.write('&lt;/body&gt;');
+    response.end();
+}                
+                </code></pre>
+            </section>
+
+            <section>
+                <p>Fichero <code>templates/dirsCorreo.ejs</code>:</p>
+                <pre><code data-trim data-noescape class="html" style="font-size:80%;line-height:120%">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Base de datos de tel&eacute;fonos&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;style&gt;
+            th, td { border: 1px solid }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;table&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Nombre&lt;/th&gt;
+                &lt;th&gt;Apellidos&lt;/th&gt;
+                &lt;th&gt;N&uacute;mero direcciones&lt;/th&gt;
+            &lt;/tr&gt;
+            <span class="hl">&lt;% filas.forEach(function(fila) { %&gt;</span>
+            &lt;tr&gt;
+                &lt;td&gt;<span class="hl">&lt;%= fila.Nombre %&gt;</span>&lt;/td&gt;
+                &lt;td&gt;<span class="hl">&lt;%= fila.Apellidos %&gt;</span>&lt;/td&gt;
+                &lt;td&gt;<span class="hl">&lt;%= fila.NumCorreos %&gt;</span>&lt;/td&gt;                
+            &lt;/tr&gt;
+            <span class="hl">&lt;% }); %&gt;</span>
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;                
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>La función <code>render()</code> de EJS</h4>
+                <p>Se encarga de producir el documento HTML definitivo a partir de la plantilla y el modelo.</p>
+                <p><code>render(plantilla, modelo)</code></p>
+                <ul>
+                    <li><code>plantilla</code> es una cadena con el texto de la plantilla.</li>
+                    <li><code>modelo</code> es un objeto, cuyos atributos pueden referenciarse dentro de la plantilla como si fueran variables.</li>
+                </ul>
+                <p>La función <code>render</code> devuelve el documento HTML generado.</p>
+
+            </section>
+
+            <section>
+                <p>La función <code>devolverPagina()</code> hace uso de esta plantilla:</p>
+                <pre><code data-trim class="javascript">
+var fs = require("fs");
+var ejs = require("ejs");
+
+// ...
+
+function devolverPagina(response, filasBD) {
+  fs.readFile("./templates/dirsCorreo.ejs", {encoding: "utf-8"},
+        // Función callback asociada a readFile
+        function(err, plantilla) {
+            if (err) {
+                console.error(err);
+            } else {
+                var modelo = { filas: filasBD };
+                // Dentro de la plantilla, la variable 'filas' 
+                // contendrá el array filasBD.
+                var docHTML = ejs.render(plantilla, modelo);
+                response.statusCode = 200;
+                response.end(docHTML);
+            }
+        });
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Otros aspectos de un servidor web</h3>
+                <ul>
+                    <li>Procesamiento de <strong>formularios</strong>: <code>url</code> y <code>querystring</code>.</li>
+                    <li>Manejo de <strong>ficheros estáticos</strong>.</li>
+                    <li>Envío de ficheros al servidor.</li>
+                    <li>Cookies.</li>
+                    <li>etc.</li>
+                </ul>
+
+                <p>El módulo <code>http</code> es de demasiado bajo nivel para estas tareas. Es recomendable el uso de un <strong>framework</strong> que abstraiga los detalles técnicos.</p>
+                <p style="color:#009e3c; font-size: 120%; font-style:italic; font-weight:bold; float:right" class="fragment">Continuará...</p>
+                <div style="clear:right"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p7">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Módulos y paquetes</a></li>
+                    <li><a href="#/p3" class="outline">El modelo asíncrono</a></li>
+                    <li><a href="#/p4" class="outline">Módulos core</a></li>
+                    <li><a href="#/p5" class="outline">Acceso a bases de datos</a></li>
+                    <li><a href="#/p6" class="outline">Servidores web</a></li>
+                    <li><a href="#/p7" class="outline current">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Bibliografía</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>B.A. Syed
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3413478~S6*spi">Beginning Node.js</a>
+                            <br> Apress, 2014
+                        </li>
+                        <li>S. Powers
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3589587~S6*spi">Learning Node, 2nd edition</a>
+                            <br> O'Reilly (2016)
+                        </li>
+                        <li>
+                            <a href="https://nodejs.org/docs/v4.6.1/api/">Documentación de las librerías de Node</a>
+                            <br><span style="font-size:50%">https://nodejs.org/docs/v4.6.1/api/</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width: 30%">
+                    <img src="https://images.springer.com/sgw/books/medium/9781484201886.jpg" style="width:50%; border:none">
+                    <img src="http://burningbird.net/wp-content/uploads/2016/05/cover2-257x300.jpg" style="width:50%; border:none">
+                </div>
+
+            </section>
+
+            </div>
+
+        </div>
+
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                history: true,
+                slideNumber: true,
+
+                // More info https://github.com/hakimel/reveal.js#dependencies
+                dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                }, {
+                    src: 'plugin/markdown/markdown.js'
+                }, {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                }, {
+                    src: 'plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function() {
+                        hljs.initHighlightingOnLoad();
+                    }
+                }]
+            });
+
+        </script>
+</body>
+
+</html>
