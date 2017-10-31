@@ -971,7 +971,7 @@ Math.log(0)         // &rarr; -Infinity
                 </section>
 
                 <section>
-                    <p>¡Cuidado con las comparaciones de <code>NaN</code>!</p>
+                    <p>¡Cuidado con las comparaciones con <code>NaN</code>!</p>
                     <pre><code data-trim data-noescape class="javascript">
 Math.log(-3) === NaN <span class="fragment">// &rarr; false</span>
 NaN === NaN          <span class="fragment">// &rarr; false</span>
@@ -1161,7 +1161,12 @@ p1: uno
 p2: dos
 p3: tres</pre>
                         </li>
-                        <li class="fragment">
+                    </ul>
+                </section>
+                
+                <section>
+                    <ul>
+                        <li>
                             Si faltan argumentos, los parámetros correspondientes tomarán el valor <code>undefined</code>
                             <pre><code data-trim class="">
 imprime_args("uno", "dos");
@@ -1185,10 +1190,10 @@ p3: undefined</pre>
     también es opcional. Su valor por defecto es 1.
 */
 function pintar_circulo(x, y, color, trazo) {
-    if (color === undefined) color = "negro";
-    if (trazo === undefined) trazo = 1;
+   if (color === undefined) color = "negro";
+   if (trazo === undefined) trazo = 1;
 
-    console.log(`Pintar círculo en (${x}, ${y}) de color ${color}` +
+   console.log(`Pintar círculo en (${x}, ${y}) de color ${color}` +
                 ` y trazo de grosor ${trazo}`;
 }
                    </code></pre>
@@ -1205,7 +1210,7 @@ function pintar_circulo(x, y, color, trazo) {
     también es opcional. Su valor por defecto es 1.
 */
 function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span class="hl">trazo = 1</span>) {
-    console.log(`Pintar círculo en (${x}, ${y}) de color ${color}` +
+   console.log(`Pintar círculo en (${x}, ${y}) de color ${color}` +
                 ` y trazo de grosor ${trazo}`;
 }
                    </code></pre>
