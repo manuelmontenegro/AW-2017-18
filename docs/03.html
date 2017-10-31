@@ -1837,11 +1837,11 @@ console.log(circulo_verde.centro.x);
 
                 <section>
                     <pre><code data-trim data-noescape class="javascript">
-var prototipoComplejo = {
-    modulo: () => {
+let prototipoComplejo = {
+    function modulo() {
         return Math.sqrt(this.r * this.r + this.i * this.i);
     },
-    argumento: () => {
+    function argumento() {
         return Math.atan2(this.i, this. r);
     }
 };
@@ -1924,11 +1924,11 @@ console.log(prototipoComplejo.isPrototypeOf(c3));
                 <section>
                     <p>Recordemos nuestro ejemplo sobre números complejos</p>
                     <pre><code data-trim data-noescape class="javascript">
-var prototipoComplejo = {
-    modulo: () => {
+let prototipoComplejo = {
+    function modulo() {
         return Math.sqrt(this.r * this.r + this.i * this.i);
     },
-    argumento: () => {
+    function argumento() {
         return Math.atan2(this.i, this. r);
     }
 };
