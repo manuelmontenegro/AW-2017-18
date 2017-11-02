@@ -96,9 +96,9 @@
                     <li class="fragment">Las versiones para Windows y Mac incluyen un instalador.</li>
                     <li class="fragment">Desde GNU/Linux se puede:
                         <ul>
-                            <li>Descargar los binarios desde la URL anterior.</li>
                             <li>Utilizar el gestor de paquetes de la distribución.</li>
                             <li>Utilizar <strong>nvm</strong> (<a href="http://nvm.sh">http://nvm.sh</a>), que permite mantener varias versiones de Node en un mismo sistema.</li>
+                            <li>Descargar los binarios desde la URL anterior.</li>
                         </ul>
                     </li>
                 </ul>
@@ -129,7 +129,7 @@
 # <span class="hl">node</span>
 > <span style="color:#720">5 + 6</span>
 11
-> <span style="color:#720">var x = 4 + 5</span>
+> <span style="color:#720">let x = 4 + 5</span>
 undefined
 > <span style="color:#720">console.log("Hola");</span>
 Hola
@@ -387,7 +387,7 @@ Is this ok? (yes) <span class="hl" style="color:#20A">yes</span>
                 <h2>Módulos en Node</h2>
                 <p>Existen tres tipos de módulos:</p>
                 <ol>
-                    <li class="fragment">Módulos <strong>como ficheros</strong>.<br> Forman parte de un proyecto, pero no están pensados para ser reutilizados como librerías.
+                    <li class="fragment">Módulos <strong>fichero</strong>.<br> Forman parte de un proyecto, pero no están pensados para ser reutilizados como librerías.
                     </li>
                     <li class="fragment">Módulos <strong>core</strong>.<br> Vienen incluidos con Node. Proporcionan operaciones básicas (ficheros, servidores web, sistema operativo, etc.).
                     </li>
@@ -400,7 +400,7 @@ Is this ok? (yes) <span class="hl" style="color:#20A">yes</span>
 
             <section>
                 <section>
-                    <h3>Crear un módulo de fichero con una única función</h3>
+                    <h3>Crear un módulo fichero con una única función</h3>
                     <p>Se crea un fichero Javascript con la función a definir y ésta se asigna a la variable <code>module.exports</code>:</p>
                     <pre><code data-trim data-noescape class="javascript">
 function fibAux(n) {
@@ -452,15 +452,15 @@ console.log(fib(10));
                 <section>
                     <p>El objeto devuelto por <code>require</code> se guarda en una variable que no ha de coincidir necesariamente con el nombre de la función exportada.</p>
                     <pre><code data-trim data-noescape class="javascript">
-var <span class="hl">myFib</span> = require("./moduloFib.js");
+const <span class="hl">myFib</span> = require("./moduloFib.js");
 
 console.log(<span class="hl">myFib</span>(10));                
                 </code></pre>
                     <div class="fragment">
                         <p>Esto es útil para prevenir conflictos de nombres entre los distintos módulos. Supongamos otro módulo <code>otroModuloFib.js</code> que también exporta una función <code>fib</code>:</p>
                         <pre><code data-trim data-noescape class="javascript">
-var <span class="hl">myFib</span> = require("./moduloFib.js");
-var <span class="hl">otroFib</span> = require("./otroModuloFib.js");
+const <span class="hl">myFib</span> = require("./moduloFib.js");
+const <span class="hl">otroFib</span> = require("./otroModuloFib.js");
 
 console.log(myFib(10));
 console.log(otroFib(10));
@@ -525,7 +525,7 @@ module.exports = {
                 <section>
                     <p>Ejemplo de uso:</p>
                     <pre><code data-trim data-noescape class="javascript">
-var <span class="hl">geometria</span> = require("./geometria.js");
+const <span class="hl">geometria</span> = require("./geometria.js");
 
 console.log(<span class="hl">geometria</span>.areaCuadrado(10));
 console.log(<span class="hl">geometria</span>.areaCirculo(10));                
@@ -533,7 +533,7 @@ console.log(<span class="hl">geometria</span>.areaCirculo(10));
                     <div class="fragment">
                         <p>De nuevo, el nombre de la variable devuelta por el <code>require</code> puede ser cualquiera:</p>
                         <pre><code data-trim data-noescape class="javascript">
-var <span class="hl">g</span> = require("./geometria.js");
+const <span class="hl">g</span> = require("./geometria.js");
 
 console.log(<span class="hl">g</span>.areaCuadrado(10));
 console.log(<span class="hl">g</span>.areaCirculo(10));             
@@ -572,12 +572,12 @@ module.exports = {
 // moduloFib.js
 // ------------
 
-var PHI = (1 + Math.sqrt(5)) / 2;
+const PHI = (1 + Math.sqrt(5)) / 2;
 
 // Cambio la función fibAux por esta:
 function fibMasEficiente(n) {
-    var p1 = Math.pow(PHI, n);
-    var p2 = Math.pow(1 - PHI, n);
+    const p1 = Math.pow(PHI, n);
+    const p2 = Math.pow(1 - PHI, n);
     return Math.round((p1 - p2) / Math.sqrt(5));
 }
 
@@ -596,23 +596,23 @@ module.exports = fib;
                     <p>A la hora de importar un módulo de tipo fichero mediante <code>require</code>, es necesario indicar el <strong>path</strong> del fichero que se importa, <strong>aunque se encuentre en el mismo directorio</strong>.</p>
                     <pre><code data-trim data-noescape class="javascript">
 // Correcto:
-var geometria = require("<span class="hl">./</span>geometria.js");
+const geometria = require("<span class="hl">./</span>geometria.js");
 
 // Correcto:
-var geometria = require("<span class="hl">./aw/librerias/</span>geometria.js");
+const geometria = require("<span class="hl">./aw/librerias/</span>geometria.js");
 
 // Correcto:
-var geometria = require("<span class="hl">../</span>geometria.js");
+const geometria = require("<span class="hl">../</span>geometria.js");
 
 // Incorrecto:
-var geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");
+const geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");
                 </code></pre>
 
                     <div class="fragment">
                         <p>No obstante, puede omitirse la extensión <code>.js</code></p>
                         <pre><code data-trim class="javascript">
 // Correcto:
-var geometria = require("./geometria");
+const geometria = require("./geometria");
                 </code></pre>
                     </div>
                 </section>
@@ -620,7 +620,7 @@ var geometria = require("./geometria");
                 <section>
                     <pre><code data-trim data-noescape class="javascript">
 // Incorrecto:
-var geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");                
+const geometria = require("<span class="hl" style="background-color:#FBB">geometria.js</span>");                
                 </code></pre>
                     <p>Si no se especifica un <em>path</em> Node entiende que se quiere importar un módulo de otro tipo:</p>
                     <ul>
@@ -635,12 +635,12 @@ var geometria = require("<span class="hl" style="background-color:#FBB">geometri
                 <p>Forman parte de la distribución de Node.</p>
                 <p>También se importan mediante <code>require</code>, pero sin indicar un path relativo.</p>
                 <pre><code data-trim class="javascript">
-var os = require("os");
+const os = require("os");
 console.log(`Nombre del host: ${os.hostname()}`);
 console.log(`Directorio personal: ${os.homedir()}`);
 
-var util = require("util");
-var mensaje = util.format("Tienes %d años", 45);
+const util = require("util");
+const mensaje = util.format("Tienes %d años", 45);
                 </code></pre>
                 <p>Nombres de módulos core: <code>os</code>, <code>fs</code>, <code>path</code>, <code>http</code>, <code>util</code>, etc.</p>
             </section>
@@ -657,7 +657,7 @@ var mensaje = util.format("Tienes %d años", 45);
                 <section>
                     <h4>Búsqueda de un módulo de tipo paquete</h4>
                     <pre><code data-trim class="javascript">
-var foo = require("foo");
+const foo = require("foo");
                 </code></pre>
                     <div class="fragment">
                         <p>Se busca <code>foo</code> en los siguientes directorios:</p>
@@ -674,7 +674,7 @@ var foo = require("foo");
                 <section>
                     <p>Por ejemplo, supongamos que en el fichero <code>/home/manuel/aw/ejemplo.js</code><br>buscamos el siguiente paquete:</p>
                     <pre><code data-trim class="javascript">
-var mimodulo = require("mimodulo");
+const mimodulo = require("mimodulo");
                 </code></pre>
                     <div class="fragment">
                         <p>Se buscará en los siguientes directorios:</p>
@@ -747,7 +747,7 @@ module.exports = {
                         <pre><code data-trim data-noescape class="javascript">
 "use strict";
 
-<span class="hl">var math = require("math");</span>
+<span class="hl">const math = require("math");</span>
 
 console.log(`fib(6) = ${math.fib(6)}`);
 console.log(`fact(6) = ${math.fact(6)}`);                    </code></pre>
@@ -1078,7 +1078,7 @@ function <span class="hl">ficheroLeido</span>(err, contenido) {
                     <pre><code data-trim class="javascript">
 "use strict";
 
-var fs = require("fs");
+const fs = require("fs");
 
 fs.readFile("FichTexto.txt", 
             { encoding: "utf-8" },
@@ -1300,7 +1300,7 @@ const fs = require("fs");
 
 fs.readFile("thymeleaf.pdf", function(err, buffer) {
     // Obtenemos los cuatro primeros bytes
-    var mark = buffer.slice(0, 4);
+    const mark = buffer.slice(0, 4);
     
     // Y los imprimimos con la codificación ASCII
     console.log(mark.toString("ascii"));
@@ -1423,8 +1423,8 @@ npm install mysql --save
                 <section>
                     <h4>Inicializar una conexión</h4>
                     <p>En el paquete <code>mysql</code> existe la función <code>createConnection()</code> y los métodos <code>connect()</code>, <code>query()</code> y <code>close()</code> para realizar estos pasos.</p>
-                    <p>Pero nosotros no vamos a abrir y cerrar conexiones de manera individual.</p>
-                    <p>En teoría, una aplicación web debería abrir y cerrar una conexión cada vez que atienda una petición que requiera acceso a la BD, pero la creación de conexiones es un proceso relativamente <strong>costoso</strong>.</p>
+                    <p class="fragment">Pero nosotros no vamos a abrir y cerrar conexiones de manera individual.</p>
+                    <p class="fragment">En teoría, una aplicación web debería abrir y cerrar una conexión cada vez que atienda una petición que requiera acceso a la BD, pero la creación de conexiones es un proceso relativamente <strong>costoso</strong>.</p>
                 </section>
 
                 <section>
@@ -1616,7 +1616,7 @@ connection.query(
 );
 </code></pre>
                     <p>La variable <code>id</code> proviene de la entrada introducida por el usuario. Esta variable pasa directamente a la consulta SQL.</p>
-                    <p>¿Qué pasa si el usuario hubiese introducido <code>4 OR TRUE</code>?</p>
+                    <p class="fragment">¿Qué pasa si el usuario hubiese introducido <code>4 OR TRUE</code>?</p>
                 </section>
 
                 <section>
@@ -1665,9 +1665,9 @@ SELECT Nombre, Apellidos FROM contactos
 WHERE Id = <span class="hl">'1 OR TRUE'</span>
                 </code></pre>
                 </section>
-                
+
                 <section>
-                    <p>La función <code>query</code> con consultas paramétricas:</p>
+                    <p>Función <code>query</code> con consultas paramétricas:</p>
                     <p><code>query(<em>consulta</em>, <em>valores_marcadores</em>, <em>callback</em>)</code></p>
                     <pre><code data-trim data-noescape class="javascript">
 // Suponemos que la variable `id` contiene el identificador
@@ -1699,9 +1699,11 @@ connection.query(
             </section>
 
             <section>
-                <h2>Servidores web con Node</h2>
-                <p>Recordemos el modelo cliente-servidor aplicado a la web:</p>
-                <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+
+                <section>
+                    <h2>Servidores web con Node</h2>
+                    <p>Recordemos el modelo cliente-servidor aplicado a la web:</p>
+                    <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
                     <defs>
                         <style id="bx-google-fonts">
                             @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500,700,900,100italic,300italic,400,400italic,500italic,700italic,900italic);
@@ -1729,57 +1731,57 @@ connection.query(
                         bx:origin="0.53 0.609" />
                 </svg>
 
-            </section>
+                </section>
 
-            <section>
-                <p>El <strong>cliente</strong> es un navegador web.</p>
-                <p>El <strong>servidor</strong> es un programa que está escuchando en el puerto TCP 80.</p>
-                <p>Cuando el usuario introduce una URL en el cliente se envía una petición HTTP al servidor correspondiente.</p>
-                <div style="font-family:monospace;font-size:27px">
-                    <div style="background-color:rgb(145, 209, 255);text-align:left">
-                        GET /index.html HTTP/1.1
-                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:100px">Línea de petición</span>
+                <section>
+                    <p>El <strong>cliente</strong> es un navegador web.</p>
+                    <p>El <strong>servidor</strong> es un programa que está escuchando en el puerto TCP 80.</p>
+                    <p>Cuando el usuario introduce una URL en el cliente se envía una petición HTTP al servidor correspondiente.</p>
+                    <div style="font-family:monospace;font-size:27px">
+                        <div style="background-color:rgb(145, 209, 255);text-align:left">
+                            GET /index.html HTTP/1.1
+                            <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:100px">Línea de petición</span>
+                        </div>
+                        <div style="background-color:rgb(255, 232, 153);text-align:left">
+                            Host: www.foo.com
+                            <br/> Accept: text/html
+                            <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:212px">Cabeceras</span>
+                            <br>...
+                        </div>
                     </div>
-                    <div style="background-color:rgb(255, 232, 153);text-align:left">
-                        Host: www.foo.com
-                        <br/> Accept: text/html
-                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:212px">Cabeceras</span>
-                        <br>...
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <section>
-                <p>El servidor analiza la petición y la responde.</p>
-                <p>En este caso, la respuesta sería:</p>
-                <div style="font-family:monospace;font-size:25px">
-                    <div style="background-color:rgb(145, 209, 255);text-align:left">
-                        HTTP/1.1 200 OK
-                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:400px">Línea de estado</span>
+                <section>
+                    <p>El servidor analiza la petición y la responde.</p>
+                    <p>En este caso, la respuesta sería:</p>
+                    <div style="font-family:monospace;font-size:25px">
+                        <div style="background-color:rgb(145, 209, 255);text-align:left">
+                            HTTP/1.1 200 OK
+                            <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;left:400px">Línea de estado</span>
+                        </div>
+                        <div style="background-color:rgb(255, 232, 153);text-align:left">
+                            Date: Mon, 15 Aug 2016 14:05:30 GMT
+                            <br/> Content-Type: text/html
+                            <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:215px">Cabeceras de la respuesta</span>
+                            <br/>...
+                        </div>
+                        <div>
+                            <span style="color:#A0A0A0;font-style:italic"> (línea en blanco) </span>
+                        </div>
+                        <div style="background-color:rgb(236, 255, 170);text-align:left">
+                            &lt;!DOCTYPE html&gt;
+                            <br/> &lt;html lang="es"&gt;
+                            <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:385px">Cuerpo de la respuesta</span>
+                            <br/> &lt;head&gt;
+                            <br/> &nbsp; &lt;title&gt;...&lt;/title&gt;
+                            <br/> ...
+                        </div>
                     </div>
-                    <div style="background-color:rgb(255, 232, 153);text-align:left">
-                        Date: Mon, 15 Aug 2016 14:05:30 GMT
-                        <br/> Content-Type: text/html
-                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:215px">Cabeceras de la respuesta</span>
-                        <br/>...
-                    </div>
-                    <div>
-                        <span style="color:#A0A0A0;font-style:italic"> (línea en blanco) </span>
-                    </div>
-                    <div style="background-color:rgb(236, 255, 170);text-align:left">
-                        &lt;!DOCTYPE html&gt;
-                        <br/> &lt;html lang="es"&gt;
-                        <span class="no_arrow_box" style="font-family:'Source Sans Pro', sans-serif;font-weight:bold;padding:2px 10px;border-radius:10px;top:-10px;left:385px">Cuerpo de la respuesta</span>
-                        <br/> &lt;head&gt;
-                        <br/> &nbsp; &lt;title&gt;...&lt;/title&gt;
-                        <br/> ...
-                    </div>
-                </div>
-                <p>Referencias: <a href="./01.html#/44">peticiones HTTP</a>, <a href="./01.html#/51">respuestas HTTP</a>.</p>
-            </section>
+                    <p>Referencias: <a href="./01.html#/44">peticiones HTTP</a>, <a href="./01.html#/51">respuestas HTTP</a>.</p>
+                </section>
 
-            <section>
-                <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+                <section>
+                    <svg viewBox="0 0 311 111" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
                     <defs>
                         <style id="bx-google-fonts">
                             @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,500,700,900,100italic,300italic,400,400italic,500italic,700italic,900italic);
@@ -1806,90 +1808,116 @@ connection.query(
                     <path d="M 132.827 36.886 L 135.302 43.025 L 130.352 43.025 L 132.827 36.886 Z" style="fill: rgb(0, 0, 0);" transform="matrix(0.550459, -0.834863, 0.834862, 0.550459, -35.392201, 135.428704)" bx:shape="triangle 130.352 36.886 4.95 6.139 0.5 0 1@9115bfd9"
                         bx:origin="0.53 0.609" />
                 </svg>
-                <p>
-                    Implementaremos la funcionalidad del
-                    <strong>servidor</strong>.
-                </p>
-                <p>
-                    En la fase de desarrollo de una aplicación web se suele utilizar otro puerto distinto del 80. Utilizaremos el puerto 3000.
-                </p>
+                    <p>
+                        Implementaremos la funcionalidad del
+                        <strong>servidor</strong>.
+                    </p>
+                    <p>
+                        En la fase de desarrollo de una aplicación web se suele utilizar otro puerto distinto del 80. Utilizaremos el puerto 3000.
+                    </p>
+                </section>
             </section>
 
             <section>
-                <h3>Servidores Web con Node</h3>
-                <p>El módulo core <code>http</code> implementa un servidor web.
-                </p>
-                <pre><code data-trim class="javascript">
-var http = require("http");
+                <section>
+                    <h3>Servidores web con Node</h3>
+                    <p>La creación de servidores requiere el uso de <em>sockets</em>.</p>
+                    <p>Para ello, deberíamos:</p>
+                    <ul>
+                        <li>Crear un socket asociado al puerto 80 (o cualquier otro).</li>
+                        <li>Aceptar peticiones de clientes.</li>
+                        <li>Analizar sintácticamente la petición HTTP del cliente, que viene como cadena de texto.</li>
+                        <li>Generar una respuesta en formato HTTP.</li>
+                    </ul>
+                    <p class="fragment">Por suerte, hay un módulo que hace todo esto...</p>
+
+
+                </section>
+
+                <section>
+                    <p>El módulo core <code>http</code> implementa un servidor web.
+                    </p>
+                    <pre><code data-trim class="javascript">
+const http = require("http");
                 </code></pre>
-                <p>Los objetos de la clase <code>Server</code> representan servidores web, y son creados mediante la función <code>createServer</code>, que recibe una función callback:</p>
-                <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
+                    <p>Los objetos de la clase <code>Server</code> representan servidores web, y son creados mediante la función <code>createServer</code>, que recibe una función callback:</p>
+                    <pre><code data-trim class="javascript">
+const servidor = http.createServer((request, response) => {
         ...
 });
                 </code></pre>
+                    <p>La función callback es definida por el programador, y llamada por el módulo <code>http</code> cada vez que algún cliente realiza una petición HTTP.
+                    </p>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="javascript">
+http.createServer((<span class="hl" style="background-color:#b5ded8">request</span>, <span class="hl" style="background-color:#c5b5de">response</span>) => { /* ... */ });
+                </code></pre>
+                    <p>
+                        El parámetro <code style="background-color:#b5ded8">request</code> de esta función callback contiene un objeto de la clase <code>IncomingMessage</code>, con atributos y métodos para acceder a cada componente de la petición: método, URL, cabeceras, etc.
+                    </p>
+                    <p class="fragment">
+                        El parámetro <code style="background-color:#c5b5de">response</code> (clase <code>ServerResponse</code>) contiene métodos y atributos que especifican la respuesta HTTP que se devolverá al cliente.
+                    </p>
+                </section>
+
+
+                <section>
+                    <p>La función <code>createServer</code> tan solo sirve para establecer la función <em>callback</em> que procesa las peticiones, pero no inicia el servidor en ningún puerto.</p>
+                    <div class="fragment">
+                        <p>Para iniciar el servidor debemos utilizar el método <code>listen()</code> del servidor recién creado, indicando el puerto en el que queremos escuchar y (opcionalmente) una función callback que será llamada cuando comience la escucha.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+const servidor = http.createServer(function(request, response) {
+    // ...
+});
+servidor.listen(3000, (err) => {
+    if (err) {
+        console.log(`Error al abrir el puerto 3000: ${err}`);
+    } else {
+        console.log("Servidor escuchando en el puerto 3000.");
+    }
+});
+                </code></pre>
+                </section>
+
             </section>
 
             <section>
-                <p>La función callback es definida por el programador, y llamada por el módulo <code>http</code> cada vez que algún cliente realiza una petición HTTP.
-                </p>
-                <p class="fragment">
-                    El parámetro <code>request</code> de esta función callback contiene un objeto de la clase <code>IncomingMessage</code>, con atributos y métodos para acceder a cada componente de la petición: método, URL, cabeceras, etc.
-                </p>
-                <p class="fragment">
-                    El parámetro <code>response</code> (clase <code>ServerResponse</code>) contiene métodos y atributos que especifican la respuesta HTTP que se devolverá al cliente.
-                </p>
-            </section>
+                <section>
+                    <h3>El objeto <code>request</code></h3>
+                    <p>Atributos más importantes de <code>request:</code></p>
+                    <ul>
+                        <li><code>method</code>: método HTTP utilizado (GET, POST, PUT, etc.).</li>
+                        <li><code>url</code>: URL a la que se accede, excluyendo el nombre del servidor.</li>
+                        <li><code>headers</code>: Objeto con las cabeceras de la petición.</li>
+                    </ul>
 
-            <section>
-                <h3>El objeto <code>request</code></h3>
-                <p>Atributos más importantes de <code>request:</code></p>
-                <ul>
-                    <li><code>method</code>: método HTTP utilizado (GET, POST, PUT, etc.).</li>
-                    <li><code>url</code>: URL a la que se accede, excluyendo el nombre del servidor.</li>
-                    <li><code>headers</code>: Objeto con las cabeceras de la petición.</li>
-                </ul>
+                    <p>Por ejemplo:</p>
 
-                <pre class="fragment"><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
+                    <pre class="fragment"><code data-trim class="javascript">
+const servidor = http.createServer(function(request, response) {
     console.log(`Método: ${request.method}`);
     console.log(`URL: ${request.url}`);
     console.log(request.headers);
 });
                 
                 </code></pre>
-            </section>
+                </section>
 
-            <section>
-                <p>La función <code>createServer</code> tan solo sirve para especificar cómo queremos que se procesen las peticiones. Esta función no arranca el servidor creado.</p>
-                <div class="fragment">
-                    <p>Para iniciar el servidor debemos utilizar el método <code>listen()</code> del servidor recién creado, indicando el puerto en el que queremos escuchar y (opcionalmente) una función callback que será llamada cuando comience la escucha.</p>
-                </div>
-            </section>
 
-            <section>
-                <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
-    // ...
-});
-servidor.listen(3000, function(err) {
-    if (err) {
-        console.log("Error al abrir el puerto 3000: " + err);
-    } else {
-        console.log("Servidor escuchando en el puerto 3000.");
-    }
-});
-                </code></pre>
-            </section>
-
-            <section>
-                <p>Arrancamos el navegador e introducimos la dirección</p>
-                <pre><code data-trim class="no-highlight">
+                <section>
+                    <p>Con el servidor arrancado, iniciamos el navegador e introducimos la siguiente dirección:</p>
+                    <pre><code data-trim class="no-highlight">
 http://localhost:3000/index.html
                 </code></pre>
-                <div class="fragment">
-                    <p>se imprime lo siguiente:</p>
-                    <pre><code data-trim data-noescape class="no-highlight">
+                    <div class="fragment">
+                        <p>Se imprime lo siguiente:</p>
+                        <pre><code data-trim data-noescape class="no-highlight">
 Método: <span class="hl">GET</span>
 URL: <span class="hl">/index.html</span>
 { host: 'localhost:3000',
@@ -1897,39 +1925,29 @@ URL: <span class="hl">/index.html</span>
                  Gecko/20100101 Firefox/49.0',
   ...
  }                </code></pre>
-                </div>
-                <div class="fragment">
-                    <p>Si hubiésemos introducido</p>
-                    <pre><code data-trim data-noescape class="no-highlight">
-http://localhost:3000/index.html?x=25&amp;y=34
-                </code></pre>
-                </div>
-                <div class="fragment">
-                    <p>tendríamos:</p>
-                    <pre><code data-trim data-noescape class="no-highlight">
-...
-URL: <span class="hl">/index.html?x=25&amp;y=34</span>
-...
-            </code></pre>
-                </div>
+                    </div>
+                </section>
+
             </section>
 
-            <section>
-                <h3>El objeto <code>response</code></h3>
-                <p>Hasta ahora, cuando introducimos una URL en el navegador, éste se queda &laquo;colgado&raquo; esperando una respuesta del servidor. Utilizaremos el objeto <code>response</code> de la función callback para responder al servidor. Sus atributos y métodos más importantes son:
-                </p>
-                <ul>
-                    <li><code>statusCode</code>: indica el código de respuesta: 200, 404, etc.</li>
-                    <li><code>setHeader(clave, valor)</code>: añade un par clave-valor a la cabecera de la respuesta.</li>
-                    <li><code>write(str)</code>: envia la cadena <code>str</code> en el cuerpo de la respuesta.</li>
-                    <li><code>end([str])</code>: delimita el final de la respuesta.</li>
-                </ul>
-            </section>
 
             <section>
-                <h4>Ejemplo</h4>
-                <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
+                <section>
+                    <h3>El objeto <code>response</code></h3>
+                    <p>Hasta ahora, cuando introducimos una URL en el navegador, éste se queda &laquo;colgado&raquo; esperando una respuesta del servidor. Utilizaremos el objeto <code>response</code> de la función callback para responder al servidor. Sus atributos y métodos más importantes son:
+                    </p>
+                    <ul>
+                        <li><code>statusCode</code>: indica el código de respuesta: 200, 404, etc.</li>
+                        <li><code>setHeader(clave, valor)</code>: añade una cabecera a la respuesta.</li>
+                        <li><code>write(str)</code>: envia la cadena <code>str</code> en el cuerpo de la respuesta.</li>
+                        <li><code>end([str])</code>: delimita el final de la respuesta.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+const servidor = http.createServer(function(request, response) {
     response.statusCode = 200;
     response.setHeader("Content-Type", "text/html");
     response.write('&lt;!DOCTYPE html&gt;');
@@ -1939,27 +1957,107 @@ var servidor = http.createServer(function(request, response) {
     response.write('&lt;meta charset="utf-8"&gt;');
     response.write('&lt;/head&gt;');
     response.write('&lt;body>&lt;/ul&gt;');
-    for (var i = 0; i &lt; 10; i++) {
+    for (let i = 0; i &lt; 10; i++) {
         response.write(`&lt;li&gt;Item ${i}&lt;/li&gt;`);
     }
     response.write('&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;');
     response.end();
 });                
                 </code></pre>
+                </section>
+                <section>
+                    <p>Al acceder a <code>http://localhost:3000</code>:</p>
+                    <img src="images/04/ItemsServidor.png" style="width:70%">
+                </section>
             </section>
 
             <section>
-                <p>Al acceder a <code>http://localhost:3000</code>:</p>
-                <img src="images/04/ItemsServidor.png" style="width:70%">
+                <section>
+                    <h3>Otro ejemplo: acceso a una BD</h3>
+                    <p>Utilizando la base de datos vista anteriormente, queremos una página que devuelva, para cada usuario, su nombre, apellidos y el número de direcciones de correo asociadas.</p>
+                    <img src="images/04/BDTelefonosNavegador.png" width="60%">
+                </section>
+                <section>
+                    <p>Implementamos una función <code>consultaBD</code>, que realiza la consulta SQL correspondiente y pasa los resultados a la función callback pasada como parámetro:</p>
+                    <pre><code data-trim class="javascript" style="font-size:90%">
+const pool = ...
+
+function consultaBD(callback) {
+    pool.getConnection(function(err, conexion) {
+      if (err) { callback(err); }
+      else {
+        conexion.query(
+          "SELECT Nombre, Apellidos, COUNT(tc.Correo) as NumCorreos " +
+          "FROM Contactos c LEFT JOIN Tiene_Correo tc ON c.Id = tc.Id " +
+          "GROUP BY c.id",
+          function(err, rows) {
+                conexion.release();
+                callback(null, rows);
+          });
+      }
+    });  
+}
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Función callback del servidor:</p>
+                    <pre><code data-trim class="javascript">
+const servidor = http.createServer(function(request, response) {
+    consultaBD(function(err, filasBD) {
+        if (err) {
+            response.statusCode = 500;
+            console.error(err);
+        } else {
+            response.statusCode = 200;
+            devolverPagina(response, filasBD);
+        }
+    });
+});
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>devolverPagina</code> es la que se encarga de generar el código HTML correspondiente:</p>
+                    <pre><code data-trim class="javascript" style="font-size:90%;line-height:120%">
+function devolverPagina(response, filasBD) {
+    response.setHeader("Content-Type", "text/html");
+    response.write('&lt;html&gt;');
+    response.write('&lt;head&gt;');
+    response.write('&lt;title&gt;Base de datos de teléfonos&lt;/title&gt;');
+    response.write('&lt;meta charset="utf-8">');
+    response.write('&lt;style&gt;th, td { border: 1px solid }&lt;/style&gt;');
+    response.write('&lt;/head&gt;');
+    response.write('&lt;body&gt;');
+    response.write('&lt;table&gt;');
+    response.write('&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Apellidos&lt;/th&gt;' + 
+                   '&lt;th&gt;Número direcciones&lt;/th&gt;&lt;/tr&gt;');
+    filasBD.forEach(function(fila) {
+        response.write('&lt;tr&gt;');
+        response.write(`&lt;td&gt;${fila.Nombre}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.Apellidos}&lt;/td&gt;`);
+        response.write(`&lt;td&gt;${fila.NumCorreos}&lt;/td&gt;`);
+        response.write('&lt;/tr&gt;');
+    });
+    response.write('&lt;/table&gt;');
+    response.write('&lt;/body&gt;');
+    response.end();
+}                
+                </code></pre>
+                </section>
             </section>
 
+
             <section>
+                <h3>Esquema general de un servidor</h3>
                 <p>La función callback del servidor devuelve una respuesta en función de la petición recibida.</p>
                 <p>Una función callback típica tendría la siguiente forma:</p>
                 <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
-    var method = request.method;
-    var url = request.url;
+const servidor = http.createServer(function(request, response) {
+    const method = request.method;
+    const url = request.url;
     if (method === "GET" &amp;&amp; url === "/index.html") {
         // Servir página principal.
     } else if (method === "GET" &amp;&amp; url === "/index.css") {
@@ -1973,298 +2071,21 @@ var servidor = http.createServer(function(request, response) {
     }
 });
                 </code></pre>
-                <p>Obviamente, hay soluciones mejores.</p>
             </section>
 
+
             <section>
-                <h3>Páginas estáticas y dinámicas</h3>
+                <h3>¡Qué complicado! ¿no?</h3>
+                <p>Esta función <em>callback</em> tendrá que lidiar con:</p>
                 <ul>
-                    <li>
-                        <p>Las páginas <strong>estáticas</strong> son aquellas cuyo contenido es &laquo;fijo&raquo;, en tanto que no dependen de la petición HTTP realizada, o de otros recursos (por ejemplo, BD).</p>
-                        <p>Las páginas estáticas se almacenan como archivos independientes en el servidor, y se devuelven al cliente tal y como están almacenadas (sin modificaciones).</p>
-                        <p>Las hojas de estilo, imágenes, etc. de una página también se consideran recursos estáticos.</p>
-                    </li>
-
-                    <li class="fragment">
-                        <p>Las páginas <strong>dinámicas</strong> son generadas total o parcialmente mediante código Javascript, porque su contenido depende de la petición o de otros recursos.</p>
-                    </li>
-                </ul>
-            </section>
-
-            <section>
-                <p>Al recibir una petición de una página estática, el servidor tan solo lee el fichero correspondiente y lo devuelve al cliente:</p>
-                <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
-    var method = request.method;
-    var url = request.url;
-    if (url corresponde a una página estática) {
-        // Leer página estática de disco
-        // Devolverla al cliente.
-    } else {
-        // ...
-        // Es una página web dinámica
-        // Generar y devolver su contenido.
-        // Si la URL no es válida, devolver un error 404.
-        // ...
-    }
-});
-                </code></pre>
-
-            </section>
-
-            <section>
-                <h3>Página web dinámica</h3>
-                <p>Utilizando la base de datos vista anteriormente, queremos una página que devuelva, para cada usuario, su nombre, apellidos y el número de direcciones de correo asociadas.</p>
-                <img src="images/04/BDTelefonosNavegador.png" width="60%">
-            </section>
-
-
-            <section>
-                <p>Implementamos una función <code>consultaBD</code>, que realiza la consulta SQL correspondiente y pasa los resultados a la función callback pasada como parámetro:</p>
-                <pre><code data-trim class="javascript" style="font-size:90%">
-function consultaBD(callback) {
-    var conexion = mysql.createConnection({
-        host: "localhost",
-        user: "root", password: "",
-        database: "miBD"
-    });
-    
-    conexion.connect(function(err) {
-      if (err) { callback(err); }
-      else {
-        conexion.query(
-          "SELECT Nombre, Apellidos, COUNT(tc.Correo) as NumCorreos " +
-          "FROM Contactos c LEFT JOIN Tiene_Correo tc ON c.Id = tc.Id " +
-          "GROUP BY c.id",
-          function(err, rows) {
-                conexion.end();
-                callback(null, rows);
-          });
-      }
-    });  
-}
-                
-                </code></pre>
-            </section>
-
-            <section>
-                <p>Función callback del servidor:</p>
-                <pre><code data-trim class="javascript">
-var servidor = http.createServer(function(request, response) {
-    consultaBD(function(err, filasBD) {
-        if (err) {
-            response.statusCode = 500;
-            console.error(err);
-        } else {
-            response.statusCode = 200;
-            devolverPagina(response, filasBD);
-        }
-    });
-});
-                
-                </code></pre>
-            </section>
-
-            <section>
-                <p>La función <code>devolverPagina</code> es la que se encarga de generar el código HTML correspondiente:</p>
-                <pre><code data-trim class="javascript" style="font-size:90%;line-height:120%">
-function devolverPagina(response, filasBD) {
-    response.setHeader("Content-Type", "text/html");
-    response.write('&lt;html&gt;');
-    response.write('&lt;head&gt;');
-    response.write('&lt;title&gt;Base de datos de teléfonos&lt;/title&gt;');
-    response.write('&lt;meta charset="utf-8">');
-    response.write('&lt;style&gt;th, td { border: 1px solid }&lt;/style&gt;');
-    response.write('&lt;/head&gt;');
-    response.write('&lt;body&gt;');
-    response.write('&lt;table&gt;');
-    response.write('&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Apellidos&lt;/th&gt;' + 
-                   '&lt;th&gt;Número direcciones&lt;/th&gt;&lt;/tr&gt;');
-    filasBD.forEach(function(fila) {
-        response.write('&lt;tr&gt;');
-        response.write(`&lt;td&gt;${fila.Nombre}&lt;/td&gt;`);
-        response.write(`&lt;td&gt;${fila.Apellidos}&lt;/td&gt;`);
-        response.write(`&lt;td&gt;${fila.NumCorreos}&lt;/td&gt;`);
-        response.write('&lt;/tr&gt;');
-    });
-    response.write('&lt;/table&gt;');
-    response.write('&lt;/body&gt;');
-    response.end();
-}                
-                </code></pre>
-            </section>
-
-            <section>
-                <h3>Procesadores de plantillas</h3>
-                <p>La tarea de generar el documento HTML directamente en el código Javascript, incluso en páginas dinámicas, es tediosa.</p>
-
-                <p>Aunque un documento HTML puede tener contenido generado dinámicamente, una buena parte del documento consiste en código invariable: Etiquetas <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>, encabezado de la página, etc.</p>
-
-            </section>
-
-            <section>
-                <p>Una <strong>plantilla</strong> es un documento HTML con &laquo;huecos&raquo;. Un <strong>procesador de plantillas</strong> se encarga de colocar el contenido dinámico en estos huecos.</p>
-                <img src="images/04/Plantillas.svg" width="70%" style="border:none; box-shadow:none">
-            </section>
-
-            <section>
-                <h4>Procesadores de plantillas en Node</h4>
-                <p>Información: <a href="https://garann.github.io/template-chooser/">https://garann.github.io/template-chooser/</a></p>
-                <ul>
-                    <li>Mustache.js - <a href="http://mustache.github.io/">http://mustache.github.io</a></li>
-                    <li>Pug (aka. Jade) - <a href="https://pugjs.org/">https://pugjs.org</a></li>
-                    <li>Handlebars - <a href="http://handlebarsjs.com/">http://handlebarsjs.com</a></li>
-                    <li>doT.js - <a href="http://olado.github.io/doT/">http://olado.github.io/doT/</a></li>
-                    <li>EJS - <a href="http://ejs.co/">http://ejs.co/</a>
-                        <span class="arrow_box_left caja_codigo fragment" style="font-size: 80%; position:relative; left: 50px">Esta asignatura</span>
-                    </li>
-                </ul>
-            </section>
-
-            <section>
-                <h4>EJS</h4>
-                <p>Es un paquete externo que se instala mediante <code>npm</code>: </p>
-                <pre><code data-trim class="no-highlight">
-npm install ejs --save        
-                </code></pre>
-                <p>Las plantillas de EJS son documentos HTML con marcadores especiales de varios tipos:</p>
-                <ul>
-                    <li>Marcadores de <strong>programa</strong>, delimitados por <code>&lt;%</code> y <code>%&gt;</code></li>
-                    <li>Marcadores de <strong>expresión</strong>, delimitados por <code>&lt;%=</code> y <code>%&gt;</code></li>
-                </ul>
-            </section>
-
-            <section>
-                <p>Los marcadores de expresión evalúan la expresión Javascript dada, la convierten en cadena, y se reemplazan por dicha cadena.</p>
-                <pre><code data-trim data-noescape class="html">
-&lt;h1&gt;¡Bienvenido, <span class="hl">&lt;%= usuario.nombre %&gt;</span>!&lt;/h1&gt;
-                </code></pre>
-
-                <div class="fragment">
-                    <p>Los marcadores de programa contienen sentencias (o fragmentos de sentencias) Javascript. Suelen utilizarse con bucles, condicionales, etc.</p>
-
-                    <pre><code data-trim data-noescape class="html">
-<span class="hl">&lt;% if (!usuario.nombre) { %&gt;</span>
-   &lt;p&gt;No est&aacute;s identificado.&lt;/p&gt;
-<span class="hl">&lt;% } else { %&gt;</span>
-   &lt;p&gt;&iexcl;Bienvenido, <span class="hl">&lt;%= usuario.nombre %&gt;</span>!&lt;/p&gt;
-<span class="hl">&lt;% } %&gt;</span>
-                </code></pre>
-                </div>
-
-            </section>
-
-            <section>
-                <p>Volviendo a nuestro ejemplo:</p>
-                <pre><code data-trim class="javascript" style="font-size:90%;line-height:120%">
-function devolverPagina(response, filasBD) {
-    response.write('&lt;html&gt;');
-    response.write('&lt;head&gt;');
-    response.write('&lt;title&gt;Base de datos de teléfonos&lt;/title&gt;');
-    response.write('&lt;meta charset="utf-8">');
-    response.write('&lt;style&gt;th, td { border: 1px solid }&lt;/style&gt;');
-    response.write('&lt;/head&gt;');
-    response.write('&lt;body&gt;');
-    response.write('&lt;table&gt;');
-    response.write('&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Apellidos&lt;/th&gt;' + 
-                   '&lt;th&gt;Número direcciones&lt;/th&gt;&lt;/tr&gt;');
-    filasBD.forEach(function(fila) {
-        response.write('&lt;tr&gt;');
-        response.write(`&lt;td&gt;${fila.Nombre}&lt;/td&gt;`);
-        response.write(`&lt;td&gt;${fila.Apellidos}&lt;/td&gt;`);
-        response.write(`&lt;td&gt;${fila.NumCorreos}&lt;/td&gt;`);
-        response.write('&lt;/tr&gt;');
-    });
-    response.write('&lt;/table&gt;');
-    response.write('&lt;/body&gt;');
-    response.end();
-}                
-                </code></pre>
-            </section>
-
-            <section>
-                <p>Fichero <code>templates/dirsCorreo.ejs</code>:</p>
-                <pre><code data-trim data-noescape class="html" style="font-size:80%;line-height:120%">
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;Base de datos de tel&eacute;fonos&lt;/title&gt;
-        &lt;meta charset=&quot;utf-8&quot;&gt;
-        &lt;style&gt;
-            th, td { border: 1px solid }
-        &lt;/style&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;table&gt;
-            &lt;tr&gt;
-                &lt;th&gt;Nombre&lt;/th&gt;
-                &lt;th&gt;Apellidos&lt;/th&gt;
-                &lt;th&gt;N&uacute;mero direcciones&lt;/th&gt;
-            &lt;/tr&gt;
-            <span class="hl">&lt;% filas.forEach(function(fila) { %&gt;</span>
-            &lt;tr&gt;
-                &lt;td&gt;<span class="hl">&lt;%= fila.Nombre %&gt;</span>&lt;/td&gt;
-                &lt;td&gt;<span class="hl">&lt;%= fila.Apellidos %&gt;</span>&lt;/td&gt;
-                &lt;td&gt;<span class="hl">&lt;%= fila.NumCorreos %&gt;</span>&lt;/td&gt;                
-            &lt;/tr&gt;
-            <span class="hl">&lt;% }); %&gt;</span>
-        &lt;/table&gt;
-    &lt;/body&gt;
-&lt;/html&gt;                
-                </code></pre>
-            </section>
-
-            <section>
-                <h4>La función <code>render()</code> de EJS</h4>
-                <p>Se encarga de producir el documento HTML definitivo a partir de la plantilla y el modelo.</p>
-                <p><code>render(plantilla, modelo)</code></p>
-                <ul>
-                    <li><code>plantilla</code> es una cadena con el texto de la plantilla.</li>
-                    <li><code>modelo</code> es un objeto, cuyos atributos pueden referenciarse dentro de la plantilla como si fueran variables.</li>
-                </ul>
-                <p>La función <code>render</code> devuelve el documento HTML generado.</p>
-
-            </section>
-
-            <section>
-                <p>La función <code>devolverPagina()</code> hace uso de esta plantilla:</p>
-                <pre><code data-trim class="javascript">
-var fs = require("fs");
-var ejs = require("ejs");
-
-// ...
-
-function devolverPagina(response, filasBD) {
-  fs.readFile("./templates/dirsCorreo.ejs", {encoding: "utf-8"},
-        // Función callback asociada a readFile
-        function(err, plantilla) {
-            if (err) {
-                console.error(err);
-            } else {
-                var modelo = { filas: filasBD };
-                // Dentro de la plantilla, la variable 'filas' 
-                // contendrá el array filasBD.
-                var docHTML = ejs.render(plantilla, modelo);
-                response.statusCode = 200;
-                response.end(docHTML);
-            }
-        });
-}
-                </code></pre>
-            </section>
-
-            <section>
-                <h3>Otros aspectos de un servidor web</h3>
-                <ul>
+                    <li>Generación de páginas web complejas mediante <code>response.write()</code>.</li>
                     <li>Procesamiento de <strong>formularios</strong>: <code>url</code> y <code>querystring</code>.</li>
-                    <li>Manejo de <strong>ficheros estáticos</strong>.</li>
                     <li>Envío de ficheros al servidor.</li>
-                    <li>Cookies.</li>
-                    <li>etc.</li>
+                    <li>Manejo de cookies, sesiones, etc.</li>
                 </ul>
 
                 <p>El módulo <code>http</code> es de demasiado bajo nivel para estas tareas. Es recomendable el uso de un <strong>framework</strong> que abstraiga los detalles técnicos.</p>
-                <p style="color:#009e3c; font-size: 120%; font-style:italic; font-weight:bold; float:right" class="fragment">Continuará...</p>
+                <p style="color:#009e3c; font-size: 120%; font-style:italic; font-weight:bold; float:right"><span class="fragment">Continuará...</span><span class="fragment">en el siguiente tema.</span></p>
                 <div style="clear:right"></div>
             </section>
 
@@ -2297,7 +2118,7 @@ function devolverPagina(response, filasBD) {
                         </li>
                         <li>
                             <a href="https://nodejs.org/docs/v4.6.1/api/">Documentación de las librerías de Node</a>
-                            <br><span style="font-size:50%">https://nodejs.org/docs/v4.6.1/api/</span>
+                            <br><span style="font-size:50%">https://nodejs.org/dist/latest-v6.x/docs/api/</span>
                         </li>
                     </ul>
                 </div>
