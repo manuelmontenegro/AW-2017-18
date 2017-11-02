@@ -1,0 +1,12 @@
+{
+  "name": "modulos",
+  "version": "1.0.0",
+  "description": "Pruebas con módulos",
+  "main": "testModules.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Manuel Montenegro",
+  "private": true,
+  "license": "ISC"
+}

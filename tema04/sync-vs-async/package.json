@@ -1,0 +1,12 @@
+{
+    "name": "sync-vs-async",
+    "version": "1.0.0",
+    "keywords": [],
+    "author": "Manuel Montenegro",
+    "description": "Funciones síncronas y asíncronas",
+    "private": true,
+    "scripts": {
+        "start": "node async.js"
+    }
+
+}

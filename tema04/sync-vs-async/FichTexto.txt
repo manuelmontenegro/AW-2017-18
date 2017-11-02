@@ -1,0 +1,5 @@
+
+Esto es un fichero de texto
+---------------------------
+
+Para que sea leído de manera síncrona y de manera asíncrona.

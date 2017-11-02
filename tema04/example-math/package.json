@@ -1,0 +1,14 @@
+{
+  "name": "example-math",
+  "version": "1.0.0",
+  "description": "Definición de módulos de tipo paquete",
+  "main": "ejemplo.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "author": "Manuel Montenegro",
+  "license": "ISC"
+}
