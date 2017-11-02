@@ -1866,7 +1866,7 @@ var c2 = construirComplejo(1, 1);
                     <pre><code data-trim class="javascript">
 // Añadimos una nueva función al prototipo:
 
-prototipoComplejo.coordenadasPolares = () => {
+prototipoComplejo.coordenadasPolares = function() {
   console.log(`(${this.modulo()}, ${this.argumento()})`);
 }
 
