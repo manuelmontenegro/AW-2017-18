@@ -1,8 +1,0 @@
-form {
-    display: grid;
-    grid-template-columns: auto 1fr;
-}
-
-form > div {
-    padding: 10px;
-}
