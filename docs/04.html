@@ -1684,6 +1684,70 @@ connection.query(
                 </section>
 
             </section>
+            
+            <section>
+                <section>
+                    <h3>El problema de las n+1 consultas</h3>
+                    <p>
+                        <img src="images/04/TelefonosER.png" style="width:80%" class="noborder">
+                    </p>
+                    <p>Supongamos que queremos mostrar un listado de todos los contactos, cada uno de ellos con sus números de teléfono asociados.</p>
+                </section>
+                
+                <section>
+                    <p>Supongamos la siguente solución (pseudocódigo):</p>
+<pre><code data-trim data-noescape class="sql">
+listaContactos := <span class="hl">SELECT Id, Nombre FROM Contactos</span>
+for (c in listaContactos) {
+    print(c.Nombre);
+    listaTelefonos := <span class="hl">SELECT Numero, Tipo FROM Tiene_Telefono</span>
+                      <span class="hl">WHERE Id = c.Id</span>
+    for (t in listaTelefonos) {
+        print(c.Numero, c.Tipo)
+    }
+}
+</code></pre>                    
+                    <p class="fragment">Si existen <code>n</code> contactos, ¿cuántas consultas se realizan?</p>
+                    <ul class="fragment">
+                        <li>Una para obtener todos los contactos.</li>
+                        <li>Para cada uno de los <code>n</code> contactos, una consulta para obtener sus teléfonos.</li>
+                    </ul>
+                    <p class="fragment">Total: <code>n+1</code> consultas.</p>
+                </section>
+                
+                <section>
+                    <p>El problema de las <strong>n+1 consultas</strong> se produce cuando se realiza un número de consultas proporcional al número de resultados recuperados de la BD.</p>
+                    <p>Cada consulta conlleva un coste en tiempo.</p>
+                    <p>Podemos obtener el mismo resultado mediante una única consulta, aunque sea más compleja.</p>
+                </section>
+                
+                <section>
+<pre><code data-trim data-noescape class="sql">
+filasConsulta := <span class="hl">SELECT c.Id, c.Nombre, t.Numero, t.Tipo </span>
+                 <span class="hl">FROM Contactos AS c</span>
+                 <span class="hl">LEFT JOIN Tiene_Telefono AS t ON c.Id = t.Id</span>
+                 <span class="hl">ORDER BY c.Id</span>
+</code></pre>                    
+                    <p><img src="images/04/JoinContactos.png" style="width:50%" class="noborder"></p>
+                </section>
+                
+                <section>
+                    <p><img src="images/04/JoinContactos.png" style="width:50%" class="noborder"></p>
+<pre><code data-trim data-noescape class="javascript">
+IdContactoActual := null;
+for (f in filasConsulta) {
+    if (f.Id &ne; IdContactoActual) {
+        print(f.Nombre)
+        IdContactoActual := f.Id;
+    }
+    if (f.Numero &ne; null) {
+        print(f.Numero)
+    }
+}
+</code></pre>                    
+                </section>
+
+            </section>
 
 
             <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
