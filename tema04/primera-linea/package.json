@@ -1,0 +1,19 @@
+{
+  "name": "primeralinea",
+  "version": "1.0.0",
+  "description": "Proyecto de prueba",
+  "main": "main.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node main.js"
+  },
+  "keywords": [
+    "primer",
+    "ejemplo",
+    "AW",
+    "FdI"
+  ],
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "private": true
+}
