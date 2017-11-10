@@ -1,0 +1,21 @@
+{
+  "name": "middleware-error",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "manuel",
+  "contributors": [],
+  "scripts": {
+    "start": "nodemon main.js"
+  },
+  "private": true,
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}

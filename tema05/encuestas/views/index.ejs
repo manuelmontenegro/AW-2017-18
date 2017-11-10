@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Encuesta</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1><%= pregunta %></h1>
+        <form action="enviar_respuesta" method="post" id="formulario">
+            <div class="tabla">
+                <% opcs.forEach((opc, i) => { %>
+                <div>
+                    <input type="radio" name="respuesta" value="<%= i %>" id="respuesta<%= i %>">
+                    <label for="respuesta<%= i %>"><%= opc.texto %></label>
+                </div>
+                <% }); %>
+            </div>
+            <input type="submit" value="Enviar">
+        </form>
+    </body>
+</html>
+ 

@@ -1,0 +1,22 @@
+{
+  "name": "session",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "scripts": {
+    "start": "nodemon main.js"
+  },
+  "author": "manuel",
+  "contributors": [],
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-mysql-session": "^1.2.2",
+    "express-session": "^1.15.6"
+  }
+}

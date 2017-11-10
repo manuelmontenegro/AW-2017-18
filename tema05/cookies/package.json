@@ -1,0 +1,21 @@
+{
+  "name": "cookies",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "scripts": {
+    "start": "nodemon main.js"
+  },
+  "author": "manuel",
+  "contributors": [],
+  "private": true,
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2"
+  }
+}

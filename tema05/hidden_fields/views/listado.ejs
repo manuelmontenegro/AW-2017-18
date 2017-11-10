@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Listado de usuarios</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Listado de usuarios</h1>
+        <ul>
+            <% usuarios.forEach((usuario, indice) => { %>
+                <li><%= usuario %>
+                    (<a href="editar?ind=<%= indice %>">Editar</a>)
+                </li>
+            <% }); %>
+        </ul>
+    </body>
+</html>

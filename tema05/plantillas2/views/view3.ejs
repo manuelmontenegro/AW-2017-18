@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vista 3</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <%- include("header") %>
+        <div>
+            <ul>
+                <% usuarios.forEach(function(u) { %>
+                <%- include("userView", { usuario: u }) %>
+                <% }); %>
+            </ul>
+        </div>
+        <%- include("footer") %>
+    </body>
+</html>

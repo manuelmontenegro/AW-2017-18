@@ -1,0 +1,21 @@
+{
+  "name": "primer-ejemplo",
+  "version": "1.0.0",
+  "description": "Primer ejemplo con Express.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "primer",
+    "ejemplo"
+  ],
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}

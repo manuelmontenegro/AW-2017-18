@@ -1,0 +1,32 @@
+
+#formulario > div.tabla {
+    display: table;
+    border-spacing: 10px;
+}
+
+#formulario > div.tabla > div {
+    display: table-row;
+}
+
+#formulario > div > input {
+    display: table-cell;
+}
+
+#formulario > div > label {
+    display: table-cell;
+}
+
+table.resultados {
+    border-collapse: collapse;
+    
+}
+
+table.resultados td, table.resultados th {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+div.barra {
+    height:1em;
+    background-color: blue;
+}

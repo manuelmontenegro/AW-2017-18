@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Resultados de la encuesta</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>Resultados</h1>
+        <table class="resultados">
+            <tr>
+                <th>Respuesta</th>
+                <th>Número de votos</th>
+            </tr>
+            <% opcs.forEach(opcion => { %>
+            <tr>
+                <td><%= opcion.texto %></td>
+                <td><%= opcion.numeroVotos %></td>
+            </tr>
+            <% }); %>
+        </table>
+    </body>
+</html>
+ 

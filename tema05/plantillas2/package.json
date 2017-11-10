@@ -1,0 +1,21 @@
+{
+  "name": "templates",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "scripts": {
+    "start": "nodemon main.js"
+  },
+  "author": "manuel",
+  "contributors": [],
+  "private": true,
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}

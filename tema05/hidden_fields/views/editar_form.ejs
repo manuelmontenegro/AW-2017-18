@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editar usuario</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Editar usuario</h1>
+        <form action="actualizar_usuario" method="POST">
+            <label for="nuevo">Nuevo nombre: </label>
+            <input type="hidden" name="indice" value="<%= indice %>">
+            <input type="text" name="nuevo_nombre" value="<%= nombre %>">
+            <input type="submit" value="Enviar">
+        </form>
+    </body>
+</html>

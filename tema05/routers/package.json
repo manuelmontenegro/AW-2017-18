@@ -1,0 +1,21 @@
+{
+  "name": "routers",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "manuel",
+  "contributors": [],
+  "private": true,
+  "scripts": {
+    "start": "nodemon main.js"
+  },
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}
