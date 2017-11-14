@@ -1,0 +1,16 @@
+{
+  "name": "hoja4-ej3",
+  "version": "1.0.0",
+  "description": "Hoja 4, ejercicio 3",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "mysql": "^2.15.0"
+  }
+}

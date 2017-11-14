@@ -22,3 +22,6 @@ Inyección SQL. Consultas paramétricas.
 
 7. `http`
 Servidores HTTP sencillos mediante el módulo `http`.
+
+8. `ejercicio-3`
+Solución al ejercicio 3 de la Hoja de Ejercicios 4.
