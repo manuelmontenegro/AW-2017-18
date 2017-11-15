@@ -25,3 +25,6 @@ Servidores HTTP sencillos mediante el módulo `http`.
 
 8. `ejercicio-3`
 Solución al ejercicio 3 de la Hoja de Ejercicios 4.
+
+9. `http-extended`
+Servidor HTTP implementado en clase.
