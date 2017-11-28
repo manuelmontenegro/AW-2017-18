@@ -446,7 +446,7 @@ app.get("/", (request, response) => {
                 </section>
 
                 <section>
-                    <p>Las páginas estáticas <strong>no</strong> suelen devolverse al cliente mediante llamadas a <code>response.end()</code>.</p>
+                    <p>Las páginas estáticas <strong>no</strong> suelen devolverse al cliente mediante llamadas a <code>response.write()</code>.</p>
                     <p>Normalmente se almacenan como archivos independientes en el servidor, y se devuelven al cliente tal y como están almacenadas (sin modificaciones).</p>
                     <p>Esto se aplica a las hojas de estilo, imágenes, etc. de una página, que también se consideran recursos estáticos.</p>
 
@@ -769,7 +769,7 @@ var server = http.createServer(function(request, response) {...});
                         <li><code>redirect()</code></li>
                         <li><code>json()</code></li>
                     </ul>
-                    <p>En cada petición, solo es posible llamar una vez a alguno de estos métodos.</p>
+                    <p>En cada petición solo es posible llamar una vez a alguno de estos métodos.</p>
                 </section>
             </section>
 
@@ -2308,15 +2308,17 @@ app.get("/pag4", function(request, response) {
                 <section>
                     Los mensajes flash suelen almacenarse como cookies o atributos de sesión, para que &laquo;sobrevivan&raquo; a las redirecciones, en caso de producirse.
                     <pre><code data-trim data-noescape class="javascript">
-function setFlash(request, msg) {
-    request.session.flashMsg = msg;
-}
-
-function getAndClearFlash(request) {
-    let msg = request.session.flashMsg;
-    delete request.session.flashMsg;
-    return msg;
-}
+app.use((request, response, next) => {
+    response.setFlash = (msg) => {
+        request.session.flashMsg = msg;    
+    };
+    
+    response.locals.getAndClearFlash = () => {
+        let msg = request.session.flashMsg;
+        delete request.session.flashMsg;
+        return msg;
+    };
+});
 </code></pre>
                 </section>
 
