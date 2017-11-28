@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista de la compra</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <h1>Tu lista de la compra</h1>
+        <% let mensaje = getFlash(); %>
+        <% if (mensaje) { %>
+            <div class="flash">
+                <%= mensaje %>
+            </div>
+        <% } %>
+        <form action="/newEntry" method="POST">
+            <label for="cuadro">Introduce una nueva entrada: </label>
+            <input type="text" name="elemento" id="cuadro">
+            <input type="submit" value="Añadir">
+        </form>
+        <ul>
+            <% listaCompra.forEach(elem => { %>
+                <li><%= elem %></li>
+            <% }); %>
+        </ul>
+    </body>
+</html>

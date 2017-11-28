@@ -41,6 +41,7 @@ El mismo ejemplo, pero con atributos de sesión.
 13. `plantillas2`
 Diseño avanzado de plantillas. Uso de `include` y variables `res.locals`.
 
-
+14. `flashMsgs`
+Aplicación: mensajes flash
 
 

@@ -1,0 +1,10 @@
+body {
+    font-family: sans-serif;
+}
+
+.flash {
+    background-color: #00a9af;
+    color: white;
+    margin: 10px 0px;
+    padding: 10px;
+}

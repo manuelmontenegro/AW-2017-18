@@ -1,0 +1,24 @@
+{
+  "name": "flash-messages",
+  "version": "1.0.0",
+  "description": "Prueba con mensajes flash",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon main.js"
+  },
+  "keywords": [
+    "mensajes",
+    "flash",
+    "aw"
+  ],
+  "private": true,
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6"
+  }
+}
