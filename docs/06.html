@@ -1,0 +1,1974 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 6 - Aspectos avanzados de programación del servidor</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 6</div>
+                <h1 style="height:4em;position:relative;top:0.3em">Programación en el servidor:<br> aspectos avanzados</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>¿Por qué un modelo asíncrono?</h2>
+                <p>Node está pensado para desarrollar aplicaciones con alta capacidad de respuesta como, por ejemplo, servidores web.</p>
+                <p>La funcionalidad de la mayoría de aplicaciones web está basada en accesos a disco u otra fuente de datos (p.ej. bases de datos), que son operaciones <strong>relativamente lentas</strong>.</p>
+                <p>Para que un servidor web pueda atender a varios clientes, ha de gestionar adecuadamente estas operaciones de entrada y salida.</p>
+            </section>
+
+            <section>
+                <h3>Modelos de servidores web</h3>
+                <ol>
+                    <li>Modelo tradicional: un proceso por petición.</li>
+                    <li>Modelo tradicional: <em>pool</em> de hebras de ejecución.</li>
+                    <li>NGINX Process Model (Node).</li>
+                </ol>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Un proceso por petición</h3>
+                    <img src="images/04/ServidorProcesos.svg" width="80%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Se crea un proceso del sistema operativo por cada petición que se realice.</p>
+                    <p><strong>Inconveniente:</strong> coste de la creación de procesos.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Pool de hebras de ejecución</h3>
+                    <img src="images/04/ServidorHilos.svg" width="80%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Al arrancar el servidor se crea un conjunto de hebras, inicialmente sin tarea asignada.</p>
+                    <p>Cuando llega una petición al servidor, una de las hebras se encarga de atenderla.</p>
+                    <p>Con esto nos ahorramos el coste de creación y liberación de hebras a medida que van llegando peticiones.</p>
+                    <p><strong>Inconveniente:</strong> el cambio del contexto de ejecución entre hebras conlleva un coste.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Modelo NGINX / Node</h3>
+                    <img src="images/04/ServidorNGINX.svg" width="90%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Existe <strong>un único hilo</strong> en ejecución</p>
+                    <p>Este hilo se encarga de atender a todas las peticiones.</p>
+
+                    <p>Cuando se requiere realizar una operación con coste elevado en tiempo (acceso a disco, BD, red, etc.), se realiza de manera asíncrona. La función <em>callback</em> se guarda en una cola de funciones que se ejecutarán cuando finalice el código que se está ejecutando actualmente.</p>
+                    <div class="fragment">
+                        <p><strong>Esta cola es gestionada por Node</strong>, no por el SO.</p>
+
+                        <p>&rArr; El cambio de contexto es menos costoso.</p>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Bucle principal de un servidor Node</h3>
+                    <pre><code data-trim class="javascript">
+while (!terminado) {
+    1. Esperar petición de un cliente.
+    2. Procesar petición.
+}                
+                </code></pre>
+                    <p>¿Cómo se procesa la petición?</p>
+                </section>
+
+                <section>
+                    <p>Si sólo se utilizan operaciones síncronas, el servidor no acepta otra petición hasta que la hayan terminado dichas operaciones:</p>
+                    <pre><code data-trim class="javascript">
+while (!terminado) {
+    1. Esperar petición de un cliente.
+    2. Procesar petición:
+        2.1 let resultado = consultarBDSync(...);
+        2.2 Procesar resultado
+        2.3 Devolver resultado al cliente.
+}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Por el contrario, si se realizan operaciones asíncronas, será la función callback la que procese y devuelva el resultado de la operación. Antes de ejecutar la función callback, la iteración actual del bucle continúa su ejecución.</p>
+                    <pre><code data-trim class="javascript">
+while (!terminado) {
+    1. Esperar petición de un cliente.
+    2. Procesar petición:
+        2.1 let resultado = consultarBDASync(..., callback);
+}                
+
+function callback(resultado) {
+    1. Procesar resultado
+    2. Devolver resultado al servidor
+}
+                </code></pre>
+                    <p>Nada más lanzar la operación <code>consultarDBAsync</code>, el servidor está listo para atender otra petición.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Consecuencias de este modelo</h3>
+                    <p>En el contexto de un servidor web con Node, todas las operaciones de E/S deben ser <strong>asíncronas</strong>, para evitar cuellos de botella en el procesamiento de las peticiones.</p>
+
+                    <p>Esto es especialmente relevante cuando se quiere realizar operaciones costosas en términos de tiempo de CPU.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+while (!terminado) {
+    1. Esperar petición de un cliente.
+    2. Procesar petición (alto coste CPU). <span class="arrow_box_left caja_codigo fragment">Cuello de botella</span>
+    3. Devolver respuesta.
+}                         
+                </code></pre>
+                </section>
+
+                <section>
+                    <div style="background-color:#ffdddd;padding:10px;">
+                        La eficiencia de un servidor implementado en Node &laquo;flojea&raquo; cuando éste tiene que realizar operaciones que requieren <strong>un uso intenso de la CPU</strong>.
+                    </div>
+
+                    <p>
+                        Si se desea realizar una operación de este tipo, el cómputo complejo deberá dividirse en cómputos más sencillos, y ejecutar cada uno de ellos en una iteración del bucle de node, de manera que se intercalen con el procesamiento de las demás peticiones al servidor.
+                    </p>
+                    <p>
+                        Esto se puede realizar con la función <code>process.nextTick()</code><br>
+                        <a href="https://howtonode.org/understanding-process-next-tick">Más información</a>
+                    </p>
+                </section>
+
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline current">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Más sobre módulos</h2>
+                <ul>
+                    <li>Los módulos admiten sentencias.</li>
+                    <li>El objeto <code>module</code>.</li>
+                    <li>Los módulos se &laquo;cachean&raquo;.</li>
+                    <li>Aplicaciones del sistema de paquetes.</li>
+                    <li>Versionado semántico.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Los módulos admiten sentencias</h3>
+                <p>Además de declaraciones de funciones, un módulo puede contener cualquier tipo de sentencia. Estas sentencias serán ejecutadas al cargar el módulo.</p>
+                <pre><code data-trim data-noescape class="javascript">
+<span class="hl">console.log("Cargando módulo " + module.filename);</span>
+
+function areaCuadrado(lado) { ... }
+
+function areaCirculo(radio) { ... }
+
+function perimetroCuadrado(lado) { ... }
+
+function perimetroCirculo(radio) { ... }
+
+module.exports = {
+    areaCuadrado: areaCuadrado,
+    areaCirculo: areaCirculo,
+    perimetroCuadrado: perimetroCuadrado,
+    perimetroCirculo: perimetroCirculo
+}                
+                </code></pre>
+            </section>
+
+            <section>
+
+                <section>
+                    <h3>El objeto <code style="text-transform:none">module</code></h3>
+                    <p>Contiene información sobre el módulo que se está ejecutando actualmente <a href="https://nodejs.org/api/modules.html#modules_the_module_object">[+]</a></p>
+
+                    <p>La variable especial <code>require.main</code> contiene el nombre del módulo que se ha cargado desde el intéprete de línea de comandos.</p>
+                    <p>Esto nos permite saber si un módulo está siendo ejecutado directamente por Node, o si está siendo importado desde otro módulo.</p>
+                </section>
+
+                <section>
+                    <p>Ejemplo: <code>moduloFib.js</code></p>
+                    <pre><code data-trim class="javascript">
+// ...
+function fib(n) {
+    // ...
+}
+
+module.exports = fib;
+
+if (require.main === module) {
+    console.log("Sucesión de Fibonacci");
+    for (let i = 0; i &lt; 10; i++) {
+        console.log(`fib(i) = ${fib(i)}`);
+    }
+}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Al ejecutarlo desde la línea de comandos:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# <span class="hl">node moduloFib.js</span>
+Sucesión de Fibonacci
+fib(i) = 0
+fib(i) = 1
+fib(i) = 1
+fib(i) = 2
+fib(i) = 3
+fib(i) = 5
+fib(i) = 8
+fib(i) = 13
+fib(i) = 21
+fib(i) = 34
+                </code></pre>
+
+                    <p>Al importarlo desde otro módulo:</p>
+                    <pre><code data-trim class="javascript">
+let fib = require("./moduloFib"); // No imprime nada
+                </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Los módulos se &laquo;cachean&raquo;</h3>
+                    <p>Cuando un módulo se importa varias veces mediante <code>require</code> a lo largo de la ejecución de un programa, el módulo cargado solo se ejecuta la primera vez.</p>
+                    <p>Las siguientes veces <code>require</code> no vuelve a ejecutar el módulo. Se limita a devolver el <code>module.exports</code> que se devolvió la primera vez que se cargó.</p>
+                    <p>En el ejemplo <code>geometria.js</code>:</p>
+                    <pre><code data-trim class="javascript">
+let g1 = require("./geometria");
+// Imprime: "Cargando módulo geometría.js"
+
+...
+let g2 = require("./geometria");
+// No se imprime nada, porque el módulo ha sido cargado
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>¡Cuidado con las variables globales en el módulo!</p>
+                    <pre><code data-trim class="javascript">
+// bd.js
+// -----
+let bd = {
+    "50382322X" : { nombre: "Francisco Martín", 
+                    fecha: new Date(1978, 04, 04) },
+    "46854322V" : { nombre: "Estela Lucas",
+                    fecha: new Date(1979, 03, 15) }
+};
+
+function obtenerPersona(dni) { return bd[dni]; }
+
+function numeroPersonas() {
+    return Object.getOwnPropertyNames(bd).length;
+}
+
+function añadirPersona(dni, nomb, fechaNac) {
+    bd[dni] = { nombre: nomb, fecha: fechaNac };
+}
+
+module.exports = {
+    obtenerPersona: obtenerPersona,
+    numeroPersonas: numeroPersonas,
+    añadirPersona: añadirPersona
+};
+                </code></pre>
+
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+// En un punto del programa:
+
+let bd1 = require("./bd");
+bd1.añadirPersona("11111111V", "Fátima", new Date());
+console.log(bd1.numeroPersonas());  // &rarr; 3
+
+// ...
+
+// En otro punto del programa:
+
+let bd2 = require("./bd");
+console.log(bd2.numeroPersonas());  // &rarr; 3   
+                </code></pre>
+
+                    <p>Tanto <code>bd1</code> como <code>bd2</code> hacen referencia a la misma base de datos, ya que al hacer <code>require</code> por segunda vez se reutiliza el mismo módulo que se cargó la primera vez.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Aplicaciones del sistema de paquetes</h3>
+                    <p>Recordemos el proceso de búsqueda de módulos:</p>
+                    <pre><code data-trim class="javascript">
+require("foo");
+                </code></pre>
+                    <div class="fragment">
+                        <p>Se busca <code>foo.js</code> o un directorio llamado <code>foo</code> en los siguientes directorios:</p>
+                        <ul>
+                            <li><code>node_modules/</code></li>
+                            <li><code>../node_modules/</code></li>
+                            <li><code>../../node_modules/</code></li>
+                            <li><code>../../../node_modules/</code></li>
+                            <li>etc.</li>
+                        </ul>
+                    </div>
+                    <p class="fragment">¿Por qué Node busca los paquetes de esta forma?</p>
+                </section>
+
+                <section>
+                    <h4>Caso de uso 1</h4>
+                    <p>
+                        Compartición de paquetes entre proyectos:
+                    </p>
+                    <img src="images/04/Subproyectos.svg" style="width:70%; border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Caso de uso 2</h4>
+                    <p>Convivencia de distintas versiones de un mismo paquete:</p>
+                    <img src="images/04/VersionesPaquete.svg" style="width:55%; border:none; box-shadow:none">
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Números de versión</h3>
+                    <p>Los paquetes y programas escritos en <em>Node</em> utilizan el convenio <em>semantic versioning</em> para numerar las versiones.</p>
+                    <p>Más información: <a href="http://semver.org/">http://semver.org/</a></p>
+                    <p>Una versión se identifica mediante tres números:</p>
+                    <img src="images/04/Versiones.svg" style="width:80%;border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <img src="images/04/Versiones.svg" style="width:3en cualquier 0%;border:none;box-shadow:none">
+                    <p>Al liberar una nueva versión:</p>
+                    <ul>
+                        <li><strong>MAJOR</strong>: Se aumenta si los cambios introducidos rompen la compatibilidad con versiones anteriores.</li>
+                        <li><strong>MINOR</strong>: Se aumenta si los cambios introducidos no rompen la compatibilidad con versiones anteriores, pero añaden nueva funcionalidad.</li>
+                        <li><strong>PATCH</strong>: Se aumenta si no hay funcionalidad nueva, pero sí correcciones de <em>bugs</em>.</li>
+                    </ul>
+                    <p>Excepción: versiones 0.x.x, cuya API es inestable.</p>
+                </section>
+
+                <section>
+                    <h4>Rangos de versión en <code>package.json</code></h4>
+                    <p>¿Qué significa el símbolo <code>^</code> en el número de versión?</p>
+                    <pre><code data-trim data-noescape class="json">
+{
+  ...
+  "dependencies": {
+    "underscore": "<span class="hl">^</span>1.8.3",
+    "express": "<span class="hl">^</span>4.14.0"
+  },
+  "private": true
+}                
+                </code></pre>
+                    <p>En el caso de <code>underscore</code> significa que se admite otra versión distinta de la especificada, siempre que preserve la compatibilidad de la API (es decir, versiones 1.x.x).</p>
+                    <p>Lo mismo se aplica a <code>express</code>.</p>
+                </section>
+
+                <section>
+                    <p>Posibles especificaciones:</p>
+                    <ul>
+                        <li><code>1.8.3</code> La versión debe ser exactamente la especificada.</li>
+                        <li><code>&gt;=1.8.3</code> Se admite cualquier versión mayor o igual.</li>
+                        <li><code>&lt;=1.8.3</code> Se admite cualquier versión menor o igual.</li>
+                        <li><code>~1.8.3</code> Se admiten versiones 1.8.x.</li>
+                        <li><code>^1.8.3</code> Se admiten versiones 1.x.x.</li>
+                        <li><code>*</code> Se admite cualquier versión.</li>
+                        <li><code>1.8.3 - 2.5.1</code> Rango permitido.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline current">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Funciones y módulos adicionales</h2>
+                <ul>
+                    <li>Temporizadores: <code>setTimeout</code>, <code>setInterval</code>.</li>
+                    <li>La variable global <code>process</code>.</li>
+                    <li>Módulos core: <code>os</code>.</li>
+                    <li>Paquetes útiles: Underscore.js, Moment.js.</li>
+                </ul>
+            </section>
+
+
+
+            <section>
+                <section>
+                    <h3>Temporizadores</h3>
+                    <p><code>setTimeout(fun, time)</code></p>
+                    <p>Ejecuta la función <code>fun</code> transcurrida una cantidad de milisegundos dada.</p>
+                    <p>La función se ejecuta <strong>de manera asíncrona</strong>.</p>
+                    <pre><code data-trim class="javascript">
+
+setTimeout(() => {
+    console.log("Han pasado 5 segundos");
+}, 5000);
+
+console.log("Esto se ejecuta antes");
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Esto se ejecuta antes
+Han pasado 5 segundos                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Similarmente: <code>setInterval</code>, <code>clearInterval</code>, que ejecutan una función periódicamente.</p>
+                    <pre><code data-trim class="javascript">
+let contador = 1;
+
+// El objeto devuelto por setInterval nos sirve
+// para detener el temporizador cuando el contador llegue a 5
+let interval = setInterval(() => {
+    console.log(`Ejecutándose por ${contador}ª vez`);
+    if (contador === 5) {
+        clearInterval(interval);
+    }
+    contador++;
+}, 1000);                
+                </code></pre>
+                    <p>Más información <a href="https://nodejs.org/docs/v4.6.1/api/timers.html">https://nodejs.org/docs/v4.6.1/api/timers.html</a>
+                    </p>
+                </section>
+            </section>
+
+            <section>
+
+                <section>
+                    <h3>La variable <code>process</code></h3>
+                    <p>Atributos relacionados con la ejecución del programa:</p>
+                    <ul>
+                        <li><code>process.exit(code)</code><br> Finaliza la ejecución del programa.</li>
+                        <li><code>process.argv</code><br> Array con los argumentos de la línea de comandos.
+                        </li>
+                        <li><code>process.cwd()</code> / <code>process.chdir(dir)</code><br> Obtiene o cambia el directorio actual.
+                        </li>
+                        <li>
+                            <code>process.platform</code>, <code>process.version</code>, <code>process.arch</code> Información sobre el sistema operativo, versión de Node, etc.
+                        </li>
+                    </ul>
+                    <a href="https://nodejs.org/docs/v4.6.1/api/process.html">https://nodejs.org/docs/v4.6.1/api/process.html</a>
+                </section>
+
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+
+// Los dos primeros elementos de process.argv son el
+// nombre del ejecutable de Node, y el nombre del script
+let args = process.argv;
+
+let suma;
+if (args.length === 4) {
+    suma = Number(args[2]) + Number(args[3]);
+} else {
+    suma = "No definida";
+}
+
+console.log(`Suma: ${suma}`);
+
+console.log(`Sistema operativo: ${process.platform}`);
+console.log(`Versión de node: ${process.version}`);
+console.log(`Arquitectura: ${process.arch}`);                
+                </code></pre>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# <span class="hl">node process.js 5 6</span>
+Suma: 11
+Sistema operativo: linux
+Versión de node: v4.6.1
+Arquitectura: x64
+                </code></pre>
+                </section>
+            </section>
+
+
+            <section>
+                <h3>Módulo <code>os</code></h3>
+                <p>Contiene utilidades relacionadas con el sistema operativo. Entre ellas:</p>
+                <ul>
+                    <li><code>homedir()</code><br> Devuelve el path del directorio de usuario.
+                    </li>
+                    <li><code>tmpdir()</code><br> Devuelve el path de un directorio para crear ficheros temporales.
+                    </li>
+                </ul>
+                <pre><code data-trim class="javascript">
+let os = require("os");
+
+console.log(os.homedir());  // &rarr; /home/manuel
+console.log(os.tmpdir());   // &rarr; /tmp
+                </code></pre>
+            </section>
+
+
+            <section>
+                <h3>Paquetes Node adicionales</h3>
+                <p>Los siguientes paquetes no forman parte de la distribución de Node y, por tanto, han de ser instalados en un proyecto utilizando la herramienta <code>npm</code>.</p>
+                <ul>
+                    <li>
+                        <strong>Underscore.js</strong> (<a href="http://underscorejs.org/">http://underscorejs.org/</a>)<br> Proporciona operaciones útiles sobre arrays y objetos.
+                        <pre><code data-trim class="no-highlight">
+npm install underscore --save                        
+                        </code></pre>
+                    </li>
+                    <li>
+                        <strong>Moment.js</strong> (<a href="http://momentjs.com/">http://momentjs.com/</a>)<br> Permite manejar fechas. Más potente que la clase <code>Date</code>.
+                        <pre><code data-trim class="no-highlight">
+npm install moment --save                        
+                        </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Underscore.js</h3>
+                    <p>
+                        Cajón de sastre con un centenar de funciones de utilidad sobre arrays y objetos.
+                    </p>
+                    <div class="fragment">
+                        <p>Algunas ya conocidas (<em>Hoja de ejercicios 3</em>):</p>
+                        <ul>
+                            <li><code>pluck(arrayDeObjetos, fieldName)</code></li>
+                            <li><code>partition(arrayDeObjetos, p)</code></li>
+                            <li><code>groupBy(arrayDeObjetos, f)</code></li>
+                            <li><code>where(arrayDeObjetos, modelo)</code></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Por convenio, la variable que contiene el módulo <code>underscore</code> suele llamarse <code>_</code> (guión bajo).</p>
+                    <pre><code data-trim class="javascript">
+let _ = require("underscore");
+                </code></pre>
+                    <p>Algunas otras funciones:</p>
+                    <ul>
+                        <li class="fragment"><code>shuffle(array)</code>: desordena un array aleatoriamente.
+                            <pre><code data-trim class="javascript">
+_.shuffle([1, 2, 3, 4, 5, 6, 7]) 
+// &rarr; [1, 6, 4, 2, 7, 3, 5]
+                        </code></pre>
+                        </li>
+                        <li class="fragment"><code>sample(array, n)</code>: toma <code>n</code> elementos de un array aleatoriamente.
+                            <pre><code data-trim class="javascript">
+_.sample([1, 2, 3, 4, 5, 6, 7], 3) 
+// &rarr; [6, 4, 3]
+                        </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>Operaciones conjuntistas:<br>
+                            <pre><code data-trim class="javascript">
+_.union([1, 5, 6], [1, 7, 5])
+    // &rarr; [1, 5, 6, 7]
+    
+_.intersection([1, 5, 6], [1, 7, 5])
+    // &rarr; [1, 5]
+    
+_.difference([1, 5, 6], [1, 7, 5])
+    // &rarr; [6]
+                        </code></pre>
+
+                        </li>
+                        <li>
+                            Eliminación de duplicados en un array (<code>uniq</code>)
+                            <pre><code data-trim class="javascript">
+_.uniq([1, 5, 1, 7, 8, 5])
+    // &rarr; [1, 5, 7, 8]
+                        </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <code>findIndex(array, p)</code>: Devuelve el índice del primer elemento <code>x</code> de <code>array</code> tal que <code>p(x)</code> devuelve <code>true</code>.
+                            <pre><code data-trim class="javascript">
+_.findIndex(["Berta", "Beatriz", "Fabio"], n => n.startsWith("F")); 
+    // &rarr; 2
+                        </code></pre>
+                        </li>
+                        <li>
+                            <code>range(ini, fin[, step])</code>: Devuelve una lista ascendente desde <code>ini</code> hasta <code>fin</code> (excluido).
+                            <pre><code data-trim class="javascript">
+_.range(1, 5) // &rarr; [1, 2, 3, 4]
+                        </code></pre>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li><code>escape(cadena)</code>, <code>unescape(cadena)</code>: Sustituye los caracteres &lt;, &gt;, &quot;, etc de una cadena por sus correspondientes entidades HTML, y viceversa.</li>
+                        <pre><code data-trim class="javascript">
+_.escape("Esto es &lt;b&gt;importante&lt;/b&gt;")
+    // &rarr; Esto es &amp;lt;b&amp;gt;importante&amp;lt;/b&amp;gt;
+                    </code></pre>
+                    </ul>
+                </section>
+            </section>
+
+
+            <section>
+                <section>
+                    <h3>Moment.js</h3>
+                    <p>Funciones de manejo de fechas.</p>
+                    <p>Se basa en una clase <code>Moment</code> que actúa como envoltorio de la clase <code>Date</code></p>
+                    <pre><code data-trim class="javascript">
+let moment = require("moment");
+
+let hoy = moment();
+let comienzoCurso = moment(new Date(2016, 8, 26));
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Puede formatear una fecha a partir de una región.</p>
+                    <pre><code data-trim class="javascript">
+let moment = require("moment");
+moment.locale('es');
+
+let hoy = moment();
+let comienzoCurso = moment(new Date(2016, 8, 26));
+
+console.log(comienzoCurso.format("MMM D"));
+    // &rarr; "sep. 26"
+    
+console.log(comienzoCurso.format("LLL"));
+    // &rarr; 26 de septiembre de 2016 0:00
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Formatear fechas en relación a la actual:</p>
+                    <pre><code data-trim class="javascript">
+console.log(comienzoCurso.fromNow());
+    // &rarr; hace un mes
+                </code></pre>
+
+                    <p>Operaciones sobre fechas:</p>
+                    <pre><code data-trim class="javascript">
+let f1 = moment();
+let f2 = moment(new Date(1983, 7, 28));
+
+console.log(f1.diff(f2, 'years')); // &rarr; 33          
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline current">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Eventos y flujos</h2>
+                <p>Son abstraciones de alto nivel aplicables en distintos contextos: ficheros, sockets, eventos del SO, etc. </p>
+            </section>
+
+
+            <section>
+
+                <section>
+                    <h3>Manejo de eventos</h3>
+                    <p>La librería <code>events</code> permite manejar <strong>generadores</strong> y <strong>suscriptores</strong> de eventos.</p>
+                    <img src="images/04/Eventos.svg" width="70%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Los objetos de la clase <code>EventEmitter</code> representan generadores de eventos.</p>
+                    <pre><code data-trim class="javascript">
+let events = require("events");
+let emisor = new events.EventEmitter();                
+                </code></pre>
+                    <img src="images/04/Emisor1.svg" width="70%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Cada tipo de evento se identifica con una cadena de texto y puede llevar asociados varios parámetros.</p>
+                    <p>El método <code>on</code> registra una función callback que será llamada cuando se produzca un evento dado.</p>
+                    <pre><code data-trim class="javascript">
+emisor.on("incrementado", valorNuevo => {
+    console.log(`Se ha incrementado el contador: ${valorNuevo}`);
+});
+                </code></pre>
+                    <img src="images/04/Emisor2.svg" width="70%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>El emisor emite sus eventos mediante la función <code>emit</code>.</p>
+                    <p>Al emitir un evento, el emisor llamará a todas las funciones que se hayan suscrito al mismo.</p>
+                    <pre><code data-trim class="javascript">
+emisor.emit("incrementado", 14);
+                </code></pre>
+                    <img src="images/04/Emisor3.svg" width="70%" style="border:none;box-shadow:none">
+                    <pre><code data-trim class="no-highlight">
+Se ha incrementado el contador: 14                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Normalmente no se utiliza la clase <code>EventEmitter</code> directamente; son otras clases las que heredan de ella.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+/*
+ * Clase Contador
+ */ 
+class Contador extends events.EventEmitter {
+
+    constructor() {
+        this.valor = 0;
+    }
+    
+    incrementar() {
+        this.valor++;
+        this.emit("incrementado", this.valor);    
+    }
+    
+}
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Un emisor de eventos puede tener múltiples suscriptores. Al emitir el evento, los suscriptores son llamados en el orden en el que suscribieron.</p>
+
+                    <pre><code data-trim class="javascript">
+let c = new Contador();
+c.on("incrementado", val => { 
+    console.log(`Suscriptor 1: ${val}`);
+});
+c.on("incrementado", val => { 
+    console.log(`Suscriptor 2: ${val}`);
+});
+c.incrementar();
+c.incrementar();                
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Suscriptor 1: 1
+Suscriptor 2: 1
+Suscriptor 1: 2
+Suscriptor 2: 2
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Eventos emitidos por <code>process</code></h4>
+                    <p>
+                        La variable <code>process</code> extiende a <code>EventEmitter</code>.
+                    </p>
+                    <p>
+                        Eventos lanzados:
+                    </p>
+                    <ul>
+                        <li>
+                            <code>"exit"</code>. Emitido al finalizar el programa.
+                            <pre><code data-trim class="javascript">
+process.on("exit", exitCode => {
+    // Liberar ficheros, volcar logs,
+    // cerrar conexiones a BDs, etc.
+});
+                    </code></pre>
+                        </li>
+                        <li><code>"uncaughtException"</code>. Emitido cuando se lanza una excepción que no es capturada por el programa.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Eventos emitidos por el módulo <code>fs</code></h4>
+                    <ul>
+                        <li>Eventos relacionados con streams.<br> Se explicará a continuación lo que es un stream.
+                        </li>
+                        <li>Eventos relacionados con el sistema de ficheros.<br> Ver: función <code>fs.watch()</code>.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Streams</h3>
+                    <p>Surgen como respuesta al problema de procesamiento de recursos de gran tamaño.</p>
+                    <img src="images/04/RecursoGrande1.svg" width="90%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <div style="display:table;margin-left:auto;margin-right:auto">
+                        <div style="display:table-row">
+                            <div style="display:table-cell;color:#006647">Tiempo respuesta</div>
+                            <div style="display:table-cell; padding-left:1em">= <span style="color:#490089">Tiempo de acceso al recurso</span></div>
+                        </div>
+                        <div style="display:table-row">
+                            <div style="display:table-cell"></div>
+                            <div style="display:table-cell">+ <span style="color:#490089">Tiempo procesamiento 1</span></div>
+                        </div>
+                        <div style="display:table-row">
+                            <div style="display:table-cell"></div>
+                            <div style="display:table-cell">+ <span style="color:#490089">Tiempo procesamiento 2</span></div>
+                        </div>
+                    </div>
+
+                    <p>Durante todo este tiempo el cliente no recibe respuesta.</p>
+                    <p>Solamente la recibe cuando el procesamiento 2 termina.</p>
+                </section>
+
+                <section>
+                    <p>Segmentando el recurso podemos enviar la respuesta al cliente a medida que se procesa.</p>
+                    <img src="images/04/RecursoGrande2.svg" width="90%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Un <strong>flujo</strong> (stream) es una corriente de datos, de la que se puede extraer y/o enviar información.</p>
+                    <p>Los flujos, además de permitir la segmentación, facilitan el uso de las funciones relativas a ficheros, pues permiten cambiar las llamadas asíncronas por funciones de captura de eventos.</p>
+                    <p>El módulo core <code>stream</code> define varias clases relacionadas con flujos de datos.</p>
+                </section>
+
+                <section>
+                    <p>Existen cuatro tipos de flujos:</p>
+                    <ul style="width:45%;float:left">
+                        <li class="fragment">Flujos de <strong>lectura</strong><br>
+                            <span style="font-size:60%">Ej: ficheros de entrada.</span><br>
+                            <img src="images/04/FlujoEntrada.svg" style="width:100%; border:none; box-shadow:none">
+                        </li>
+                        <li class="fragment">Flujos de <strong>escritura</strong><br>
+                            <span style="font-size:60%">Ej: ficheros de salida.</span><br>
+                            <img src="images/04/FlujoSalida.svg" style="width:100%; border:none; box-shadow:none">
+                        </li>
+                    </ul>
+                    <ul style="width:45%;float:right">
+                        <li class="fragment">Flujos <strong>dúplex</strong><br>
+                            <span style="font-size:60%">Ej: sockets.</span><br>
+                            <img src="images/04/FlujoES.svg" style="width:100%; border:none; box-shadow:none">
+                        </li>
+                        <li class="fragment">Flujos <strong>transformadores</strong><br>
+                            <span style="font-size:60%">Ej: compresores, codificadores.</span><br>
+                            <img src="images/04/FlujoTransform.svg" style="width:100%; border:none; box-shadow:none">
+                        </li>
+                    </ul>
+                    <div style="clear:both"></div>
+                </section>
+
+                <section>
+                    <p>Todos los flujos heredan de la clase <code>Stream.</code></p>
+                    <img src="images/04/JerarquiaStreams.svg" style="width:80%;border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Flujos y ficheros</h4>
+                    <p>El módulo <code>fs</code> permite obtener flujos <code>Readable</code> y <code>Writable</code> a partir de ficheros.</p>
+                    <pre><code data-trim class="javascript">
+let fs = require("fs");
+let flujoEntrada = fs.createReadStream("Poema.txt");
+                </code></pre>
+                    <p>Inicialmente el flujo está en estado de <strong>pausa</strong>. No emite ninguna información hasta que se haga explícitamente con el método <code>read()</code>.</p>
+                </section>
+
+                <section>
+                    <p>Cuando un flujo en pausa tiene información disponible para ser extraida, emite el evento <code>readable</code>.</p>
+                    <pre><code data-trim class="javascript">
+flujoEntrada.on("readable", () => {
+    // Llamar a flujoEntrada.read() para obtener
+    // la información.
+});                
+                </code></pre>
+                    <p>Si el fichero es grande, se emitirán sucesivamente varios eventos <code>readable</code> con cada uno de sus &laquo;fragmentos&raquo;.</p>
+                    <p>Cada llamada a <code>read()</code> obtiene uno de esos fragmentos.</p>
+                    <p>Cuando ya no quedan más fragmentos por leer, el flujo vuelve a emitir el evento <code>readable</code> para avisarnos, pero esta vez la función <code>read()</code> devolverá <code>null</code>.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+let flujoEntrada = fs.createReadStream("Fichero_grande.pdf");
+
+flujoEntrada.on("readable", () => {
+  let fragmento = flujoEntrada.read();
+  if (fragmento !== null) {
+    console.log(`Leído fragmento de ${fragmento.length} bytes`);
+  } else {
+    console.log("Ya no hay más fragmentos");
+  }
+});                
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 65536 bytes
+Leído fragmento de 45245 bytes
+Ya no hay más fragmentos                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Para crear un flujo de salida hacia un fichero, se utiliza <code>createWriteStream</code>, que devuelve un <code>Writable.</code></p>
+                    <p>Los objetos <code>Writable</code> tienen, entre otros, los siguientes métodos:</p>
+                    <ul>
+                        <li><code>write()</code>, para enviar información al flujo.</li>
+                        <li><code>end()</code>, para enviar información al flujo, e indicar que ya no se va a enviar más información.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+let flujoSalida = fs.createWriteStream("NuevoFichero.txt", 
+                                        {encoding: "utf-8"});
+
+for (let i = 0; i &lt; 10; i++) {
+    flujoSalida.write(i + "\n");
+}
+
+flujoSalida.end("Fin!\n");                
+                </code></pre>
+                </section>
+                <section>
+                    <h4>Encadenamiento de flujos</h4>
+                    <p>El método <code>pipe()</code> vuelca el contenido de un flujo a otro.</p>
+                    <img src="images/04/Pipe.svg" width="70%" style="border:none; box-shadow:none">
+                    <p><code>flujoEntrada.pipe(flujoSalida);</code></p>
+                </section>
+
+                <section>
+                    <p>Ejemplo: copia de un fichero</p>
+                    <pre><code data-trim class="javascript">
+const fs = require("fs");
+
+let flujoEntrada = fs.createReadStream("Poema.txt");
+let flujoSalida = fs.createWriteStream("PoemaCopia.txt");
+flujoEntrada.pipe(flujoSalida);                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>El módulo <code>zlib</code></h4>
+                    <p>Trabaja con distintos formatos de compresión de ficheros.</p>
+                    <p>En particular, tiene un métodos <code>createGzip()</code> y <code>createGunzip()</code>. Cada uno de ellos crea un <strong>flujo transformador</strong> que comprime (o descomprime, respectivamente) la entrada.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: compresión de un fichero</h4>
+                    <img src="images/04/Compresion.svg" width="90%" style="border:none;box-shadow:none">
+                    <pre><code data-trim class="javascript">
+const fs = require("fs");
+const zlib = require("zlib");
+
+let flujoEntrada = fs.createReadStream("thymeleaf.pdf");
+let flujoCompresion = zlib.createGzip();
+let flujoSalida = fs.createWriteStream("thymeleaf.pdf.gz");
+
+flujoEntrada.pipe(flujoCompresion);
+flujoCompresion.pipe(flujoSalida);                
+                </code></pre>
+                </section>
+            </section>
+
+           
+
+
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline current">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Subida de ficheros</h2>
+                <ul>
+                    <li>Codificación de formularios.</li>
+                    <li>El middleware <code>multer</code>.</li>
+                    <li>Adjuntar ficheros a un formulario.</li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Codificación de formularios</h3>
+                    <img src="images/06/FormMultipart.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;form method=&quot;POST&quot; action=&quot;procesar_formulario.html&quot;&gt;
+    ...
+    &lt;input type=&quot;text&quot; name=&quot;nombre&quot;&gt;
+    ...
+    &lt;input type=&quot;text&quot; name=&quot;apellidos&quot; style=&quot;width:30em&quot;&gt;
+    ...
+    &lt;input type=&quot;checkbox&quot; name=&quot;fumador&quot; value=&quot;si&quot;&gt;
+    ...
+    &lt;input type=&quot;submit&quot; value=&quot;Enviar&quot;&gt;
+&lt;/form&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Al hacer clic en el botón <em>Enviar</em> se adjunta la información del formulario dentro del cuerpo de la petición POST:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+POST http://localhost:3000/procesar_formulario.html HTTP/1.1
+Host: localhost:3000
+User-Agent: Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:50.0) 
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*
+Accept-Language: en-US,en;q=0.7,de;q=0.3
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:3000/
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+<div style="background-color:#DDF;padding:10px 5px">Content-Type: <span class="hl" style="background-color:#DFD">application/x-www-form-urlencoded</span>   <span class="arrow_box_left caja_codigo fragment">Codificación</span>
+Content-Length: 49
+
+<span class="hl" style="background-color:#FFE">nombre=Elena&amp;apellidos=Paredes+Torrado&amp;fumador=si</span>    <span class="arrow_box_left caja_codigo fragment">Contenido</span></div>
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Por defecto, los datos del formulario se envían con la codificación <code>application/x-www-form-urlencoded</code>, en la que los datos del formulario aparecen exactamente de la misma manera en la que aparecerían en la URL de una petición GET.</p>
+                    <p>El middleware <code>body-parser</code> puede extraer los datos de un formulario con esta codificación:</p>
+                    <pre><code data-trim class="javascript">
+app.use(bodyParser.urlencoded({ extended: false }));
+                </code></pre>
+                    <p>Este middleware descodifica la información del formulario y la guarda en <code>request.body</code>.</p>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", (request, response) => {
+    response.render("datos_formulario", {
+        nombre: <span class="hl">request.body.nombre</span>,
+        apellidos: <span class="hl">request.body.apellidos</span>,
+        fumador: <span class="hl">request.body.fumador</span> === "si"
+    });
+});
+                
+                </code></pre>
+                    <img src="images/06/FormularioDatos.png" width="50%">
+                </section>
+
+                <section>
+                    <p>La codificación mediante URL de los datos de un formulario es bastante limitada si el formulario permite introducir grandes cantidades de texto o adjuntar ficheros en formato binario (p.ej. imágenes).</p>
+                    <p>Existe otro tipo de codificación más adecuada para formularios complejos: <code>multipart/form-data</code>.</p>
+                    <p>La codificación con la que el cliente envía los datos del formulario se indica en la etiqueta <code>&lt;form&gt;</code>:</p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;form method="POST" action="procesar_formulario.html" 
+         <span class="hl">enctype="multipart/form-data"</span>&gt;
+...
+&lt;/form&gt;
+                
+                </code></pre>
+                </section>
+
+
+                <section>
+                    <p>Esta vez, al hacer clic en el botón <em>Enviar</em> el navegador envía la siguiente petición:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+POST http://localhost:3000/procesar_formulario.html HTTP/1.1
+Host: localhost:3000
+User-Agent: Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:50.0) 
+...
+
+<div style="background-color:#DDF;padding:10px 5px">Content-Type: <span class="hl" style="background-color:#DFD">multipart/form-data</span>; boundary=------------
+Content-Length: 425
+
+------------
+Content-Disposition: form-data; name="nombre"
+
+<span class="hl" style="background-color:#FFE">Elena</span>
+------------
+Content-Disposition: form-data; name="apellidos"
+
+<span class="hl" style="background-color:#FFE">Paredes Torrado</span>
+------------
+Content-Disposition: form-data; name="fumador"
+
+<span class="hl" style="background-color:#FFE">si</span>
+--------------</div>
+                </code></pre>
+                </section>
+            </section>
+
+
+            <section>
+                <section>
+                    <h3>El middleware <code>multer</code></h3>
+                    <p>El middleware <code>body-parser</code> no puede analizar formularios enviados con la codificación <code>multipart/form-data</code>.</p>
+                    <p>Existe otro middleware destinado a ello: <code>multer</code></p>
+                    <pre><code data-trim class="no-highlight">
+npm install multer --save
+                </code></pre>
+                    <p><a href="https://github.com/expressjs/multer">https://github.com/expressjs/multer</a></p>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+const multer = require("multer");
+                </code></pre>
+                    <p>El módulo <code>multer</code> exporta una única función. Esta función devuelve una factoría de middlewares.</p>
+                    <pre><code data-trim class="javascript">
+const multerFactory = multer();                
+                </code></pre>
+                    <p>Esta factoría contiene métodos que devuelven middlewares:</p>
+                    <ul>
+                        <li><code>none()</code>: Procesa formularios que no adjuntan ningún fichero.</li>
+                        <li><code>single()</code>: Procesa formularios que adjuntan un fichero.</li>
+                        <li><code>array()</code>: Procesa formularios que adjuntan varios ficheros.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Dado que nuestro formulario aún no tiene ningún campo para subir ficheros, utilizamos <code>none()</code>.</p>
+                    <p>El middleware puede añadirse a la cadena global:</p>
+                    <pre><code data-trim class="javascript">
+app.use(multerFactory.none());
+                </code></pre>
+                    <p>Pero es más frecuente su uso como middleware intermedio exclusivamente en aquellas rutas que hagan uso de este tipo de formularios:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", 
+         <span class="hl">multerFactory.none()</span>, (request, response) => {   
+         ...
+});
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Al igual que <code>body-parser</code>, el middleware <code>multer</code> analiza el contenido del formulario y añade los atributos correspondientes al objeto <code>request.body</code>.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", 
+            multerFactory.none(), (request, response) => {
+    response.render("datos_formulario", {
+        nombre: <span class="hl">request.body.nombre</span>,
+        apellidos: <span class="hl">request.body.apellidos</span>,
+        fumador:<span class="hl"> request.body.fumador</span> === "si"
+    });
+});                
+                </code></pre>
+                    <img src="images/06/FormularioDatos.png" width="30%">
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Adjuntar ficheros a un formulario</h3>
+                    <p>Hemos visto los siguientes tipos de componentes <code>&lt;input&gt;</code></p>
+                    <ul>
+                        <li><code>submit</code></li>
+                        <li><code>reset</code></li>
+                        <li><code>text, password, number, range, ...</code></li>
+                        <li><code>radio</code></li>
+                        <li><code>checkbox</code></li>
+                        <li><code>hidden</code></li>
+                    </ul>
+                    <p class="fragment">Veremos otro tipo nuevo: <code>file</code></p>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="html">
+&lt;form method=&quot;POST&quot; action=&quot;procesar_formulario.html&quot; 
+         enctype=&quot;multipart/form-data&quot;&gt;
+        ...
+        &lt;input type=&quot;file&quot; name=&quot;foto&quot;&gt;
+        ...
+&lt;/form&gt;                
+                </code></pre>
+                    <img src="images/06/FormFile.png" width="70%">
+                </section>
+
+                <section>
+                    <p>Al enviar el formulario se genera la siguiente petición:</p>
+                    <pre><code data-trim data-noescape class="no-highlight" style="font-size:80%; line-height:115%">
+POST http://localhost:3000/procesar_formulario.html HTTP/1.1
+Host: localhost:3000
+User-Agent: Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:50.0) 
+...
+
+<div style="background-color:#DDF;padding:10px 5px">Content-Type: <span class="hl" style="background-color:#DFD">multipart/form-data</span>; boundary=------------
+Content-Length: 14411
+
+------------
+Content-Disposition: form-data; name="nombre"
+
+<span class="hl">Elena</span>
+------------
+Content-Disposition: form-data; name="apellidos"
+
+<span class="hl">Paredes Torrado</span>
+------------
+Content-Disposition: form-data; name="fumador"
+
+<span class="hl">si</span>
+------------
+Content-Disposition: form-data; name="foto"; filename="profile-icon-png-917.png"
+Content-Type: image/png
+
+<span class="hl">...datos del fichero PNG....</span>
+--------------</div>
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Pasamos al código Javascript en el servidor.</p>
+                    <p>En primer lugar, a la hora de crear la factoría de middlewares, hemos de indicar dónde almacenar los ficheros subidos:</p>
+                    <ul style="width:90%">
+                        <li>En memoria:<br>
+                            <pre><code data-trim class="javascript">
+let multer = require("multer");
+multerFactory = multer({ storage: multer.memoryStorage() });
+                        </code></pre>
+                        </li>
+                        <li>En una carpeta determinada en el servidor:
+                            <pre><code data-trim class="javascript">
+let multer = require("multer");
+multerFactory = multer({ dest: path.join(__dirname, "uploads") });
+                        </code></pre>
+                        </li>
+                    </ul>
+                    <p>Utilizaremos esta última opción en nuestro ejemplo.</p>
+                </section>
+
+                <section>
+                    <p>Como el formulario incluye un único componente para subir archivos, debemos utilizar el método <code>single()</code> de la factoria de middlewares creada por <code>multer</code>.</p>
+                    <p>Este método recibe el nombre del campo del formulario que contiene el fichero adjunto.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", 
+            <span class="hl">upload.single("foto")</span>, (request, response) => {
+    ...
+});
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>El middleware devuelto por <code>single()</code> añade un nuevo atributo <code>file</code> al objeto <code>request</code>. El atributo <code>file</code> es un objeto con los siguientes atributos:</p>
+                    <ul>
+                        <li>
+                            <code>mimetype</code>, <code>size</code><br>Tipo MIME y tamaño del fichero subido.
+                        </li>
+                        <li>
+                            <code>destination</code>, <code>filename</code><br>La carpeta y nombre del fichero donde se ha guardado el fichero subido en el servidor.
+                        </li>
+                        <li>
+                            <code>path</code><br>La ruta completa del fichero subido dentro del servidor.
+                        </li>
+                        <li>
+                            <code>buffer</code><br>Contenido del fichero (solamente disponible si se ha utilizado almacenamiento en memoria).
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>En nuestro ejemplo:</p>
+                    <pre><code data-trim class="javascript">
+app.post("/procesar_formulario.html", 
+            upload.single("foto"), (request, response) => {
+
+    if (request.file) { // Si se ha subido un fichero
+       console.log(`Fichero guardado en: ${request.file.path}`);
+       console.log(`Tamaño: ${request.file.size}`);
+       console.log(`Tipo de fichero: ${request.file.mimetype}`);
+    }
+    
+    response.render("datos_formulario", {
+       nombre: request.body.nombre,
+       apellidos: request.body.apellidos,
+       fumador: request.body.fumador === "si"
+    });
+});
+                
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Fichero guardado en: uploads/85a78144eb402de50883c6be1204b200
+Tamaño: 13819
+Tipo de fichero: image/png                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>
+                        Modificamos la función para que añada el nombre del fichero subido a la carpeta <code>uploads</code> dentro de la vista (en el caso en que se haya subido alguno):
+                        <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", 
+            upload.single("foto"), (request, response) => {
+    let nombreFichero = null;
+    if (request.file) {
+        nombreFichero = request.file.filename;
+    }
+    
+    response.render("datos_formulario", {
+        nombre: request.body.nombre,
+        apellidos: request.body.apellidos,
+        fumador: request.body.fumador === "si",
+        <span class="hl">imagen: nombreFichero</span>
+    });
+});
+                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Dentro de la vista <code>datos_formulario</code>:</p>
+                    <pre><code data-trim data-noescape class="html">
+...                
+<span class="hl">&lt;% if (imagen) { %&gt;</span>
+&lt;tr&gt;
+    &lt;td&gt;Foto:&lt;/td&gt;
+    &lt;td&gt;&lt;img src=&quot;/imagen/<span class="hl">&lt;%= ficheroImagen %&gt;</span>&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+<span class="hl">&lt;% } %&gt;</span>
+...
+            </code></pre>
+                    <p>Para mostrar la imagen, el navegador hará una petición GET a la dirección <code>/imagen/<em>identificador</em></code>, donde el <code><em>identificador</em></code> es el nombre de la imagen dentro de la carpeta <code>uploads</code>.</p>
+                </section>
+
+                <section>
+                    <p>Para tratar las URLs de la forma <code>/imagen/<em>identificador</em></code> tenemos que añadir un nuevo manejador de ruta paramétrica a la aplicación:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.get("/imagen/:id", (request, response) => {
+    ...
+});
+</code></pre>
+                    <div class="fragment">
+                        <p>Este manejador devolverá la imagen correspondiente al servidor:</p>
+                        <pre><code data-trim data-noescape class="javascript">
+let pathImg = path.join(__dirname, "uploads", request.params.id);
+response.sendFile(pathImg);
+</code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <img src="images/06/FormularioDatosImagen.png" width="50%">
+                </section>
+
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p7">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline current">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+
+                <section>
+                    <h2>Binarios y bases de datos</h2>
+                    <p>Las imágenes pueden ser guardadas en la base de datos como celdas de tipo BLOB.</p>
+                    <p>Supongamos que queremos almacenar los resultados del formulario anterior en una base de datos.</p>
+                    <img src="images/06/TablaPersonas.png" width="40%" style="border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <p>El primer paso es configurar <code>multer</code> para que los ficheros adjuntos al formulario se almacenen en memoria:</p>
+                    <pre><code data-trim class="javascript">
+const multer = require("multer");
+...
+const upload = multer({ storage: multer.memoryStorage() });
+                </code></pre>
+                    <p>Al utilizar almacenamiento en memoria, el contenido del fichero está disponible dentro de la propiedad <code>buffer</code> como un objeto de la clase <code>Buffer</code>.</p>
+                </section>
+
+
+                <section>
+                    <p>Actualizamos el controlador de <code>/procesar_formulario.html</code></p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.post("/procesar_formulario.html", upload.single("foto"), 
+                (request, response) => {
+    let usuario = {
+        nombre: request.body.nombre,
+        apellidos: request.body.apellidos,
+        fumador: request.body.fumador === "si",
+        foto: null
+    };
+    
+    if (request.file) {
+        usuario.foto = <span class="hl">request.file.buffer</span>;
+    }
+    
+    insertarUsuario(usuario, (err, newId) => {
+        usuario.id = newId;
+        response.render("datos_formulario_bd", usuario);
+    });
+});                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>insertarUsuario</code> utiliza una consulta paramétrica para añadir la correspondiente fila en la BD.</p>
+                    <pre><code data-trim data-noescape class="javascript" style="font-size:80%; line-height:115%">
+let pool = mysql.createPool(...);
+...
+function insertarUsuario(usuario, callback) {
+    pool.getConnection((err, con) => {
+        if (err) {
+            callback(err);
+        } else {
+            let sql = 
+                "INSERT INTO personas(Nombre, Apellidos, Fumador, Foto) " +
+                "VALUES (?, ?, ?, ?)";
+            con.query(sql, [usuario.nombre, usuario.apellidos, 
+                            usuario.fumador, <span class="hl">usuario.foto</span>],  <span class="arrow_box_left caja_codigo">Objeto <span style="font-family:monospace">Buffer</span></span>
+                (err, result) => {
+                    con.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, result.insertId);
+                    }
+                });
+        }
+    });
+}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>¿Cómo obtener las imágenes de la BD?</p>
+                    <p>Añadimos una ruta <code>/imagen/<span class="hl">:id</span></code> que devuelve al cliente la foto correspondiente al usuario con el <code>id</code> dado.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.get("/imagen/:id", (request, response) => {
+    let n = Number(request.params.id);
+    if (isNaN(n)) {
+        response.status(400);
+        response.end("Petición incorrecta");
+    } else {
+        obtenerImagen(n, (err, imagen) => {
+            if (imagen) {
+                <span class="hl">response.end(imagen);</span>  <span class="arrow_box_left caja_codigo">Devolvemos buffer al cliente</span>
+            } else {
+                response.status(404);
+                response.end("Not found");
+            }
+        });
+    }
+});                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>obtenerImagen</code> obtiene la foto de la BD:</p>
+                    <pre><code data-trim class="javascript">
+function obtenerImagen(id, callback) {
+    pool.getConnection((err, con) => {
+        if (err) {
+            callback(err);
+        } else {
+            let sql = "SELECT Foto FROM personas WHERE Id = ?";
+            con.query(sql, [id], (err, result) => {
+                con.release();
+                if (err) {
+                    callback(err);
+                } else {
+                    // Comprobamos si existe una persona
+                    // con el Id dado.
+                    if (result.length === 0) { 
+                        callback(null, undefined);
+                    } else {
+                        callback(null, result[0].Foto);
+                    }
+                }
+            });
+        }
+    });
+}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Una vez que el usuario ha enviado el formulario, y se ha insertado la información correspondiente en la BD, se visualiza la vista <code>datos_formulario_bd</code>.</p>
+                    <p>Esta vista utiliza una URL de la forma <code>/imagen/:id</code> para mostrar la imagen del usuario:</p>
+                    <pre><code data-trim data-noescape class="html">
+...
+<span class="hl">&lt;% if (foto) { %&gt;</span>
+&lt;tr&gt;
+    &lt;td&gt;Foto:&lt;/td&gt;
+    &lt;td&gt;&lt;img src=&quot;/imagen/<span class="hl">&lt;%= id %&gt;</span>&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+<span class="hl">&lt;% } %&gt;</span>
+...
+                </code></pre>
+                </section>
+
+                <section>
+                    <img src="images/06/FormularioImagenBD1.png" width="50%"><br>
+                    <img src="images/06/FormularioDatosImagenBD.png" width="35%">
+                </section>
+
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p8">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline current">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <section>
+                    <h2>Validación de formularios</h2>
+                    <p>Un problema recurrente en las aplicaciones web es la comprobación de que los datos introducidos por los usuarios en un formulario son correctos.</p>
+                    <p>El módulo <code>express-validator</code> facilita esta comprobación.</p>
+                    <p><a href="https://github.com/ctavan/express-validator">https://github.com/ctavan/express-validator</a></p>
+                    <p>La comprobación realizada mediante este módulo se realiza en el lado del <strong>servidor</strong>.</p>
+                </section>
+
+                <section>
+                    <h3>El módulo <code>express-validator</code></h3>
+                    <pre><code data-trim class="no-highlight">
+npm install express-validator --save
+                </code></pre>
+                    <p>El módulo exporta una única función que devuelve un middleware:</p>
+                    <pre><code data-trim class="javascript">
+const expressValidator = require("express-validator");
+const app = express();
+...
+app.use(expressValidator());
+...
+                </code></pre>
+                    <p>Este middleware añade métodos extra al objeto <code>request</code>. Estos métodos permiten validar la información de un formulario.</p>
+                </section>
+
+                <section>
+                    <h4>Métodos añadidos al objeto <code>request</code></h4>
+                    <ul>
+                        <li><code>checkQuery()</code><br> Especifica condiciones en los parámetros de la URL (formularios con <code>method="GET"</code>).
+                        </li>
+                        <li><code>checkBody()</code><br> Especifica condiciones en el cuerpo de la petición (formularios con <code>method="POST"</code>).
+                        </li>
+                        <li><code>checkParam()</code><br> Especifica condiciones en las componentes de las URL paramétricas (por ejemplo, <code>/user/<span class="hl">:id</span>/profile</code>).
+                        </li>
+                        <li><code>check()</code><br> Especifica condiciones en cualquiera de las tres anteriores.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Estos métodos reciben uno o dos parámetros:</p>
+                    <p><code>check(nombreParam[, mensaje])</code></p>
+                    <p>donde <code>nombreParam</code> es el nombre del componente del formulario (o parámetro de la URL) que se quiere analizar, y <code>mensaje</code> es el mensaje de error que se debería mostrar al usuario en el caso en que las condiciones impuestas no se cumplan.</p>
+                    <p>Estos métodos devuelven un objeto cuyos métodos permiten concretar qué condiciones ha de cumplir la información correspondiente.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/06/FormularioValidacion.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;form method=&quot;post&quot; action=&quot;procesar_formulario&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;login&quot;&gt;
+    ...
+    &lt;input type=&quot;password&quot; name=&quot;pass&quot;&gt;
+    ...
+    &lt;input type=&quot;text&quot; name=&quot;email&quot;&gt;
+    ...
+    &lt;input type=&quot;text&quot; name=&quot;fechaNacimiento&quot;&gt;
+&lt;/form&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim data-noescape class="javascript" style="font-size:100%">
+app.post("/procesar_formulario", (request, response) => {
+   // El campo login ha de ser no vacío.
+   request.checkBody("login",
+       "Nombre de usuario vacío").notEmpty();
+       
+   // El campo login solo puede contener caracteres alfanuméricos.
+   request.checkBody("login",
+       "Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);
+       
+   // El campo pass ha de tener entre 6 y 10 caracteres.
+   request.checkBody("pass",
+       "La contraseña no es válida").isLength({ min: 6, max: 10 });
+       
+   // El campo email ha de ser una dirección de correo válida.
+   request.checkBody("email",
+       "Dirección de correo no válida").isEmail();
+       
+   // El campo fechaNacimiento ha de contener una fecha en formato
+   // mm/dd/aaaa anterior a la fecha actual.
+   request.checkBody("fechaNacimiento",
+       "Fecha de nacimiento no válida").isBefore();
+   ...
+}
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Métodos de comprobación</h4>
+                    <ul style="float:left;width:40%;font-size:80%">
+                        <li><code>isAlpha(locale)</code></li>
+                        <li><code>isAlphanumeric(locale)</code></li>
+                        <li><code>isAscii(locale)</code></li>
+                        <li><code>isBefore([date])</code></li>
+                        <li><code>contains(str)</code></li>
+                        <li><code>isDate()</code></li>
+                        <li><code>isDecimal()</code></li>
+                        <li><code>isFloat()</code></li>
+                    </ul>
+                    <ul style="float:right;width:50%;font-size:80%">
+                        <li><code>isHexColor()</code></li>
+                        <li><code>isIP()</code></li>
+                        <li><code>isIn([v1, v2, ...])</code></li>
+                        <li><code>isNumeric()</code></li>
+                        <li><code>matches(regexp)</code></li>
+                        <li><code>isURL()</code></li>
+                        <li><code>isLength({min: .., max: ..})</code></li>
+                        <li>etc.</li>
+                    </ul>
+                    <div style="clear:both"></div>
+                    <p>Lista completa: <a href="https://github.com/chriso/validator.js">https://github.com/chriso/validator.js</a></p>
+                </section>
+
+                <section>
+                    <h4>Métodos de comprobación personalizados</h4>
+                    <p>Se pasa un objeto con una propiedad <code>customValidators</code> a la función que crea el middleware.</p>
+                    <pre><code data-trim class="javascript">
+app.use(expressValidator({
+    customValidators: {
+        // El siguiente validador determina si un campo comienza
+        // por la letra 'a'
+        empiezaPorA: param => {
+            return param.startsWith("a");
+        }
+    }
+}));                
+                </code></pre>
+
+                    <pre><code data-trim class="javascript">
+...
+request.checkBody("login",
+    "Nombre de usuario no empieza por a").empiezaPorA();
+...    
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Una vez ejecutados los métodos <code>check()</code>, puede comprobarse la existencia de fallos mediante:</p>
+                    <p><code>request.getValidationResult().then(callback);</code></p>
+                    <p>donde la función <code>callback</code> recibe un objeto que permite obtener los errores de validación detectados.</p>
+                    <pre><code data-trim class="javascript">
+request.getValidationResult().then(result => {
+    // El método isEmpty() devuelve true si las comprobaciones
+    // no han detectado ningún error
+    if (result.isEmpty()) {
+        response.redirect("/correcto.html");
+    } else {
+        // manejar caso de error
+    }
+});
+
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>En caso de que el método <code>isEmpty()</code> devuelva <code>false</code>, existen dos métodos para obtener los errores producidos:</p>
+                    <ul>
+                        <li><code>result.array()</code></li>
+                        <li><code>result.mapped()</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>El método <code>result.array()</code></h4>
+                    <p>Devuelve un array con tantos objetos como errores producidos. Cada objeto contiene el nombre del elemento del formulario (<code>name</code>), el mensaje de error (<code>msg</code>) y el valor introducido por el usuario (<code>value</code>):
+                        <p>
+                            <pre><code data-trim class="javascript">
+[ 
+  { param: 'email',
+    msg: 'Dirección de correo no válida',
+    value: 'correo' },
+  { param: 'fechaNacimiento',
+    msg: 'Fecha de nacimiento no válida',
+    value: '40/23/2004' }
+]
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Este método resulta útil para mostrar al usuario todos los errores juntos en una misma zona de la web:</p>
+                    <img src="images/06/FormularioErrores1.png" width="70%">
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+request.getValidationResult().then(result => {
+    // El método isEmpty() devuelve true si las comprobaciones
+    // no han detectado ningún error
+    if (result.isEmpty()) {
+        response.redirect("/correcto.html");
+    } else {
+        response.render("index", {errores: result.array() });
+    }
+});
+                </code></pre>
+                    <p><code>views/index.ejs</code></p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;h1&gt;Formulario de registro&lt;/h1&gt;
+&lt;div class=&quot;caja_errores&quot;&gt;
+    La informaci&oacute;n introducida en el formulario es incorrecta:
+    &lt;ul&gt;
+        <span class="hl">&lt;% errores.forEach(error => { %&gt;</span>
+        &lt;li&gt;<span class="hl">&lt;%= error.msg %&gt;</span>&lt;/li&gt;
+        <span class="hl">&lt;% }); %&gt;</span>
+    &lt;/ul&gt;
+&lt;/div&gt;
+&lt;form method=&quot;post&quot; action=&quot;procesar_formulario&quot;&gt;   
+...
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>El método <code>result.mapped()</code></h4>
+                    <p>Devuelve un objeto cuyas claves son los nombres de campos del formulario en los que se ha producido error:
+                        <p>
+                            <pre><code data-trim class="javascript">
+{ 
+  email: { 
+            param: 'email',
+            msg: 'Dirección de correo no válida',
+            value: 'correo'
+  },
+  fechaNacimiento: { 
+            param: 'fechaNacimiento',
+            msg: 'Fecha de nacimiento no válida',
+            value: '40/23/2004' 
+  }
+}                </code></pre>
+                </section>
+
+                <section>
+                    <p>Sirve para separar los mensajes de error en distintas zonas de la página web:</p>
+                    <img src="images/06/FormularioErrores2.png" width="90%">
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+request.getValidationResult().then(result =>  {
+    // El método isEmpty() devuelve true si las comprobaciones
+    // no han detectado ningún error
+    if (result.isEmpty()) {
+        response.redirect("/correcto.html");
+    } else {
+        response.render("index", {errores: result.mapped() });
+    }
+});
+                </code></pre>
+                    <p><code>views/index.ejs</code></p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;input type=&quot;text&quot; name=&quot;email&quot;&gt;
+<span class="hl">&lt;% if (errores.email) { %&gt;</span>
+    &lt;span class="rojo"&gt;<span class="hl">&lt;%= errores.email.msg %&gt;</span>&lt;/span&gt;
+<span class="hl">&lt;% } %&gt;</span>
+...
+&lt;input type=&quot;text&quot; name=&quot;fechaNacimiento&quot;&gt;
+<span class="hl">&lt;% if (errores.fechaNacimiento) { %&gt;</span>
+    &lt;span class="rojo"&gt;<span class="hl">&lt;%= errores.fechaNacimiento.msg %&gt;</span>&lt;/span&gt;
+<span class="hl">&lt;% } %&gt;</span>
+                </code></pre>
+                </section>
+            </section>
+
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p9">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">¿Por qué un modelo asíncrono?</a></li>
+                    <li><a href="#/p2" class="outline">Más sobre módulos</a></li>
+                    <li><a href="#/p3" class="outline">Funciones y paquetes adicionales</a></li>
+                    <li><a href="#/p4" class="outline">Eventos y flujos</a></li>
+                    <li><a href="#/p6" class="outline">Subida de ficheros</a></li>
+                    <li><a href="#/p7" class="outline">Binarios y bases de datos</a></li>
+                    <li><a href="#/p8" class="outline">Validación de formularios</a></li>
+                    <li><a href="#/p9" class="outline current">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Bibliografía</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>B.A. Syed
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3413478~S6*spi">Beginning Node.js</a>
+                            <br> Apress, 2014
+                        </li>
+                        <li>
+                            <a href="https://nodejs.org/docs/v4.6.1/api/">Documentación de las librerías de Node</a>
+                            <span style="font-size:70%">https://nodejs.org/docs/v4.6.1/api/</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width: 30%">
+                    <img src="https://images.springer.com/sgw/books/medium/9781484201886.jpg" style="width:50%; border:none">
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+
+            <section>
+                <h3>Documentación librerías externas</h3>
+                <ul>
+                    <li>Multer:<br><a href="https://github.com/expressjs/multer">https://github.com/expressjs/multer</a> </li>
+                    <li>Express validator:<br><a href="https://github.com/ctavan/express-validator">https://github.com/ctavan/express-validator</a> </li>
+                    <li>Underscore.js:<br><a href="http://underscorejs.org/">http://underscorejs.org/</a></li>
+                    <li>Moment.js:<br><a href="http://momentjs.com/">http://momentjs.com/</a></li>
+                </ul>
+
+            </section>
+
+
+        </div>
+
+    </div>
+
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }]
+        });
+    </script>
+</body>
+
+</html>
