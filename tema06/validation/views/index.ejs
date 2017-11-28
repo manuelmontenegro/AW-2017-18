@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Validación de formularios</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Formulario de registro</h1>
+        <form method="post" action="procesar_formulario">
+            <table>
+                <tr>
+                    <td>Nombre de usuario:</td>
+                    <td><input type="text" name="login"
+                            value="<%= usuario.login %>"></td>
+                    <% if (errores.login) { %>
+                        <td class="error">
+                            <%= errores.login.msg %>
+                        </td>
+                    <% } %>
+                </tr>
+                <tr>
+                    <td>Contraseña:</td>
+                    <td><input type="password" name="pass"
+                                value="<%= usuario.pass %>"></td>
+                    <% if (errores.pass) { %>
+                        <td class="error">
+                            <%= errores.pass.msg %>
+                        </td>
+                    <% } %>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="text" name="email" 
+                                value="<%= usuario.email %>"></td>
+                    <% if (errores.email) { %>
+                        <td class="error">
+                            <%= errores.email.msg %>
+                        </td>
+                    <% } %>
+                </tr>
+                <tr>
+                    <td>Fecha de nacimiento (mm-dd-aaaa):</td>
+                    <td><input type="text" name="fechaNacimiento"
+                                value="<%= usuario.fechaNacimiento %>"></td>
+                    <% if (errores.fechaNacimiento) { %>
+                        <td class="error">
+                            <%= errores.fechaNacimiento.msg %>
+                        </td>
+                    <% } %>
+                </tr>
+            </table>
+            <input type="submit" value="Enviar">
+        </form>
+    </body>
+</html>

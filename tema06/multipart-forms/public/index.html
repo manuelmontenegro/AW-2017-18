@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Formularios multipart</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Formulario</h1>
+        <form method="POST" action="procesar_formulario.html" enctype="multipart/form-data">
+            <div>
+                <label for="inputNombre">Nombre:</label>
+                <input type="text" name="nombre" id="inputNombre">
+            </div>
+            <div>
+                <label for="inputApellidos">Apellidos:</label>
+                <input type="text" name="apellidos" id="inputApellidos" style="width:30em">
+            </div>
+            <div>
+                <input type="checkbox" name="fumador" value="si" id="inputFumador">
+                <label for="inputFumador">Fumador/a</label>
+            </div>
+            <div>
+                <label for="inputImagen">Foto:</label>
+                <input type="file" name="foto" id="inputImagen">
+            </div>
+            <div>
+                <input type="submit" value="Enviar">
+            </div>
+        </form>
+    </body>
+</html>

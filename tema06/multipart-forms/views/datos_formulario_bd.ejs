@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gracias!</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Base de datos actualizada</h1>
+        <table>
+            <tr>
+                <td>Id:</td>
+                <td><%= id %></td>
+            </tr>
+            <tr>
+                <td>Nombre:</td>
+                <td><%= nombre %></td>
+            </tr>
+            <tr>
+                <td>Apellidos:</td>
+                <td><%= apellidos %></td>
+            </tr>
+            <tr>
+                <td>Fumador/a:</td>
+                <td><%= fumador ? "Sí" : "No" %></td>
+            </tr>
+            <% if (foto) { %>
+            <tr>
+                <td>Foto:</td>
+                <td><img src="/imagen/<%= id %>"></td>
+            </tr>
+            <% } %>
+        </table>
+        <div class="volver">
+            <a href="index.html">Volver</a>
+        </div>
+        
+    </body>
+</html>

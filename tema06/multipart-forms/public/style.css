@@ -1,0 +1,29 @@
+body {
+    background-color: cornsilk;
+    font-family: sans-serif;
+}
+
+
+table {
+    border: 1px solid black;    
+    border-collapse: collapse;
+    background-color: lightyellow;
+}
+
+table td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+div.volver {
+    padding: 10px 5px;
+}
+
+form {
+    background-color: #ffccff;
+    padding: 20px;
+}
+
+form div {
+    padding: 5px 0px;
+}
