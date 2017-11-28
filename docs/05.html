@@ -2327,7 +2327,7 @@ app.use((request, response, next) => {
                     <pre><code data-trim data-noescape class="javascript">
 app.post("/insertar_usuario", (request, response) => {
     /* ... insertar usuario en BD ... */
-    setFlash(request, "Usuario insertado correctamente");
+    response.setFlash(request, "Usuario insertado correctamente");
     response.redirect("/main");
 });
 </code></pre>
