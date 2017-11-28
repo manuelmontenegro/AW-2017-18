@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista de usuarios</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <ul>
+            <% for(let i = 0; i < users.length; i++) { %>
+            <li><%= users[i] %> 
+                <a href="/borrar/<%= i %>">Borrar (URL paramétrica)</a> - 
+                (<a href="/borrar?id=<%= i %>">Borrar (query string)</a>)
+                <form action="/borrar" method="POST">
+                    <input type="hidden" name="id" value="<%= i%>">
+                    <input type="submit" value="Borrar (petición POST)">
+                </form>
+            </li>
+            <% } %>
+        </ul>
+    </body>
+</html>

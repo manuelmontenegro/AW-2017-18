@@ -44,4 +44,5 @@ Diseño avanzado de plantillas. Uso de `include` y variables `res.locals`.
 14. `flashMsgs`
 Aplicación: mensajes flash
 
-
+15. `ejercicio2`
+Solución al ejercicio 2 de la Hoja de Ejercicios 5
