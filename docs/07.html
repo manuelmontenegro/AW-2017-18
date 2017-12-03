@@ -1,0 +1,2209 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 7 - Javascript en el cliente</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 7</div>
+                <h1 style="height:3em;position:relative;top:0.3em">Javascript en el navegador: jQuery</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+
+                <section>
+                    <h2>Introducción</h2>
+                    <img src="images/07/JavascriptServidor.svg" width="80%" style="border:none;box-shadow:none">
+                    <p>
+                        <strong>Temas 4, 5 y 6</strong>: hemos utilizado Javascript para implementar servidores HTTP y toda la funcionalidad que se ejecuta dentro del servidor: acceso a bases de datos, servir ficheros al cliente, lógica de aplicación, etc.
+                    </p>
+                </section>
+
+                <section>
+                    <img src="images/07/JavascriptCliente.svg" width="90%" style="border:none;box-shadow:none">
+                    <p>En <strong>este tema</strong> escribiremos programas en Javascript, pero pensados para ejecutarse en el navegador web.</p>
+                </section>
+
+                <section>
+                    <img src="images/07/JavascriptClienteScript.svg" width="75%" style="border:none;box-shadow:none">
+                    <p>Estos programas pueden estar integrados en un documento HTML proporcionado por el servidor...</p>
+                </section>
+
+                <section>
+                    <img src="images/07/JavascriptClienteGET.svg" width="75%" style="border:none;box-shadow:none">
+                    <p>...o bien pueden estar aparte, en ficheros proporcionados por el servidor, previa petición del navegador, por ejemplo, cuando aparece una etiqueta <code>&lt;script&gt;</code> con una referencia a un fichero <code>.js</code> externo:</p>
+                    <pre><code data-trim class="html">
+&lt;script src="scripts/suma.js"&gt;&lt;/script&gt;
+                </code></pre>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h3>¡Ya no estamos en Node!</h3>
+                    <p>Aunque el código Javascript es proporcionado por el servidor, ahora se ejecutará en el navegador.</p>
+                    <p>Podemos utilizar lo que hemos visto en el Tema 3 para realizar nuestros programas en el cliente...</p>
+                    <p class="fragment">...pero no las funciones específicas de Node.js y Express.js vistas en temas posteriores.</p>
+                </section>
+
+                <section>
+                    <h4>En el lado del cliente no tenemos...</h4>
+                    <ul>
+                        <li>El sistema de módulos visto en Node.js.</li>
+                        <li>La función <code>require</code> para importar módulos.</li>
+                        <li>La herramienta <code>npm</code>.</li>
+                        <li>Módulos core de node: <code>fs</code>, <code>path</code>, etc.</li>
+                        <li>Paquetes externos de Node.js: <code>mysql</code>, <code>express</code>, <code>ejs</code>, etc.</li>
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>En cambio, tenemos otras cosas nuevas</h4>
+                    <ul>
+                        <li>Manipulación de elementos de la página web actualmente cargada (<strong>DOM</strong>).</li>
+                        <li>Funcionalidad relativa al historial de navegación (página anterior, siguiente, etc.)</li>
+                        <li>Peticiones al servidor: <strong>AJAX</strong> (tema siguiente).</li>
+                    </ul>
+                </section>
+            </section>
+
+
+            <section>
+                <section>
+                    <h3>Un primer ejemplo</h3>
+                    <p>Creamos un documento HTML con el siguiente contenido:</p>
+                    <pre><code data-trim class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Javascript integrado en la p&aacute;gina Web&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;    
+        &lt;script&gt;
+            console.log(&quot;Ejecutando script&quot;);
+            for (let i = 0; i &lt; 10; i++) {
+                console.log(`Iteraci&oacute;n n&ordm; ${i}...`);
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;h1&gt;Javascript en el cliente.&lt;/h1&gt;
+        &lt;p&gt;Activa la consola de las &lt;strong&gt;herramientas del
+        desarrollador&lt;/strong&gt; para ver la salida generada por el
+        programa&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Abrimos la página en el navegador y utilizamos las <strong>herramientas del desarrollador</strong> para visualizar la consola.</p>
+                    <p>En Firefox: <em>Ctrl+Mayús+K</em></p>
+                    <img src="images/07/EjecucionFirefox.png" width="75%" style="border:none">
+                </section>
+
+                <section>
+                    <p>Lo más recomendable es escribir el código Javascript en un <strong>fichero separado</strong>, y hacer referencia a él desde la página web. Para ello se utiliza también la etiqueta <code>&lt;script&gt;</code></p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Javascript integrado en la p&aacute;gina Web&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;    
+        &lt;script src=&quot;<span class="hl">myscript.js</span>&quot;&gt;&lt;/script&gt;   <span class="arrow_box_left caja_codigo">Referencia a script</span>
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;h1&gt;Javascript en el cliente.&lt;/h1&gt;
+        &lt;p&gt;Activa la consola de las &lt;strong&gt;herramientas del
+        desarrollador&lt;/strong&gt; para ver la salida generada por el
+        programa&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Fichero <code>myscript.js</code>:</p>
+                    <pre><code data-trim class="javascript">
+// myscript.js
+// -----------
+"use strict";
+
+console.log("Ejecutando script");
+for (let i = 0; i &lt; 10; i++) {
+    console.log(`Iteración nº ${i}...`);
+}
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Es posible incluir varios scripts en un mismo documento:</p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;head&gt;
+    &lt;script src=&quot;script1.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;script2.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;script3.js&quot;&gt;&lt;/script&gt;
+    ...
+&lt;/head&gt;
+                </code></pre>
+                    <p>Los scripts se cargarán y ejecutarán en el mismo orden en el que aparecen en el documento.</p>
+                    <p><strong>Atención:</strong> las variables globales definidas en un script son accesibles desde los scripts incluidos posteriormente.</p>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline current">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Objetos predefinidos</h2>
+                <p>Los siguientes objetos están disponibles en cualquier navegador:</p>
+                <ul>
+                    <li>Variables y funciones globales: <code>window</code></li>
+                    <li>Manejo del historial: <code>history</code></li>
+                    <li>Información del navegador: <code>navigator</code></li>
+                    <li>Información sobre la pantalla: <code>screen</code></li>
+                </ul>
+            </section>
+
+
+            <section>
+                <section>
+                    <h3>El objeto <code>window</code></h3>
+                    <p>Contiene todas las funciones y variables globales definidas, más algunos métodos predefinidos:</p>
+                    <ul>
+                        <li><code>alert()</code></li>
+                        <li><code>setTimeout()</code>, <code>clearTimeout()</code>, <code>setInterval()</code></li>
+                    </ul>
+                    <p>Toda variable y función global es implícitamente un atributo de <code>window</code>:</p>
+                    <pre><code data-trim class="javascript">
+var str = "Mi cadena";
+console.log(str);        // &rarr; Mi cadena
+console.log(window.str); // &rarr; Mi cadena
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>El método <code>alert()</code></h4>
+                    <p>Muestra una ventana emergente del navegador con un mensaje dado:</p>
+                    <pre><code data-trim class="javascript">
+alert("¡Hola!");
+                </code></pre>
+                    <img src="images/07/Alert.png" width="40%" style="border:none">
+                    <p>La función es <strong>bloqueante</strong>: el script no continúa hasta que se pulse el botón <em>Aceptar</em>.</p>
+                </section>
+
+                <section>
+                    <h4>Temporizadores: <code>setTimeout()</code>, <code>setInterval()</code></h4>
+                    <p>La llamada <code>setTimeout(fun, t)</code> ejecuta la función <code>fun</code> transcurrida una cantidad <code>t</code> de milisegundos.</p>
+                    <pre><code data-trim class="javascript">
+function saludar() {
+    console.log("Hola!");
+}
+
+setTimeout(saludar, 1000);
+    // Imprime "¡Hola!" tras un segundo
+                </code></pre>
+                    <p>equivalentemente:</p>
+                    <pre><code data-trim class="javascript">
+setTimeout(() => { console.log("¡Hola!"); }, 1000);
+    // Imprime "¡Hola!" tras un segundo
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función <code>setInterval(fun, t)</code> funciona de manera similar a <code>setTimeout</code>, pero ejecuta la función cada <code>t</code> milisegundos:</p>
+                    <pre><code data-trim class="javascript">
+setInterval(saludar, 1000);
+    // Imprime "¡Hola!" cada segundo.
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Tanto <code>setTimeout()</code> como <code>setInterval()</code> devuelven un número identificador, que puede pasarse a <code>clearTimeout()</code> o <code>clearInterval()</code> para cancelar los temporizadores correspondientes:</p>
+                    <pre><code data-trim class="javascript">
+// Saludamos cada 1000 milisegundos
+let timerID = setInterval(saludar, 1000);
+
+// Ponemos otro temporizador que, transcurridos 5000 ms, 
+// cancele el temporizador anterior:
+setTimeout(() => { clearInterval(timerID); }, 5000);
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>El método <code>open()</code></h4>
+                    <p>Abre una ventana emergente con la URL dada.</p>
+                    <p><em>¡Cuidado con los bloqueadores de ventanas emergentes!</em></p>
+                    <pre><code data-trim class="javascript">
+var w1 = open("http://www.google.es");
+
+var w2 = open(""); // Ventana en blanco
+                </code></pre>
+                    <p>Devuelven un objeto de la clase <code>Window</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window">[+]</a>, que sirve para manipular su contenido, posición, etc.</p>
+                </section>
+            </section>
+
+            <section>
+                <h3>El objeto <code>history</code></h3>
+                <p>Proporciona funcionalidad similar a los botones de <em>Atrás</em> y <em>Adelante</em> del navegador, que permiten navegar por las últimas páginas visitadas.</p>
+                <pre><code data-trim class="javascript">
+history.go(-1); // Navega a la última página visitada
+history.go(-2); // Navega a la penúltima página visitada
+history.go(-3); // Navega a la antepenúltima página visitada
+...
+history.go(1); // Página siguiente en el historial
+               // (tras retroceder)
+history.go(2);
+...
+history.back();  // equivale a history.go(-1)
+history.forward();  // equivale a history.go(1)
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>El objeto <code>navigator</code></h3>
+                <p>Proporciona información sobre el navegador:</p>
+                <pre><code data-trim class="javascript">
+console.log(navigator.appName);   // &rarr; Netscape
+console.log(navigator.language);  // &rarr; es-ES
+console.log(navigator.platform);  // &rarr; Linux x86_64
+console.log(navigator.product);   // &rarr; Gecko
+console.log(navigator.userAgent); 
+    // &rarr; Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:50.0)
+    //   Gecko/20100101 Firefox/50.0
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>El objeto <code>screen</code></h3>
+                <p>Contiene atributos sobre la resolución de pantalla:</p>
+                <ul>
+                    <li><code>width</code>, <code>height</code>: tamaño &laquo;total&raquo; de pantalla.
+                        <pre><code data-trim class="javascript">
+console.log(screen.width);  // &rarr; 1080
+console.log(screen.height);  // &rarr; 1920
+                    </code></pre>
+                    </li>
+                    <li><code>availWidth</code>, <code>availHeight</code>: tamaño disponible (excluyendo barra de tareas del SO, etc.)
+                        <pre><code data-trim class="javascript">
+console.log(screen.availWidth);  // &rarr; 1050
+console.log(screen.availHeight);  // &rarr; 1920
+                    </code></pre>
+                    </li>
+                </ul>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline current">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+
+                <section>
+                    <h2>DOM (Document object model)</h2>
+                    <p>
+                        Un documento HTML consiste esencialmente en una serie de elementos anidados:
+                    </p>
+                    <pre><code data-trim class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Bienvenido a mi p&aacute;gina&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1 id="encabezado"&gt;&iexcl;Bienvenido!&lt;/h1&gt;
+        &lt;div class=&quot;section&quot;&gt;
+            &lt;h2&gt;Novedades&lt;/h2&gt;
+            &lt;p&gt;No hay muchas novedades &uacute;ltimamente&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;section&quot;&gt;
+            &lt;h2&gt;Contacto&lt;/h2&gt;
+            &lt;p&gt;Puedes contactar en la direcci&oacute;n de correo
+            &lt;a href=&quot;mailto:montenegro@fdi.ucm.es&quot;&gt;
+                    montenegro@fdi.ucm.es&lt;/a&gt;&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Por tanto, un documento HTML puede visualizarse como una estructura en forma de árbol:</p>
+                    <img src="images/07/DOM.svg" width="80%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>El <strong>DOM</strong> <em>(Document Object Model)</em> es una interfaz que permite nos permite acceder, navegar y modificar este árbol.</p>
+                    <p>Esta interfaz se materializa en una serie de clases:</p>
+                    <img src="images/07/ClasesDOM.svg" width="70%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Cada nodo del árbol es una instancia de la clase <code>Node</code>.</p>
+                    <p>La variable <code>document</code> contiene la raíz del árbol.</p>
+                    <img src="images/07/DOM.svg" width="50%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Los métodos de <code>document</code> permiten buscar elementos dentro del árbol. Entre ellos:</p>
+                    <ul>
+                        <li><code>getElementById(<em>id</em>)</code></li>
+                        <li><code>getElementsByTagName(<em>nombre</em>)</code></li>
+                        <li><code>getElementsByClassName(<em>nombre</em>)</code></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+let elemH1 = document.getElementById("encabezado");
+                </code></pre>
+                    <p>Devuelve el objeto <code>Node</code> correspondiente al elemento HTML con el atributo <code>id="encabezado"</code>.</p>
+
+                    <pre><code data-trim class="javascript">
+let elemsDiv = document.getElementsByTagName("div");
+                </code></pre>
+                    <p>Devuelve un <code>NodeList</code> con todos los <code>&lt;div&gt;</code> del documento.</p>
+                </section>
+
+                <section>
+                    Los objetos <code>Node</code> tienen atributos y métodos para acceder y modificar las propiedades del nodo: estilo, posición, contenido, etc. Por ejemplo:
+
+                    <pre><code data-trim class="javascript">
+let elemH1 = document.getElementById("encabezado");
+console.log(elemH1.textContent);    // &rarr; "¡Bienvenido!"
+let elemsDiv = document.getElementsByTagName("div");
+console.log(elemsDiv.length)  // &rarr; 2
+                </code></pre>
+
+                </section>
+
+                <section>
+                    <p>La clase <code>Node</code> tiene atributos para navegar por el árbol DOM:</p>
+                    <ul>
+                        <li><code>childNodes</code> (tipo <code>NodeList</code>)</li>
+                        <li><code>firstChild</code> (tipo <code>Node</code>)</li>
+                        <li><code>lastChild</code> (tipo <code>Node</code>)</li>
+                        <li><code>nextSibling</code> (tipo <code>Node</code>)</li>
+                    </ul>
+                    <p>Ver: <a href="https://developer.mozilla.org/es/docs/DOM">https://developer.mozilla.org/es/docs/DOM</a></p>
+                </section>
+            </section>
+
+
+
+            <section>
+                <h3>Inconvenientes de utilizar DOM</h3>
+                <p>En la práctica no suelen utilizarse los métodos mostrados anteriormente para acceder directamente al árbol DOM.</p>
+                <p class="fragment">
+                    <strong>Motivo</strong>: inconsistencias entre distintos navegadores.
+                </p>
+                <div class="fragment">
+                    <p>Es más recomendable utilizar una librería Javascript que proporcione su propia API abstrayendo las diferencias entre los navegadores:</p>
+                    <ul>
+                        <li>Prototype.js</li>
+                        <li class="fragment highlight-blue">jQuery <span class="arrow_box_left caja_codigo fragment" style="position:relative; left:100px">Este tema</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline current"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <section>
+                    <h2><span style="text-transform:none">j</span>Query</h2>
+                    <p>Es una librería de Javascript que funciona en el lado del navegador web.</p>
+                    <img src="images/07/jQueryLogo.png" width="50%" style="border:none;box-shadow:none">
+                    <p><a href="http://jquery.com/">http://jquery.com/</a></p>
+                </section>
+
+                <section>
+                    <p>Proporciona una capa de abstracción entre las funciones del DOM y el programador:</p>
+                    <p><img src="images/07/jQuery.svg" width="60%" style="border:none;box-shadow:none"></p>
+                </section>
+
+                <section>
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Eliminación de inconsistencias entre navegadores.</li>
+                        <li>Código más claro y conciso.</li>
+                        <li>Extensible mediante <em>plugins</em></li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Instalación</h3>
+                    <p><a href="https://jquery.com/download/">https://jquery.com/download/</a></p>
+                    <p>Descargamos la versión 3.2.1, disponible en el fichero <code>jquery-3.2.1.min.js</code>, o bien en el fichero<br> <code>jquery-3.2.1.js</code></p>
+                    <p>Incluimos este fichero en el documento HTML:</p>
+                    <pre><code data-trim class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        ...
+        &lt;script src=&quot;jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    ...
+&lt;/html&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Alternativa más sencilla: CDN</h4>
+                    <p>En lugar de descargar la librería e incluirla en nuestra aplicación web, es posible enlazar una copia de la librería directamente en un CDN:</p>
+                    <pre><code data-trim class="html" style="font-size:90%">
+&lt;script src=&quot;https://code.jquery.com/jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+                </code></pre>
+                    <p>Un CDN (<em>Content Delivery Network</em>) es un conjunto de servidores que albergan copias del mismo contenido estático para optimizar su descarga por parte del cliente.</p>
+                    <p><a href="https://en.wikipedia.org/wiki/Content_delivery_network">https://en.wikipedia.org/wiki/Content_delivery_network</a></p>
+                </section>
+            </section>
+
+            <section>
+                <h3>La variable <code>$</code></h3>
+                <p>Al cargar la librería jQuery se define una <strong>variable global</strong> nueva que contiene los métodos de jQuery.</p>
+                <p>El nombre de esta variable es <code>$</code></p>
+                <p class="fragment">(sí, <code>$</code> es un nombre de variable válido en Javascript)</p>
+                <div class="fragment">
+                    <p>Esta variable tiene varios usos:</p>
+                    <ul>
+                        <li>Como función: <code>$(document)</code>, <code>$("header")</code>, etc.</li>
+                        <li>Como objeto: <code>$.ajax()</code>, <code>$.get()</code>, etc.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <p>Funciones disponibles:</p>
+                <ul>
+                    <li>Inicialización de la página</li>
+                    <li>Búsqueda y navegación en el DOM</li>
+                    <li>Manipulación del DOM</li>
+                    <li>Creación de nuevos elementos en el DOM</li>
+                    <li>Posicionamiento y dimensiones</li>
+                    <li>Manejo de eventos</li>
+                    <li>Animaciones</li>
+                    <li>AJAX <span style="color:#474">(siguiente tema)</span></li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Inicialización de la página</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <p>A menudo queremos realizar acciones sobre el árbol DOM nada más cargarse la página.</p>
+                    <p>Por ejemplo: mostrar los datos inciales, asociar callbacks con eventos, etc.</p>
+                    <pre><code data-trim class="html">
+&lt;html&gt;
+    ...
+    &lt;script src="init.js"&gt;&lt;/script&gt;
+    ...
+    &lt;button id="miBoton"&gt; ... &lt;/button&gt;
+    ...
+&lt;/html&gt;
+                    </code></pre>
+                    <pre><code data-trim data-noescape class="javascript">
+// init.js
+let boton = document.getElementById("miBoton"); <span class="arrow_box_left caja_codigo fragment">¡Cuidado!</span>
+// ... configurar botón ...
+                    </code></pre>
+                </section>
+                <section>
+                    <pre><code data-trim class="html">
+&lt;html&gt;
+    ...
+    &lt;script src="init.js"&gt;&lt;/script&gt;
+    ...
+    &lt;button id="miBoton"&gt; ... &lt;/button&gt;
+    ...
+&lt;/html&gt;
+                    </code></pre>
+                    <pre><code data-trim data-noescape class="javascript">
+// init.js
+let boton = document.getElementById("<span class="hl">miBoton</span>");
+// ... configurar botón ...
+                    </code></pre>
+
+                    <p class="fragment">¿Cuándo se ejecuta este código? Puede que el <em>script</em> se ejecute antes de que el navegador haya cargado el DOM.</p>
+                    <p class="fragment">En este caso, <code>miBoton</code> no está disponible.</p>
+                </section>
+
+
+
+                <section>
+                    <h4>Inicialización del DOM</h4>
+                    <p>Con jQuery podemos asociar un <em>callback</em> a la inicialización del DOM. La función <em>callback</em> será llamada cuando el DOM se haya cargado en memoria.</p>
+                    <p>La función <code>$()</code> sirve para esto.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$(<em>callback</em>);
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+// Indicamos al navegador que ejecute la función inicializar()
+// cuando se cargue el DOM de la página.
+$(inicializar); 
+
+function inicializar() {
+    let boton = document.getElementById("miBoton");
+    // ... configurar botón ...
+}
+                    </code></pre>
+
+                    <div class="fragment">
+                        <p>Podemos introducir directamente una función anónima en la llamada a <code>$()</code>:</p>
+
+                        <pre><code data-trim class="javascript">
+$(() => {
+    let boton = document.getElementById("miBoton");
+    // ... configurar botón ...
+})
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Las múltiples facetas de <code>$</code></h4>
+                    <ol>
+                        <li class="fragment"><code>$(<em>funciónCallback</em>)</code><br> Acciones a realizar tras inicializar el DOM.
+                        </li>
+                    </ol>
+                    <p class="fragment"><em>La lista continuará...</em></p>
+                </section>
+
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Búsqueda y navegación en el DOM</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Para manipular el DOM de la página con jQuery:</p>
+                    <ol>
+                        <li class="fragment highlight-blue">Seleccionar los elementos del árbol a modificar.</li>
+                        <li>Aplicar las modificaciones que queramos sobre estos elementos. </li>
+                    </ol>
+                    <p>En esta sección veremos solamente el primer paso.</p>
+                </section>
+
+                <section>
+                    <p style="background:#cfffcb;padding:10px">Una <strong>selección</strong> es un conjunto de nodos del DOM.</p>
+                    <div class="fragment">
+                        <p>En jQuery, las selecciones son instancias de una determinada clase, cuyo nombre es <code>$</code>.</p>
+                        <p>A continuación veremos una función que nos permitirá obtener instancias de esta clase.</p>
+                    </div>
+                    <p class="fragment">El nombre de esta función es... <code>$</code>.</p>
+                </section>
+
+                <section>
+                    <h4>Selección a partir de un elemento del DOM</h4>
+                    <p>Si hemos obtenido un elemento del árbol mediante las funciones del DOM de Javascript, podemos obtener una selección compuesta por ese único elemento.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+let boton = document.getElementById("miBoton");
+let seleccion = $(<span class="hl">boton</span>);  
+
+seleccion.css("color", "red");
+                    </code></pre>
+                    <p>¡No te encariñes con esto! En breve veremos una forma de seleccionar un elemento a partir de su identificador.</p>
+                </section>
+
+                <section>
+                    <h4>Las múltiples facetas de <code>$</code></h4>
+                    <ol>
+                        <li><code>$(<em>funciónCallback</em>)</code><br> Acciones a realizar tras inicializar el DOM.
+                        </li>
+                        <li class="fragment" style="color:#4040FF"><code>$(<em>elementoDOM</em>)</code><br> Seleccionar un único elemento.
+                        </li>
+                    </ol>
+                    <p class="fragment"><em>La lista continuará...</em></p>
+                </section>
+
+                <section>
+                    <h4>Selección a partir de selectores CSS</h4>
+                    <p>Es posible llamar a <code>$</code> pasando una cadena de texto como parámetro. Esta cadena recibe el nombre de <strong>selector</strong>.</p>
+                    <pre><code data-trim class="javascript">
+$("div.entrada > input")                    
+                    </code></pre>
+                    <p>La sintaxis de los selectores es análoga a la utilizada en CSS.</p>
+                    <p>Ver: <a href="02.html#/25">selectores CSS</a></p>
+                    <p>La expresión <code>$(...)</code> devuelve la selección que contiene los elementos afectados por el selector.</p>
+                </section>
+
+                <section>
+                    <p>Una vez seleccionados los nodos, podemos utilizar las funciones de manipulación del DOM mencionadas anteriormente:</p>
+                    <pre><code data-trim class="javascript">
+// Asigna un color de fondo a todos los elementos &lt;li&gt;
+let seleccion = $("li");
+seleccion.css("background-color", "#FFFFD0");
+
+// Lo anterior es equivalente a esto.
+$("li").css("background-color", "#FFFFD0");
+// Utilizaremos esta forma a partir de ahora.
+
+// Añade una clase a los elementos &lt;p&gt; de la clase 'entradilla'
+$("p.entradilla").addClass("seleccionado");
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Selectores disponibles</h4>
+                    <ul>
+                        <li>Todos los nodos del DOM:
+                            <pre><code data-trim class="javascript">
+$("*")
+                            </code></pre>
+                        </li>
+                        <li>Todos los elementos <code>&lt;p&gt;</code> del documento:
+                            <pre><code data-trim class="javascript">
+$("p")
+                            </code></pre>
+                        </li>
+                        <li>Todos los elementos <code>&lt;li&gt;</code> del documento que tengan la clase <code>seleccionado</code>:
+                            <pre><code data-trim class="javascript">
+$("li.seleccionado")
+                            </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>Todos los elementos con la clase <code>.seleccionado</code>.
+                            <pre><code data-trim class="javascript">
+$(".seleccionado")
+                            </code></pre>
+                        </li>
+                        <li>Elemento cuyo <code>id</code> sea <code>barra_principal</code>
+                            <pre><code data-trim data-noescape class="javascript">
+$("#barra_principal")  <span class="arrow_box_left caja_codigo">Selección mediante identificador</span>
+                            </code></pre>
+                        </li>
+                        <li>Elementos <code>&lt;p&gt;</code> con la clase <code>inciso</code> contenidos dentro de un elemento <code>&lt;div&gt;</code>:
+                            <pre><code data-trim class="javascript">
+$("div p.inciso")
+                            </code></pre>
+                        </li>
+                        <li>Igual que antes, pero solo los <code>&lt;p&gt;</code> que son hijos directos de <code>&lt;div&gt;</code>:
+                            <pre><code data-trim class="javascript">
+$("div > p.inciso")
+                            </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>Elementos <code>&lt;div&gt;</code> que se encuentran después de un <code>&lt;form&gt;</code>.
+                            <pre><code data-trim class="javascript">
+$("form + div")
+                            </code></pre>
+                        </li>
+                        <li>Enlaces cuyo atributo <code>href</code> comience por <code>"http://"</code>.
+                            <pre><code data-trim class="javascript">
+$("a[href^='http://']")
+                            </code></pre>
+                        </li>
+
+                    </ul>
+                    <p>Referencia: <a href="http://api.jquery.com/category/selectors/">http://api.jquery.com/category/selectors/</a></p>
+                </section>
+
+                <section>
+                    <h4>Recorrido en el DOM</h4>
+                    <p>Algunos métodos de los objetos selección permiten obtener otras selecciones. Por ejemplo:</p>
+                    <p>Hijos directos de los elementos <code>&lt;header&gt;</code>:</p>
+                    <pre><code data-trim class="javascript">
+$("header").children()
+                    </code></pre>
+                    <p>Hijos de los elementos <code>&lt;header&gt;</code> que contengan la clase <code>seleccion</code>:</p>
+                    <pre><code data-trim class="javascript">
+$("header").children(".seleccion")                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Descendientes (directos o indirectos) de los elementos <code>&lt;div&gt;</code> que contengan la clase <code>seleccion</code>:</p>
+                    <pre><code data-trim class="javascript">
+$("header").find(".seleccion")                    
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <p>Otras relaciones:</p>
+                    <ul>
+                        <li><code>.parent()</code><br> Padres de los elementos seleccionados:
+                        </li>
+                        <li><code>.parents(<em>[selector]</em>)</code><br> Antecesores de los elementos seleccionados:
+                        </li>
+                        <li><code>.parentsUntil(selector)</code><br> Padres de los elementos seleccionados hasta llegar a un nodo que ajuste con el selector indicado.
+                        </li>
+                    </ul>
+                    <p>Referencia: <a href="https://api.jquery.com/category/traversing/tree-traversal/">https://api.jquery.com/category/traversing/tree-traversal/</a></p>
+                </section>
+
+                <section>
+                    <h4>Acceder a los elementos de la selección</h4>
+                    <ul>
+                        <li><code>.length</code>: Número de elementos seleccionados.
+                            <pre><code data-trim class="javascript">
+$("input[type='text'])").length
+                        </code></pre>
+                        </li>
+                        <li><code>.eq(n)</code>: Elemento <code>n</code>-ésimo.
+                            <pre><code data-trim class="javascript">
+$("input[type='text'])").eq(2) // Segundo elemento
+                        </code></pre>
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h4>Las múltiples facetas de <code>$</code></h4>
+                    <ol>
+                        <li><code>$(<em>funciónCallback</em>)</code><br> Acciones a realizar tras inicializar el DOM.
+                        </li>
+                        <li><code>$(<em>elementoDOM</em>)</code><br> Seleccionar un único elemento.
+                        </li>
+                        <li class="fragment" style="color:#4040FF"><code>$(<em>selectorCSS</em>)</code><br> Seleccionar uno o varios elementos.
+                        </li>
+                    </ol>
+                    <p class="fragment"><em>La lista continuará...</em></p>
+                </section>
+
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Manipulación de elementos del DOM</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Las selecciones jQuery tienen métodos para manipular las propiedades y el estilo de todos los objetos seleccionados.</p>
+
+                    <pre><code data-trim class="javascript">
+// Selector: elemento con ID "encabezado"
+// Manipulación: cambiar su color de fondo a gris
+                    
+$("#encabezado").css("background-color", "gray");
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Propiedades de un nodo del DOM</h4>
+                    <p>Sabemos que algunos elementos HTML tienen un conjunto de propiedades que depende del tipo de elemento:</p>
+                    <ul>
+                        <li>Imágenes: <code>src</code>, <code>alt</code>, <code>title</code>, ...</li>
+                        <li>Componentes de formularios: <code>type</code>, <code>checked</code>, <code>value</code>, etc.</li>
+                        <li>Enlaces: <code>href</code>, etc.</li>
+                        <li>Cualquier elemento: <code>class</code>, <code>id</code>, etc.</li>
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <div>
+                        <p>El código HTML especifica sus valores iniciales,</p>
+                        <pre><code data-trim class="html">
+    &lt;input type="text" name="edad" value="0"&gt;                    
+                        </code></pre>
+                        <p>pero estos valores pueden modificarse dinámicamente.</p>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>El método <code>prop</code></h4>
+                    <p><code>.prop(<em>nombrePropiedad</em>, <em>valorPropiedad</em>)</code></p>
+                    <p>Modifica una propiedad de los elementos seleccionados.</p>
+                    <pre><code data-trim class="html">
+...
+&lt;img src="img/CandadoAbierto.svg" id="candado"&gt;
+...
+                    </code></pre>
+                    <pre><code data-trim data-noescape class="javascript">
+let candadoAbierto = true;
+
+function cambiarCandado() {
+    candadoAbierto = !candadoAbierto;
+    if (candadoAbierto) {
+        <span class="hl">$("#candado").prop("src", "img/CandadoAbierto.svg");</span>
+    } else {
+        <span class="hl">$("#candado").prop("src", "img/CandadoCerrado.svg");</span>    
+    }
+}                    
+                   </code></pre>
+                </section>
+
+                <section>
+                    <img src="images/07/Candado.png" width="60%">
+                </section>
+
+                <section>
+                    <p><code>.prop(<em>nombrePropiedad</em>)</code></p>
+                    <p>Obtiene el valor actual de la propiedad.</p>
+                    <pre><code data-trim class="html">
+...
+&lt;p&gt;Edad: &lt;input type=&quot;text&quot; name=&quot;edad&quot; id=&quot;campoEdad&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;input type=&quot;checkbox&quot; name=&quot;fumador&quot; id=&quot;campoFumador&quot;&gt;
+    Fumador&lt;/p&gt;
+...
+                    </code></pre>
+                    <pre><code data-trim data-noescape class="javascript">
+function mostrarInfo() {
+    let edad = <span class="hl">$("#campoEdad").prop("value")</span>;
+    let fumador = <span class="hl">$("#campoFumador").prop("checked")</span>;
+    alert(`Tienes ${edad} años y ` + 
+          `${fumador ? '' : 'no')} eres fumador`);
+}                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <img src="images/07/LeerFormulario.png" width="50%"><br>
+                    <img src="images/07/ResultadoFormulario.png" width="40%">
+                </section>
+
+                <section>
+                    <h4>Modificar clases y estilos</h4>
+                    <p>Se pueden añadir, modificar o eliminar clases CSS de los elementos utilizando <code>.prop("class", "...")</code>.
+                        <p>Pero es más fácil utilizar los siguientes métodos:</p>
+                        <ul>
+                            <li><code>.addClass(<em>nombreClase</em>)</code></li>
+                            <li><code>.removeClass(<em>nombreClase</em>)</code></li>
+                            <li><code>.toggleClass(<em>nombreClase</em>)</code></li>
+                            <li><code>.hasClass(<em>nombreClase</em>)</code></li>
+                        </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="html">
+ &lt;h1&gt;¡Pulsa en mí para cambiar mi estilo!&lt;/h1&gt;
+                    </code></pre>
+                    <pre><code data-trim class="javascript">
+
+$(() => {
+    let cabecera = $("h1");
+    cabecera.on("click", () => {
+        cabecera.toggleClass("rojo");
+    });
+});                    
+                    </code></pre>
+                    <img src="images/07/H1Estilo1.png" width="40%">
+                    <img src="images/07/H1Estilo2.png" width="40%">
+                </section>
+
+                <section>
+                    <p>Mediante el método <code>.css()</code> podemos obtener y modificar una propiedad CSS de modo individual.</p>
+                    <p><code>.css(<em>nombrePropiedad</em>, <em>valorPropiedad</em>)</code></p>
+                    <pre><code data-trim class="javascript">
+// Todos los encabezados &lt;h1&gt; tendrán el texto de color verde
+$("h1").css("color", "green");
+                    </code></pre>
+
+                    <p><code>.css(<em>nombrePropiedad</em>)</code></p>
+                    <pre><code data-trim class="javascript">
+console.log($("h1").eq(0).css("font-size")); // &rarr; "32px"
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h4>Mostrar/ocultar elementos</h4>
+                    <p>Puede utilizarse el método <code>.css("display", "...")</code>, pero es más conveniente utilizar los métodos <code>.show()</code> y <code>.hide()</code></p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/07/ShowHide.png" width="40%">
+                    <pre><code data-trim class="html">
+&lt;button id=&quot;mostrarVentana&quot;&gt;Mostrar ventana&lt;/button&gt;
+&lt;div id=&quot;ventana&quot;&gt;
+    &lt;p&gt;
+        Esto es una ventana emergente. Puedes pulsar el bot&oacute;n de
+        abajo o el bot&oacute;n cerrar de la esquina para cerrar la
+        ventana.
+    &lt;/p&gt;
+    &lt;button id=&quot;cerrar&quot;&gt;Cerrar&lt;/button&gt;
+    &lt;span class=&quot;cerrar&quot;&gt;&amp;#x274C;&lt;/span&gt;
+&lt;/div&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+function abrirVentana() {
+    $("#ventana").show();
+}
+
+function cerrarVentana() {
+    $("#ventana").hide();
+}
+
+$(document).ready(function() {
+    $("#mostrarVentana").on("click", abrirVentana);
+    $("#ventana span.cerrar").on("click", cerrarVentana);
+    $("#cerrar").on("click", cerrarVentana);
+});
+                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Cambiar el contenido de un elemento</h4>
+                    <p>Obtener contenido contenido en el interior de un elemento:</p>
+                    <p><code>.text()</code></p>
+                    <p>Modificar contenido en el interior de un elemento:</p>
+                    <p><code>.text(<em>nuevoTexto</em>)</code></p>
+                </section>
+
+                <section>
+                    <img src="images/07/Numeros.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;p&gt;
+    Introduce un n&uacute;mero: &lt;input type=&quot;text&quot; id=&quot;campoNumero&quot;&gt;
+    &lt;span id=&quot;mensaje&quot; class=&quot;incorrecto&quot;&gt;&lt;/span&gt;
+&lt;/p&gt;                    
+                    </code></pre>
+                    <pre><code data-trim class="javascript">
+$("#campoNumero").on("change", function() {
+    // Obtenemos valor actual
+    let valor = $(event.target).prop("value").trim();
+
+    if (valor === "") {
+        $("#mensaje").text("El campo está vacío");
+    } else if (isNaN(Number(valor))) {
+        $("#mensaje").text("No se ha introducido un número");
+    } else {
+        $("#mensaje").text("");
+    }
+});                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Si se introducen etiquetas HTML en la cadena pasada a <code>.text()</code>, éstas se &laquo;escapean&raquo;, de manera que se evita la inyección de código HTML en el elemento seleccionado.</p>
+                    <pre><code data-trim class="javascript">
+$("#mensaje").text("El campo está &lt;em&gt;vacío&lt;/em&gt;");
+                    </code></pre>
+                    <img src="images/07/NumerosEm.png" width="80%">
+
+                    <p>
+                        En el caso en que queramos que se interpreten las etiquetas, debemos utilizar el método <code>.html()</code>
+                    </p>
+                    <pre><code data-trim class="javascript">
+$("#mensaje").html("El campo está &lt;em&gt;vacío&lt;/em&gt;");
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Propiedades definidas por el usuario</h4>
+                    <p>Además de las propiedades predefinidas en los elementos del DOM (<code>class</code>, <code>value</code>, <code>src</code>, etc.), el programador puede añadir propiedades a cualquier elemento del DOM.</p>
+                    <img src="images/07/DomNumero.png" width="70%">
+                    <pre><code data-trim class="html">
+&lt;p id=&quot;elem&quot;&gt;Esto es un elemento del DOM que almacena un n&uacute;mero&lt;/p&gt;
+&lt;button id=&quot;incrementar&quot;&gt;Incrementar&lt;/button&gt;
+&lt;button id=&quot;obtener&quot;&gt;Obtener valor actual&lt;/button&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p><code>.data(<em>nombreAtributo</em>)</code></p>
+                    <p>Obtiene el valor de una propiedad personalizada del elemento seleccionado.</p>
+                    <pre><code data-trim class="javascript">
+// Obtenemos el valor inicial del atributo 'number' contenido
+// dentro del elemento #elem
+
+var n = $("#elem").data("number");                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p><code>.data(<em>nombreAtributo</em>, <em>nuevoValor</em>)</code></p>
+                    <p>Cambia el valor de una propiedad personalizada de los elementos seleccionados.</p>
+                    <pre><code data-trim class="javascript">
+// Al pulsar el botón Incrementar, se incrementan la propiedad
+// 'number' del párrafo.
+$("#incrementar").on("click", () => {
+    let elemento = $("#elem");
+    let num = elemento.data("number");
+    elemento.data("number", num + 1);
+});
+
+// Al pulsar el botón Obtener, se muestra el valor actual de la
+// propiedad 'number' del párrafo
+$("#obtener").on("click", () => {
+    alert($("#elem").data("number"));
+});
+                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Es posible especificar los valores iniciales de este tipo de propiedades en el propio documento HTML. Para ello basta con añadir un atributo a la etiqueta correspondiente con el nombre de la propiedad precedida por el prefijo <code>data-</code></p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;p id=&quot;elem&quot; <span class="hl">data-number=&quot;1&quot;</span>&gt;
+        Esto es un elemento del DOM que almacena un n&uacute;mero
+&lt;/p&gt;                    
+                    </code></pre>
+                    <p>Si hacemos esto en nuestro ejemplo, ya no será necesario inicializar este atributo en el código Javascript:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+// Ya no es necesario inicializar la propiedad en el código
+<del>$("#elem").data("number", 1 );</del>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Combinar operaciones de manipulación</h4>
+                    <p>Todas las operaciones de manipulación vistas hasta ahora pueden encadenarse para ser aplicadas en una misma selección.</p>
+                    <pre><code data-trim class="javascript">
+$("ul > li.opcion").addClass("seleccionada").data("numOpcion", 0);
+                    </code></pre>
+                    <pre><code data-trim class="javascript">
+$("img").prop("width", "90%")
+        .css("border-bottom", "2px solid black")
+        .css("border-top", "1px solid red")
+        .on("click", pulsarImagen);
+                    </code></pre>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Creación e inserción de nuevos elementos en el dom</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Creación de nodos</h4>
+                    <p>También podemos aplicar la función <code>$</code> a una cadena de texto que contenga etiquetas HTML.</p>
+                    <p>Al hacer esto, se crea un árbol DOM que refleja dicho código y se devuelve su selección.</p>
+                    <pre><code data-trim class="javascript">
+let seleccion = $("&lt;div&gt;Nuevo elemento&lt;/div&gt;");
+                    </code></pre>
+                    <pre><code data-trim class="javascript">
+$("&lt;img&gt;").prop("src", imagen).addClass("imagen-ciudad");
+                    </code></pre>
+                    <p style="background-color:#FCC" class="fragment">Estos elementos no forman parte del documento HTML actual, a menos que se añadan al árbol DOM.</p>
+                </section>
+
+                <section>
+                    <h4>Añadir nodos al DOM</h4>
+                    <p><code>.append(<em>elem</em>)</code><br><code>.prepend(<em>elem</em>)</code></p>
+                    <img src="images/07/AppendPrepend.svg" width="90%" style="border:none; box-shadow:none">
+                </section>
+
+
+                <section>
+                    <p><code>.before(<em>elem</em>)</code><br>
+                        <code>.after(<em>elem</em>)</code>
+                    </p>
+                    <img src="images/07/BeforeAfter.svg" width="90%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/07/ListaCreciente.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;p&gt;Pulsa el bot&oacute;n de abajo para a&ntilde;adir elementos a la lista:&lt;/p&gt;
+&lt;ol id=&quot;listaNumerada&quot;&gt;
+&lt;/ol&gt;
+&lt;button id=&quot;anyadirElemento&quot;&gt;A&ntilde;adir elemento&lt;/button&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+
+$(() => {
+    $("#anyadirElemento").on("click", () => {
+        let nuevoElemento = $("&lt;li&gt;Nuevo elemento&lt;/li&gt;");
+        $("#listaNumerada").append(nuevoElemento);
+    });
+});                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Otras funciones</h4>
+                    <ul>
+                        <li>
+                            <code>.remove()</code><br> Elimina del documento los objetos seleccionados.
+                        </li>
+                        <li>
+                            <code>.clone()</code><br> Hace una copia del objeto seleccionado.
+                        </li>
+                        <li>
+                            <code>.wrap(<em>elem</em>)</code><br> Envuelve los objetos seleccionados en el objeto pasado como parámetro.
+                        </li>
+                    </ul>
+                    <p>
+                        Más información: <a href="http://api.jquery.com/category/manipulation/">http://api.jquery.com/category/manipulation/</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h4>Las múltiples facetas de <code>$</code></h4>
+                    <ol>
+                        <li><code>$(<em>funciónCallback</em>)</code><br> Acciones a realizar tras inicializar el DOM.
+                        </li>
+                        <li><code>$(<em>elementoDOM</em>)</code><br> Seleccionar un único elemento.
+                        </li>
+                        <li><code>$(<em>selectorCSS</em>)</code><br> Seleccionar uno o varios elementos.
+                        </li>
+                        <li class="fragment" style="color:#4040FF">
+                            <code>$(<em>codigoHTML</em>)</code><br> Crear nuevos elementos y seleccionarlos.
+                        </li>
+                    </ol>
+                    <p class="fragment"><em>La lista continuará...</em></p>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Posicionamiento y dimensiones</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Dimensiones de un objeto</h4>
+                    <p>El manejo de las dimensiones mediante las llamadas <code>.css("width")</code> y <code>.css("height")</code> es bastante complejo, ya que los valores de estas propiedades pueden estar expresados en distintas unidades: pixels, puntos, porcentajes, etc.</p>
+                    <p>Para facilitar esta tarea, existen sendos métodos <code>.width()</code> y <code>height()</code> que devuelven las dimensiones del objeto seleccionado en píxeles.</p>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <code>.width()</code>, <code>.height()</code><br> Obtienen la anchura y la altura del elemento seleccionado.
+                        </li>
+                        <li>
+                            <code>.width(<em>anchura</em>)</code>, <code>.height(<em>altura</em>)</code><br> Modifican la anchura y altura del elemento seleccionado.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/07/CambioDimensiones.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;div class=&quot;parrafo&quot;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+&lt;/div&gt;
+&lt;div class=&quot;tama&ntilde;o&quot;&gt;&lt;/div&gt;
+&lt;button id=&quot;aumentarAnchura&quot;&gt;Aumentar anchura&lt;/button&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+// Actualiza la etiqueta de la esquina superior derecha con las
+// dimensiones del elemento pasado como parámetro
+function actualizarEtiqueta(elem) {
+    let ancho = Math.round(elem.width());
+    let alto = Math.round(elem.height());
+    $("div.tamaño").text(`${ancho} x ${alto}`);
+}
+
+
+$(() => {
+    let parrafo = $("div.parrafo");
+    actualizarEtiqueta(parrafo);
+    
+    // Cuando se pulsa el botón de aumentar anchura...
+    $("#aumentarAnchura").on("click", () => {
+        // Obtenemos la anchura actual y establecemos la nueva
+        let anchoActual = parrafo.width();
+        parrafo.width(anchoActual + 20);
+        // Actualizamos la etiqueta con la nueva dimensión
+        actualizarEtiqueta(parrafo);
+    });
+});                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Variantes</h4>
+                    <ul>
+                        <li>
+                            <code>.innerWidth()</code>, <code>.innerHeight()</code><br> Obtienen o cambian la anchura o altura sin tener en cuenta el borde ni los márgenes (pero sí el <em>padding</em>).
+                        </li>
+                        <li>
+                            <code>.outerWidth()</code>, <code>.outerHeight()</code><br> Obtienen o cambian la anchura incluyendo <em>padding</em>, bordes y márgenes.
+                        </li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h4>Posicionamiento</h4>
+                    <p>Existen dos métodos para obtener la posición del elemento seleccionado:</p>
+                    <ul>
+                        <li><code>.offset()</code><br> Devuelve posición con respecto al documento.
+                        </li>
+                        <li><code>.position()</code><br> Devuelve posición con respecto al elemento padre en el DOM.
+                        </li>
+                    </ul>
+                    Ambos devuelven un objeto con dos atributos: <code>left</code> (coordenada x) y <code>top</code> (coordenada y).
+                    <p>El método <code>offset()</code> permite, además, cambiar la posición de un objeto.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/07/CambioPosicion.png" width="70%">
+                    <pre><code data-trim class="html">
+&lt;div class=&quot;parrafo&quot;&gt;
+     Mu&eacute;veme con los cursores
+&lt;/div&gt;                    
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <pre><code data-trim data-noescape class="javascript" style="font-size:90%; line-height: 110%">
+const IZQUIERDA = 37;
+const DERECHA = 39;
+const ARRIBA = 38;
+const ABAJO = 40;
+
+$(() => {
+    let parrafo = $("div.parrafo");
+
+    $("body").on("keydown", (evt) => {
+        let incremento = { x: 0, y: 0 };
+
+        switch (evt.which) {
+            case IZQUIERDA: incremento.x = -10; break;
+            case DERECHA: incremento.x = 10; break;
+            // ...
+        }
+
+        let current = parrafo.offset();
+        parrafo.offset({
+            left: current.left + incremento.x,
+            top: current.top + incremento.y
+        });
+        
+        evt.preventDefault();  <span class="arrow_box_left caja_codigo fragment">Luego veremos para qué sirve esto</span>
+    });
+});                    
+                    </code></pre>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Eventos</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <p>Para asociar un evento a una selección basta con utilizar el método <code>.on()</code>, indicando el tipo de evento a capturar y una función manejadora del evento.</p>
+                    <pre><code data-trim class="javascript">
+$("div").on("mousedown", () => {
+    // Manejar evento
+});
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Eventos de ratón</h4>
+                    <ul>
+                        <li>
+                            <code>click</code>, <code>dblclick</code><br> Pulsación completa del botón izquierdo (pulsar+liberar).
+                        </li>
+                        <li>
+                            <code>contextmenu</code><br> Pulsación completa del botón derecho (pulsar+liberar).
+                        </li>
+                        <li>
+                            <code>mousedown</code>, <code>mouseup</code><br> Pulsación y liberación de un botón, respectivamente.
+                        </li>
+                        <li>
+                            <code>mouseenter</code>, <code>mouseleave</code>, <code>mousemove</code><br> Entrada/salida del puntero en un área, y su movimiento.
+
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Eventos de teclado</h4>
+                    <ul>
+                        <li><code>keydown</code>, <code>keyup</code><br> Pulsación o liberación de una tecla.
+                        </li>
+                        <li><code>keypress</code><br> Pulsación + liberación
+                        </li>
+
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>El objeto <code>event</code></h4>
+                    <p>Según el evento que capturemos, puede ser necesario conocer más información sobre cómo se produce el evento.</p>
+                    <p>Por ejemplo:</p>
+                    <ul>
+                        <li>Con <code>mousemove</code>, ¿dónde está el puntero del ratón?.</li>
+                        <li>En <code>mousedown</code>, ¿qué botón del ratón se ha pulsado?.</li>
+                        <li>En <code>keypress</code>, ¿qué tecla se ha pulsado?.</li>
+                        <li>En <code>keydown</code>, ¿se ha pulsado también alguna de las teclas auxiliaries (Ctrl, Alt, ...)?</li>
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>La función manejadora de eventos que recibe el método <code>.on()</code> recibe un objeto de la clase <code>Event</code> que contiene esta información adicional.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$("#elem").on("mousedown", (<span class="hl">event</span>) => {
+    console.log(`Posición: ${event.pageX}, ${event.pageY}`);
+    console.log(`Botón pulsado: ${event.which}`);
+});
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Información del objeto <code>event</code>:</p>
+                    <ul>
+                        <li><code>target</code>: Elemento del DOM que produjo el evento.</li>
+                        <li><code>timeStamp</code>: Hora del evento.</li>
+                        <li><code>which</code>: Botón o tecla pulsado, en caso de eventos de ratón y teclado. </li>
+                        <li><code>ctrlKey</code>, <code>metaKey</code>, <code>shiftKey</code>, <code>altKey</code>: Indica si se ha pulsado alguna tecla auxiliar.</li>
+                        <li><code>pageX</code>, <code>pageY</code>: coordenadas del ratón, con respecto al documento HTML.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: movimiento del ratón</h4>
+                    <img src="images/07/PruebaRaton.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;p&gt;Mueve el rat&oacute;n por esta superficie ...&lt;/p&gt;
+&lt;div id=&quot;superficie&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;posicion&quot;&gt;&lt;/div&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+$(() => {
+    $("#superficie").on("mouseenter", () => {
+        $("#posicion").show();
+    });
+
+    $("#superficie").on("mouseleave", () => {
+        $("#posicion").hide();
+    });
+
+    $("#superficie").on("mousemove", (event) => {
+        $("#posicion").text(
+            `${event.pageX} x ${event.pageY}`
+        );
+    });
+});                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: pulsación de teclas</h4>
+                    <img src="images/07/PruebaTeclado.png" width="60%">
+                    <pre><code data-trim class="html">
+&lt;p&gt;C&oacute;digo de tecla pulsado: &lt;span id=&quot;codigoTecla&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;
+    &lt;span class=&quot;indicador&quot; id=&quot;ctrl&quot;&gt;Control&lt;/span&gt;
+    &lt;span class=&quot;indicador&quot; id=&quot;alt&quot;&gt;Alt&lt;/span&gt;
+    &lt;span class=&quot;indicador&quot; id=&quot;meta&quot;&gt;Meta&lt;/span&gt;
+    &lt;span class=&quot;indicador&quot; id=&quot;shift&quot;&gt;Shift&lt;/span&gt;
+&lt;/p&gt;
+</code></pre>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+$(() => {
+    $(document).on("keypress", function(event) {
+        $(".indicador").removeClass("activo");
+        $("#codigoTecla").text(event.which);
+        
+        if (event.ctrlKey) {
+            $("#ctrl").addClass("activo");
+        }
+        
+        if (event.metaKey) {
+            $("#meta").addClass("activo");
+        }
+        
+        if (event.altKey) {
+            $("#alt").addClass("activo");
+        }
+        
+        if (event.shiftKey) {
+            $("#shift").addClass("activo");
+        }
+    });
+});                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Eventos directos vs. eventos delegados</h4>
+                    <p>Partimos del siguiente código:</p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;ul id="listaElementos"&gt;
+    &lt;li&gt;Elemento 1&lt;/li&gt;
+    &lt;li&gt;Elemento 2&lt;/li&gt;
+    &lt;li&gt;Elemento 3&lt;/li&gt;
+&lt;/ul&gt;
+                    </code></pre>
+                    <p>Capturamos el evento de pulsación sobre cada <code>&lt;li&gt;</code>:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$("#listaElementos li").on("click", (event) => {
+    // event.target contiene un elemento del DOM
+    // Construimos una selección a partir de él:
+    let elementoPulsado = $(event.target);
+    // Mostramos mensaje con el contenido del &lt;li&gt;:
+    alert(`Has hecho clic en ${elementoPulsado.text()}`);
+});
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <img src="images/07/EventosLive.png" style="width:70%">
+                </section>
+
+                <section>
+                    <p>Supongamos que permitimos añadir nuevos <code>&lt;li&gt;</code> de manera dinámica:</p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;button id="anyadir"&gt;Añadir nuevo elemento&lt;/button&gt;
+                    </code></pre>
+                    <p>Capturar pulsación del botón:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+let contador = 3;
+
+$("#anyadir").on("click", () => {
+    contador++;
+    let newElem = $(`&lt;li&gt;Elemento ${contador}&lt;/li&gt;`);
+    $("#listaElementos").append(newElem);
+});
+                    </code></pre>
+                </section>
+
+                <section>
+                    <img src="images/07/EventosLive2.png" style="width:70%">
+                </section>
+
+                <section>
+                    <p>Habíamos capturado la pulsación sobre los <code>&lt;li&gt;</code>:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$("#listaElementos li").on("click", (event) => { ... });
+                    </code></pre>
+                    <p>¿Afecta solamente a los <code>&lt;li&gt;</code> existentes en el momento de ejecutar esta sentencia? ¿O también afecta a los <code>&lt;li&gt;</code> añadidos <em>a posteriori</em> de manera dinámica?</p>
+                </section>
+
+                <section>
+                    <p>Cuando capturamos un evento de la siguiente forma:</p>
+                    <p><code>$(<em>selectorCSS</em>).on(<em>evento</em>, <em>callback</em>)</code></p>
+                    <p>La función <code><em>callback</em></code> se ejecuta <strong>exclusivamente</strong> en aquellos elementos que se ajusten al <code><em>selectorCSS</em></code> indicado, <strong>en el momento de asociar el evento a la función <code><em>callback</em></code></strong>.</p>
+                    <p>Si, después de ejecutar el método <code>on()</code>, añadimos al DOM nuevos elementos que coincidan con el <code><em>selectorCSS</em></code>, estos <strong>no se verán afectados</strong> por la llamada a <code>on()</code>.</p>
+                </section>
+
+
+
+                <section>
+                    <p>En nuestro ejemplo, si pulsamos sobre los elementos numerados desde el 4 en adelante, no pasará nada.</p>
+                    <img src="images/07/EventosLive2.png" style="width:50%">
+                </section>
+
+
+                <section>
+                    <p>Cambiamos la línea</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$("#listaElementos <span class="hl">li</span>").on("click", (event) => { ... });
+                    </code></pre>
+                    <p>por la siguiente:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+$("#listaElementos").on("click", "<span class="hl">li</span>", (event) => { ... });
+                    </code></pre>
+                    <p>Esta última captura de eventos afecta a los elementos <code>&lt;li&gt;</code> que estén por debajo de <code>#listaElementos</code>, tanto los actualmente existentes, como los que se introduzcan después dinámicamente.</p>
+                </section>
+
+                <section>
+                    <p><strong>Eventos directos</strong></p>
+                    <p style="font-size:80%"><code>$(<em>selectorCSS</em>).on(<em>evento</em>, <em>callback</em>)</code></p>
+                    <p>Afectan a los elementos que ajusten con <code>selectorCSS</code> en el momento de ejecutar esta llamada.</p>
+                    <p><strong>Eventos delegados</strong></p>
+                    <p style="font-size:80%"><code>$(<em>selectorCSS1</em>).on(<em>evento</em>, <em>selectorCSS2</em>, <em>callback</em>)</code></p>
+                    <p>Afectan a los elementos que ajusten con <code>selectorCSS2</code> que se encuentren contenidos dentro de alguno de los elementos que ajusten con <code>selectorCSS1</code>. Afecta tanto a los elementos <strong>presentes</strong> como a los <strong>futuros</strong>.</p>
+                </section>
+
+
+                <section>
+                    <h4>Propagación de eventos</h4>
+                    <p>Sabemos que los elementos de HTML pueden estar anidados unos dentro de otros:</p>
+                    <img src="images/07/AnidamientoDOM.png" width="60%">
+                </section>
+
+                <section>
+                    <pre style="float:left; width:40%; margin:5%"><code data-trim class="html">
+&lt;div id=&quot;contenedor&quot;&gt;
+    Regi&oacute;n externa
+    &lt;div id=&quot;region1&quot;&gt;
+        Region 1
+    &lt;/div&gt;
+    &lt;div id=&quot;region2&quot;&gt;
+        Region 2
+    &lt;/div&gt;
+&lt;/div&gt;                    
+                    </code></pre>
+                    <p style="float:right; width:45%">
+                        <img src="images/07/Anidamiento.svg" width="80%" style="border:none;box-shadow:none">
+                    </p>
+                    <div style="clear:both"></div>
+                </section>
+
+                <section>
+                    <p>Supongamos que hacemos clic sobre la región 1:</p>
+                    <img src="images/07/AnidamientoDOM2.png" width="50%">
+                    <p>¿Quién recibe el evento <code>click</code>? ¿La region 1? ¿La región externa? ¿Ambas?</p>
+                </section>
+
+                <section>
+                    <p>Los eventos se propagan de manera ascendente en el DOM, desde los elementos &laquo;internos&raquo; hasta los &laquo;externos&raquo;,<br> y <strong>en ese orden</strong> (<em>bubble propagation</em>)</p>
+                    <img src="images/07/Propagacion.svg" width="40%" style="border:none;box-shadow:none">
+                </section>
+
+                <section>
+                    <p>Supongamos el siguiente código Javascript:</p>
+                    <pre><code data-trim class="javascript">
+$("body").on("click", () => {
+    console.log("Se ha pulsado en el cuerpo de la página");
+});
+
+$("#contenedor").on("click", () => {
+    console.log("Se ha pulsado en la región externa");
+});
+
+$("#region1").on("click", () => {
+    console.log("Se ha pulsado en la región 1");
+});
+
+$("#region2").on("click", () => {
+    console.log("Se ha pulsado en la región 2");
+});                    
+                    </code></pre>
+                </section>
+                <section>
+                    <p>Al hacer clic en la región 1:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+Se ha pulsado en la región 1
+Se ha pulsado en la región externa        <span class="arrow_box_left caja_codigo" style="position:relative; top: 10px;">También reciben el evento</span>
+Se ha pulsado en el cuerpo de la página
+                    </code></pre>
+                    <p>Al hacer clic en la región 2:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+Se ha pulsado en la región 2
+Se ha pulsado en la región externa        <span class="arrow_box_left caja_codigo" style="position:relative; top: 10px;">También reciben el evento</span>
+Se ha pulsado en el cuerpo de la página
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Es posible impedir la propagación del evento hacia los elementos superiores del árbol DOM.</p>
+                    <p>Para ello hay que llamar al método <code>.stopPropagation()</code> el objeto <code>Event</code> recibido:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+...                    
+$("#region1").on("click", (<span class="hl">event</span>) => {
+    console.log("Se ha pulsado en la región 1");
+    <span class="hl">event.stopPropagation();</span>
+});
+...
+                    </code></pre>
+                    <p>Al hacer clic en la región 1:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+    Se ha pulsado en la región 1   <span class="arrow_box_left caja_codigo">El evento no se propaga hacia arriba</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Acciones por defecto</h4>
+                    <p>Algunos tipos de eventos llevan implícita una determinada acción por parte del navegador:</p>
+                    <ul>
+                        <li>
+                            Hacer clic en un enlace: el navegador salta a la URL correspondiente.
+                        </li>
+                        <li>
+                            Hacer clic en el botón <em>Enviar</em> de un formulario: el navegador realiza una petición GET/POST a la URL indicada en el attributo <code>action</code> del formulario.
+                        </li>
+                        <li>
+                            Pulsar una combinación de teclas (p. ej. <em>Ctrl+S</em>), que realiza una determinada acción en el navegador (p. ej. guardar la página actual en el cliente).
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Es posible evitar la ejecución de estas acciones utilizando el método <code>preventDefault()</code> de la clase <code>Event</code>, tras capturar un evento.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: validación de un formulario</h4>
+                    <img src="images/07/Validacion.png" width="70%">
+                    <pre><code data-trim class="html">
+&lt;form action=&quot;correcto.html&quot; method=&quot;GET&quot; id=&quot;formulario&quot;&gt;
+    Introduce un n&uacute;mero: 
+    &lt;input type=&quot;text&quot; name=&quot;num&quot;&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Enviar&quot;&gt;
+&lt;/form&gt;                    
+                    </code></pre>
+                </section>
+
+                <section>
+                    <p>Si asociamos un evento al botón <code>Enviar</code> del formulario, podemos comprobar que el valor introducido es un número.</p>
+
+                    <pre><code data-trim class="javascript">
+$("#formulario input[type=submit]").on("click", function() {
+    let valor = $("#formulario input[type=text]").prop("value");
+    if (isNaN(Number(valor))) {
+       alert("No has introducido ningún número!");
+    }
+});
+                    </code></pre>
+                    <p>Sin embargo, esta solución no funciona: cuando el usuario introduce una entrada no numérica en el cuadro de texto, además de mostrarse el mensaje con <code>alert(...)</code>, se salta a la URL de destino del formulario (<code>correcto.html</code>).</p>
+                </section>
+
+                <section>
+                    <p>Para evitar el envío del formulario en caso de no ser validado, hemos de inhibir la acción por defecto mediante el método <code>preventDefault()</code>.</p>
+
+                    <pre><code data-trim data-noescape class="javascript">
+$("#formulario input[type=submit]").on("click", function(<span class="hl">event</span>) {
+    let valor = $("#formulario input[type=text]").prop("value");
+    if (isNaN(Number(valor))) {
+       alert("No has introducido ningún número!");
+       
+       // Inhibir el envío del formulario
+       <span class="hl">event.preventDefault();</span>
+    }
+});
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Advertencia</h4>
+                    <p>Hemos visto un ejemplo de validación de formularios que se ejecuta en el lado del navegador.</p>
+
+                    <p>Esta validación es beneficiosa, en tanto que se evita el envío de formularios incorrectos al servidor.</p>
+                    <p>No obstante, la validación del lado del cliente <strong>no exime de la validación en el lado del servidor</strong>.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="bloquetitulo" style="padding:45px 20px 20px 20px">
+                        <h3>Animaciones y efectos</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Efectos</h4>
+                    <p>Además de los métodos <code>show()</code> y <code>hide()</code>, es posible utilizar efectos visuales para mostrar y ocultar elementos.</p>
+                    <ul>
+                        <li><code>fadeOut([<em>duración</em>])</code>, <code>fadeIn([<em>duración</em>])</code>,<code>fadeTo(<em>duración</em>, <em>opacidad</em>)</code><br> Desaparición / aparición gradual.
+                        </li>
+                        <li>
+                            <code>slideDown([<em>duración</em>])</code>, <code>slideUp([<em>duración</em>])</code><br> Desaparición / aparición mediante desplazamiento.
+                        </li>
+                    </ul>
+                    <p>Ejemplo:</p>
+                    <pre><code data-trim class="javascript">
+$("#elem").fadeOut(500); // Tarda medio milisegundo en desaparecer
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h4>Animaciones personalizadas</h4>
+                    <p>Método <code>.animate(<em>propiedades</em>, <em>t</em>)</code></p>
+                    <p>Modifica las propiedades CSS de la selección de manera gradual para que alcancen los valores indicados en el objeto <code><em>propiedades</em></code>. La transición dura <code><em>t</em></code> milisegundos. </p>
+                    <pre><code data-trim class="javascript">
+// Se hace un desplazamiento y un fundido simultáneos durante
+// un segundo
+$("#elem").css("position", "relative")
+          .animate({ top: "100px", opacity: "0" }, 1000);
+                    </code></pre>
+                </section>
+            </section>
+
+
+            <section>
+                <h3>Extensiones de <span style="text-transform:none">j</span>Query</h3>
+                <p>jQuery es un framework modular, que permite la incorporación de extensiones (<em>plug-ins</em>)</p>
+                <ul>
+                    <li>Validación de formularios:<br>
+                        <a href="https://github.com/jzaefferer/jquery-validation">https://github.com/jzaefferer/jquery-validation</a><br>
+                        <a href="https://github.com/victorjonsson/jQuery-Form-Validator">https://github.com/victorjonsson/jQuery-Form-Validator</a>
+                    </li>
+                    <li><strong>jQuery UI</strong>: componentes de interfaz de usuario, drag-and-drop, etc.<br>
+                        <a href="http://jqueryui.com/">http://jqueryui.com/</a>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <ul>
+                    <li><strong>jQueryMobile</strong>: componentes de interfaz de usuario enfocados a dispositivos móviles.<br>
+                        <a href="http://jquerymobile.com/">http://jquerymobile.com/</a>
+                    </li>
+                    <li><strong>QUnit</strong>: ejecución de tests de unidad.<br>
+                        <a href="http://qunitjs.com/">http://qunitjs.com/</a>
+                    </li>
+                </ul>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline current">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Módulos Javascript en el navegador</h2>
+                <p>El sistema de módulos de Node no es directamente aplicable al cliente.</p>
+                <p>Por tanto, no tenemos función <code>require</code>, ni módulos que exporten sus funciones mediante <code>module.exports</code>.</p>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Inclusión directa de ficheros .js</h3>
+                    <p>Es posible separar el código Javascript de una página web en distintos ficheros <code>.js</code> e incluirlos mediante las respectivas etiquetas <code>&lt;script&gt;</code>:</p>
+                    <pre><code data-trim class="html">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="modulo1.js"&gt;&lt;/script&gt;                
+        &lt;script src="modulo2.js"&gt;&lt;/script&gt;                
+        ...
+    &lt;/head&gt;
+    ...
+                </code></pre>
+                    <p>El resultado de esto es equivalente a importar un único fichero <code>.js</code> en el que se concatenen todas las definiciones de <code>modulo1.js</code>, seguidas de las de <code>modulo2.js</code>, etc.</p>
+                    <p>¿Qué problema conlleva esto?</p>
+                </section>
+
+                <section>
+                    <p>Supongamos las siguientes implementaciones:</p>
+                    <p><code>modulo1.js</code></p>
+                    <pre><code data-trim class="javascript">
+function minombre() {
+    ...
+}
+                </code></pre>
+                    <p><code>modulo2.js</code></p>
+                    <pre><code data-trim class="javascript">
+...
+minombre = 5;
+...
+                </code></pre>
+                    <p>Existe un <strong>conflicto de nombres</strong> entre los dos módulos. Si un mismo identificador se define en ambos módulos, las definiciones de <code>modulo2.js</code> prevalecen sobre las de <code>modulo1.js</code>.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>La librería Require.js</h3>
+                    <p><a href="http://requirejs.org/">http://requirejs.org/</a></p>
+                    <p>Proporciona un sistema de módulos que evita que los identificadores definidos en distintos módulos interfieran entre sí.</p>
+                    <p>Tiene la misma finalidad que el sistema de módulos de Node, pero está basada en otro modelo: AMD (<em>Asynchronous Module Definition</em>).</p>
+                </section>
+
+                <section>
+                    <p>En los siguientes ejemplos, supondremos la siguiente estructura de directorios:</p>
+                    <img src="images/07/FolderStructure3.svg" width="40%" style="border:none;box-shadow:none">
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Definición de un módulo</h3>
+                    <pre><code data-trim  data-noescape class="javascript">
+"use strict";
+
+define(["<em>dep1</em>", "<em>dep2</em>", ...], (<em>mod1</em>, <em>mod2</em>, ...) => {
+
+    // Definiciones del módulo
+    
+    return <em>objeto_o_funcion_exportado</em>;
+});
+                </code></pre>
+                    <p>La función <code>define</code> recibe dos parámetros:</p>
+                    <ul>
+                        <li>Una lista con los nombres de las dependencias de los módulos que se está definiendo.</li>
+                        <li>Una función que recibe los objetos exportados por dichas dependencias y devuelve el valor exportado por el módulo.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>La definición de un módulo mediante Require.js</p>
+                    <pre><code data-trim  data-noescape class="javascript">
+"use strict";
+
+define(["<em>dep1</em>", "<em>dep2</em>", ...], (<em>mod1</em>, <em>mod2</em>, ...) => {
+
+    // Definiciones del módulo
+    return <em>objeto_o_funcion_exportado</em>;
+
+});
+                </code></pre>
+                    <p>es equivalente al siguiente código en Node:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+let <em>mod1</em> = require("<em>dep1</em>");
+let <em>mod2</em> = require("<em>dep2</em>");
+...
+// Definiciones del módulo
+...
+module.exports = <em>objeto_o_funcion_exportado</em>;
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <img src="images/07/FolderStructure3.svg" width="40%" style="border:none;box-shadow:none;float:left">
+                    <div style="float:right;width:60%">
+                        <code>fib.js</code>
+                        <pre><code data-trim data-noescape class="javascript" style="font-size:75%;line-height:110%">
+define([], () => {
+
+    var PHI = (1 + Math.sqrt(5)) / 2;
+
+    function fibMasEficiente(n) {
+        var p1 = Math.pow(PHI, n);
+        var p2 = Math.pow(1 - PHI, n);
+        return Math.round((p1 - p2) / Math.sqrt(5));
+    }
+
+    function fib(n) {
+        console.assert(typeof(n) === "number",
+            `fib: ${n} is not a number`);
+        return fibMasEficiente(n);
+    }
+
+    return fib;   <span class="arrow_box_left caja_codigo">Se exporta una única función</span>
+    
+});                    
+                    </code></pre>
+
+                    </div>
+                    <div style="clear:both"></div>
+                </section>
+
+
+                <section>
+                    <img src="images/07/FolderStructure3.svg" width="40%" style="border:none;box-shadow:none;float:left">
+                    <div style="float:right;width:60%">
+                        <code>fact.js</code>
+                        <pre><code data-trim data-noescape class="javascript" style="font-size:90%;line-height:115%">
+define([], () => {
+    function fact(n) {
+        var result = 1;
+        for (var i = 1; i &lt;= n; i++) {
+            result = result * i;
+        }
+        return result;
+    }
+
+    return fact;   <span class="arrow_box_left caja_codigo">Se exporta una función</span>
+});                    
+                    </code></pre>
+                        <code>fact.js</code>
+                        <pre><code data-trim data-noescape class="javascript" style="font-size:90%;line-height:115%">
+define([], () => {
+
+    function sqr(n) {
+        return n * n;
+    }
+    
+    return sqr;    <span class="arrow_box_left caja_codigo">Se exporta una función</span>
+}); 
+                    </code></pre>
+
+                    </div>
+                    <div style="clear:both"></div>
+                </section>
+
+
+                <section>
+                    <img src="images/07/FolderStructure3.svg" width="40%" style="border:none;box-shadow:none;float:left">
+                    <div style="float:right;width:60%">
+                        <code>geometria.js</code>
+                        <pre><code data-trim data-noescape class="javascript" style="font-size:90%;line-height:115%">
+define(["<span class="hl">math/sqr</span>"], (<span class="hl">sqr</span>) => {
+            <span class="no_arrow_box caja_codigo" style="position:relative;top:10px">Este módulo depende de <span style="font-family:monospace">sqr</span></span>
+
+    function areaCuadrado(lado) {
+        return <span class="hl">sqr</span>(lado);
+    }
+
+    function areaCirculo(radio) {
+        return Math.PI * <span class="hl">sqr</span>(radio);
+    }
+
+    function perimetroCuadrado(lado) {
+        return 4 * lado;
+    }
+
+    function perimetroCirculo(radio) {
+        return 2 * Math.PI * radio;
+    }
+
+    return {   <span class="arrow_box_left caja_codigo" style="position:relative;top:-4px">Se exporta un objeto</span>
+       areaCuadrado: areaCuadrado,
+       areaCirculo: areaCirculo,
+       perimetroCuadrado: perimetroCuadrado,
+       perimetroCirculo: perimetroCirculo
+    };
+
+});                    </code></pre>
+                    </div>
+                    <div style="clear:both"></div>
+                </section>
+
+                <section>
+                    <div>
+                        <code>main.js</code>
+                        <pre><code data-trim data-noescape class="javascript" style="font-size:90%;line-height:115%">
+define(["math/sqr", "math/fib", "geometria"], (sqr, fib, g) => {
+
+    console.log(`4^2 = ${sqr(4)}`);
+    console.log(`fib(6) = ${fib(6)}`);
+    console.log(`Area de circulo de radio 10: ${g.areaCirculo(10)}`);
+    
+});                    </code></pre>
+                    </div>
+                    <p>Para utilizar este módulo en el documento HTML es necesario importar el script <code>require.js</code> pasando como atributo <code>data-main</code> el nombre del módulo principal:</p>
+                    <pre><code data-trim data-noescape class="html">
+&lt;script src="scripts/require.js" <span class="hl">data-main="scripts/main"</span>&gt;
+&lt;/script&gt;    
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Antes de definir el módulo principal suele incluirse una llamada a <code>requirejs.config</code> indicando las opciones de configuración:</p>
+                    <pre><code data-trim class="javascript">
+"use strict";
+
+requirejs.config({  
+    // Directorio en el que se encuentran los scripts
+    baseUrl: "scripts",
+});
+
+define(["math/sqr", "math/fib", "geometria"], (sqr, fib, g) => {
+        ...
+});
+
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Por defecto, al introducir un módulo <code>nombreMod</code> como dependencia, se busca <code>nombreMod.js</code> en el directorio indicado por la opción <code>baseUrl</code>.</p>
+                    <p>Si se quiere, puede establecerse manualmente una correspondencia entre nombres lógicos de módulos y nombres en el sistema de ficheros. Para ello se utiliza la opción <code>paths</code>.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo: uso de <span style="text-transform:none">j</span>Query</h4>
+                    <pre><code data-trim data-noescape class="javascript">
+requirejs.config({
+    baseUrl: "scripts",
+    paths: {
+        jquery: "../jquery/jquery-3.1.1.min" <span class="arrow_box_left caja_codigo">No introducir extension .js</span>
+    } 
+});             
+                </code></pre>
+
+                    <p>El siguiente módulo cargará el fichero <code>../jquery/jquery-3.1.1.min.js</code> como dependencia:</p>
+                    <pre><code data-trim class="javascript">
+define(["jquery"], ($) => {
+    $("#miDiv").on("click", () => {
+        $("#aviso").show();
+    })
+});                
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:17em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Objetos predefinidos</a></li>
+                    <li><a href="#/p3" class="outline">Document Object Model (DOM)</a></li>
+                    <li><a href="#/p4" class="outline"><span style="text-transform:none">j</span>Query</a></li>
+                    <li><a href="#/p5" class="outline">Sistema de módulos: require.js</a></li>
+                    <li><a href="#/p6" class="outline current">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Bibliografía</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>B. Bibeault, Y. Katz, A. De Rosa
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3549757~S6*spi">jQuery in Action, 3<sup style="font-size:60%">rd</sup> edition</a>
+                            <br> Manning Publications, 2015
+                        </li>
+                        <li style="position:relative;top:20px">
+                            <a href="http://api.jquery.com/">Documentación de la API de jQuery</a>
+                            <span style="font-size:70%">http://api.jquery.com/</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width:30%">
+                    <img src="https://images-na.ssl-images-amazon.com/images/I/51XOg1baCBL._SX396_BO1,204,203,200_.jpg" style="width:60%; border:none">
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }]
+        });
+
+    </script>
+</body>
+
+</html>
