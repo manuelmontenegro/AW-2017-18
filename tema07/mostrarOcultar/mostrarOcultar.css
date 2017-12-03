@@ -1,0 +1,28 @@
+
+#ventana {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    border: 2px solid black;
+    width: 50%;
+    box-shadow: 5px 5px 7px 0px rgba(0,0,0,0.55);
+    padding: 20px;
+    text-align: center;
+    background-color: #DFD;
+    display: none;
+} 
+
+#ventana span.cerrar {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+#ventana span.cerrar:hover {
+    color: red;
+}
+
+#ventana button {
+    border: 1px solid black;
+}

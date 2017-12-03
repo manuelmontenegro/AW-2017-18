@@ -1,0 +1,14 @@
+
+table.generada {
+    border-collapse: collapse;
+}
+
+table.generada td {
+    border: 2px solid black;
+    padding: 5px;
+}
+
+table.generada td:hover {
+    background-color: #FF6;
+    cursor: pointer;
+}

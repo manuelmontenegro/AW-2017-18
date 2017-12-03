@@ -1,0 +1,16 @@
+div.parrafo {
+    width: 50%;
+    border: 2px dotted brown;
+    background-color: #FFD;
+    padding: 20px;
+}
+
+div.tamaño {
+    position: fixed;
+    background-color: #007;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    right: 10px;
+    top: 10px;
+}

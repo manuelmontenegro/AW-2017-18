@@ -1,0 +1,34 @@
+#contenedor {
+    position: relative;
+    width: 500px;
+    height: 300px;
+    border: 1px dotted brown;
+    background-color: #FFD;
+    text-align: center;
+    padding-top: 10px;
+}
+
+#region1 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 40px;
+    left: 20px;
+    border: 1px solid #050;
+    background-color: #DFD;
+    padding-top: 10px;
+    
+}
+
+#region2 {
+    float: right;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 40px;
+    right: 25px;
+    border: 1px solid #050;
+    background-color: #DFF;
+    padding-top: 10px;
+    
+}
