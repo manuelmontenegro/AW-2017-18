@@ -1,0 +1,13 @@
+div.mia table {
+    border-collapse: collapse;
+}
+
+div.mia td {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+div.mia td:hover {
+    background-color: #FFFFAA;
+    cursor: pointer;
+}

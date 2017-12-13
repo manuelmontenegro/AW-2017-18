@@ -39,3 +39,6 @@
  
  * `navegacionTeclado`: Navegación en un sitio web mediante el teclado
 
+ * `tabla-dinamica`: Solución a los ejercicios 1 y 3 de la hoja de ejercicios 7.
+ 
+ * `calculadora`: Solución al ejercicio 4 de la hoja de ejercicios 7.
