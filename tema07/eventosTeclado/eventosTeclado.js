@@ -1,6 +1,7 @@
 
 $(() => {
-    $(document).on("keypress", (event) => {
+    $(document).on("keydown", (event) => {
+        event.preventDefault();
         $(".indicador").removeClass("activo");
         $("#codigoTecla").text(event.which);
         if (event.ctrlKey) {
@@ -17,6 +18,5 @@ $(() => {
         }
         // Para evitar que la pulsación sea capturada
         // por el navegador
-        event.preventDefault();
     });
 });
