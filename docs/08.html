@@ -1,0 +1,2273 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 8 - Servicios Web, AJAX y RIAs</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 8</div>
+                <h1 style="height:4em;position:relative;top:0.3em">Servicios web, AJAX y Rich Internet Applications</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <section style="height:15em" data-transition="slide-in fade-out">
+                    <h2>Introducción</h2>
+                    <img src="images/08/EsquemaClasico.svg" width="80%" style="border:none;box-shadow:none">
+                    <p>
+                        Hasta ahora hemos estudiado el protocolo HTTP utilizado en la comunicación entre un navegador web y un servidor.
+                    </p>
+                </section>
+
+                <section style="height:15em" data-transition="fade">
+                    <h2>Introducción</h2>
+                    <img src="images/08/EsquemaClasico.svg" width="80%" style="border:none;box-shadow:none">
+                    <p>
+                        El servidor devolvía al cliente: documentos HTML (<code>.html</code>), imágenes (<code>.png</code>, <code>.jpg</code>, <code>.svg</code>), código Javascript para ser ejecutado en navegador (<code>.js</code>), etc.
+                    </p>
+                    <p class="fragment">El destinatario de estos contenidos es el <strong>navegador web</strong></p>
+                </section>
+
+                <section style="height:15em" data-transition="fade-in slide-out">
+                    <h2>Introducción</h2>
+                    <img src="images/08/EsquemaServicioWeb.svg" width="80%" style="border:none;box-shadow:none">
+                    <p>
+                        ¿Y si utilizamos el mismo esquema y el mismo protocolo HTTP para que el servidor devuelva otro tipo de contenido?
+                    </p>
+                    <p>El contenido estaría destinado a ser consumido por un programa que tome el papel del cliente; no necesariamente un navegador.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Servicios web</h3>
+                    <p>Un <strong>servicio web</strong> es un servicio ofrecido por un dispositivo a otros dispositivos a través de la web.</p>
+                    <p>Los servicios web están diseñados para la comunicación máquina a máquina.</p>
+                    <p>La comunicación requerida por el servicio se realiza normalmente mediante HTTP.</p>
+                </section>
+
+                <section>
+                    <p>La principal ventaja es la <strong>interoperabilidad</strong> entre distintos componentes, independientemente del lenguaje de programación en el que estén implementados y de la máquina en la que se ejecuten.</p>
+                    <p>
+                        <img src="images/08/EsquemaServicioFactorial.svg" width="90%" style="border:none;box-shadow:none">
+                    </p>
+                </section>
+            </section>
+
+            <section>
+                <h3>Ejemplos de servicios web</h3>
+                <ul>
+                    <li><strong>Fixer.io</strong> - <a href="http://fixer.io/">http://fixer.io/</a><br> Proporciona una API para los tipos de cambio de divisas.
+                    </li>
+                    <li><strong>OpenWeatherMap</strong> - <a href="https://openweathermap.org/">https://openweathermap.org/</a><br> Permite acceder a los datos meteorológicos de distintas ciudades.
+                    </li>
+                    <li><strong>Google Drive</strong>, <strong>Dropbox</strong>, <strong>GitHub</strong><br> Disponen de una API mediante la cual pueden implementarse aplicaciones que accedan, desde el escritorio o de manera automática, a ficheros almacenados en la nube.
+                    </li>
+                </ul>
+                <p>
+                </p>
+            </section>
+
+            <section>
+                <h3>Pila de protocolos de servicios web</h3>
+                <ul>
+                    <li><strong style="color:#6d06d4">Protocolo de transporte</strong>. Determina el mecanismo de envío de mensajes. Normalmente es HTTP.</li>
+                    <li><strong style="color:#6d06d4">Protocolo de mensajería</strong>. Determina cómo se codifican los mensajes. Suele utilizarse XML (SOAP) o JSON.</li>
+                    <li><strong style="color:#6d06d4">Protocolo de descripción</strong>. Describe la interfaz de un servicio (qué operaciones se pueden realizar, qué parámetros recibe cada una, etc.). Por ejemplo, WSDL.</li>
+                    <li><strong style="color:#6d06d4">Protocolo de descubrimiento</strong>. Permite que un servicio publique su URL y descripción en un registro público común. Por ejemplo, UDDI.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Tipos de servicios web</h3>
+                <ul>
+                    <li><strong>REST</strong> (<em>REpresentational State Transfer</em>)<br>
+                        <span style="font-size:80%">Utilizan los distintos tipos de peticiones HTTP (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) para especificar las operaciones a realizar. Las operaciones se realizan sobre recursos, cada uno identificado mediante una URL.</span>
+                    </li>
+                    <li style="margin-top:20px"><strong>SOAP</strong> (<em>Simple Object Access Protocol</em>)<br>
+                        <span style="font-size:80%">Utilizan mensajes en formato XML para especificar el tipo de operación que se desea realizar y sus parámetros.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline current">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Formatos de intercambio de datos</h2>
+                <img src="images/08/FormatoIntercambio.svg" width="90%" style="border:none;box-shadow:none">
+                <p>Hemos visto que el servidor responde al programa cliente con la información que este último ha pedido.
+                    <br>¿En qué formato se transmite esta información?</p>
+            </section>
+
+            <section>
+                <h3>Requsitos de un formato de intercambio de datos</h3>
+                <ul>
+                    <li>Debe ser lo suficientemente <strong>genérico</strong> como para poder representar cualquier tipo de respuesta.</li>
+                    <li>Debe de ser fácilmente analizable por un programa.<br> ... y si es legible, mejor.
+                    </li>
+                </ul>
+                <div class="fragment">
+                    <p>Formatos de intercambio más populares:</p>
+                    <ul>
+                        <li><strong>XML</strong> (<em>eXtensible Markup Language</em>)
+                        </li>
+                        <li><strong>JSON</strong> (<em>JavaScript Object Notation</em>)
+                        </li>
+                    </ul>
+                    <p>Nosotros utilizaremos principalmente JSON.</p>
+                </div>
+            </section>
+
+
+            <section>
+                <section>
+                    <h3>Formato XML</h3>
+                    <pre><code data-trim class="xml">
+&lt;agenda&gt;
+    
+    &lt;contacto id=&quot;c1&quot;&gt;
+        &lt;nombre&gt;David Jim&eacute;nez&lt;/nombre&gt;
+        &lt;fecha-nacimiento&gt;20/01/1989&lt;/fecha-nacimiento&gt;
+        &lt;telefonos&gt;
+            &lt;tel tipo=&quot;casa&quot;&gt;917371235&lt;/tel&gt;
+            &lt;tel tipo=&quot;trabajo&quot;&gt;914483124&lt;/tel&gt;
+        &lt;/telefonos&gt;
+    &lt;/contacto&gt;
+    
+    &lt;contacto id=&quot;c2&quot;&gt;
+        &lt;nombre&gt;Luis Garc&iacute;a&lt;/nombre&gt;
+        &lt;fecha-nacimiento&gt;15/03/1979&lt;/fecha-nacimiento&gt;
+        &lt;telefonos&gt;
+        &lt;/telefonos&gt;
+    &lt;/contacto&gt;
+    
+&lt;/agenda&gt;                </code></pre>
+                </section>
+
+                <section>
+                    <p>Sintaxis similar a la de HTML, con ciertas restricciones:</p>
+                    <ul>
+                        <li>Toda etiqueta de inicio tiene una etiqueta de cierre, y las etiquetas han de estar correctamente anidadas.</li>
+                        <li>Los atributos de etiquetas están delimitados por comillas dobles.</li>
+                        <li>Existe un único elemento raíz.</li>
+                    </ul>
+                    <p>Cualquier documento que cumpla estas tres condiciones está <strong>bien formado</strong>.</p>
+                </section>
+
+                <section>
+                    <p>El conjunto de etiquetas XML permitidas y su contenido depende de la aplicación concreta.</p>
+                    <p>En nuestro ejemplo: <code>&lt;agenda&gt;</code>, <code>&lt;contacto&gt;</code>, <code>&lt;nombre&gt;</code>, <code>&lt;fecha-nacimiento&gt;</code>, <code>&lt;telefonos&gt;</code> y <code>&lt;tel&gt;</code>.</p>
+                    <p>Existen mecanismos para especificar restricciones adicionales: qué etiquetas y atributos se permiten, y cuál es el contenido de cada una de ellas.</p>
+                    <p>Si un documento XML bien formado cumple estas restricciones, se dice que es un documento <strong>válido</strong>.</p>
+                </section>
+
+                <section>
+                    <h4>Lenguajes de especificación para XML</h4>
+                    <ul style="width:90%">
+                        <li>DTD (<em>Document Type Definition</em>)
+                            <pre><code data-trim class="xml">
+&lt;!ELEMENT agenda (contacto*)&gt;
+&lt;!ELEMENT contacto (nombre, fecha-nacimiento?, telefonos)&gt;
+&lt;!ELEMENT telefonos (tel*)&gt;
+&lt;!ELEMENT nombre (#PCDATA)&gt;
+&lt;!ELEMENT fecha-nacimiento (#PCDATA)&gt;
+&lt;!ELEMENT tel (#PCDATA)&gt;
+&lt;!ATTLIST contacto id ID #REQUIRED&gt;
+&lt;!ATTLIST tel tipo CDATA #REQUIRED&gt;                    
+                    </code></pre>
+                        </li>
+                        <li>XML Schema</li>
+                        <li>Relax NG</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Otras aplicaciones de XML</h4>
+                    <ul>
+                        <li><strong>Ficheros de configuración</strong><br> Por ejemplo: <em>Ant</em>, <em>Maven</em>, <em>Eclipse</em>, <em>Tomcat</em>, etc.
+                        </li>
+                        <li><strong>Bases de datos</strong><br> Por ejemplo: <em>BaseX</em>, <em>eXist-db</em>, etc.<br> Existe un lenguaje de consultas propio: <em>XQuery</em>.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+
+                <section>
+                    <h3>Formato JSON</h3>
+                    <pre><code data-trim class="json">
+{
+    "c1": {
+            "nombre": "David Jiménez",
+            "fechaNacimiento": "20/01/1989",
+            "telefonos": [
+                { "tipo": "casa", "numero": 917371235 },
+                { "tipo": "trabajo", "numero": 914483124 }
+            ]
+          },
+    "c2": {
+            "nombre": "Luis García",
+            "fechaNacimiento": "15/03/1979",
+            "telefonos" : []
+          }
+}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Sintaxis similar a los objetos de Javascript</p>
+                    <p>... con una excepción: los nombres de los atributos van siempre delimitados por comillas</p>
+                    <p>Incorrecto:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+{ <span class="hl" style="background-color:#dfc2c2">nombre</span>: "Lucía", <span class="hl" style="background-color:#dfc2c2">edad</span>: 20 }
+                </code></pre>
+                    <p>Correcto:</p>
+                    <pre><code data-trim class="json">
+{ "nombre": "Lucía", "edad": 20 }
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Sintaxis JSON</h4>
+                    <ul style="width:90%">
+                        <li><strong style="color:#7234ee">Números</strong>
+                            <pre><code data-trim class="json">
+34    2.40   -2.0e+16
+                        </code></pre>
+                        </li>
+                        <li><strong style="color:#7234ee">Cadenas</strong>
+                            <pre><code data-trim class="json">
+"Hola"    "Esto es una cadena"
+                        </code></pre>
+                        </li>
+                        <li><strong style="color:#7234ee">Booleanos</strong>: <code>true</code>, <code>false</code>
+                        </li>
+                        <li>Valor <strong style="color:#7234ee">nulo</strong>: <code>null</code>
+                        </li>
+                        <li><strong style="color:#7234ee">Arrays</strong>
+                            <pre><code data-trim class="json">
+[ 23, "Pepe", 3.45, null, 2 ]
+                        </code></pre>
+                        </li>
+                        <li><strong style="color:#7234ee">Objetos</strong> (listas de pares clave-valor)
+                            <pre><code data-trim class="json">
+{ "nombre" : "Javier", "asignaturas": ["MDLM", "ABD", "MMI"] }
+                        </code></pre>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <p>Supongamos un servicio web de conversión de divisas.</p>
+                    <p>Petición:</p>
+                    <pre><code data-trim class="javascript">
+{
+    "moneda": "EUR",
+    "cantidad": 25.00,
+    "convertirA": ["GBP", "JYN", "USD"]
+}
+                </code></pre>
+                    <p>Respuesta:</p>
+                    <pre><code data-trim class="json">
+[   
+    { "moneda": "GBP", "cantidad": 21.3226 },
+    { "moneda": "JYN", "cantidad": 3064.69 },
+    { "moneda": "USD", "cantidad": 26.1096 }
+]                
+                </code></pre>
+
+                </section>
+
+                <section>
+                    <h4>Lenguajes de especificación para JSON</h4>
+                    <p>Permiten especificar la estructura que ha de seguir un determinado fichero JSON.</p>
+                    <p>La especificación más conocida es JSON Schema: <a href="http://json-schema.org/">http://json-schema.org/</a></p>
+                    <p class="fragment">Sin embargo, apenas se utiliza.</p>
+
+                </section>
+
+                <section>
+                    <h4>Utilizar JSON en Javascript</h4>
+                    <p>Las siguientes funciones están disponibles tanto en el servidor (Node) como en el cliente (navegadores).</p>
+                    <ul>
+                        <li>
+                            <code>JSON.parse(<em>texto</em>)</code><br> Convierte un texto en formato JSON en un objeto Javascript
+                            <li>
+                                <code>JSON.stringify(<em>valor</em>)</code><br> Obtiene la representación JSON de un objeto Javascript.
+                            </li>
+                    </ul>
+                    <pre><code data-trim class="javascript">
+var obj = [ {x: 13, y: 12}, {x: 0, y: 0} ];
+JSON.stringify(obj);
+    // &rarr; Devuelve la cadena '[{"x":13,"y":12},{"x":0,"y":0}]'
+    
+JSON.parse('[{"x":13,"y":12},{"x":0,"y":0}]');
+    // &rarr; Devuelve el objeto [ {x: 13, y: 12}, {x: 0, y: 0} ]
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Utilizar JSON en Java</h4>
+                    <p>Existe una multitud de librerías externas.</p>
+                    <p>Por ejemplo: <code>org.json</code></p>
+                    <p><a href="https://github.com/stleary/JSON-java">https://github.com/stleary/JSON-java</a></p>
+                    <pre><code data-trim class="java">
+String cadena = "[{\"x\":13,\"y\":12},{\"x\":0,\"y\":0}]";
+
+JSONArray arr = new JSONArray(cadena);
+
+System.out.println(arr.getJSONObject(0).get("x"));  // &rarr; 13
+System.out.println(arr.getJSONObject(0).get("y"));  // &rarr; 12
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline current">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Servicios de tipo REST</h2>
+                <p>Utilizan la semántica de los métodos HTTP (<code>GET</code>, <code>POST</code>, etc.) para indicar la acción a realizar sobre un determinado recurso, identificado por una URL.</p>
+                <p><strong style="color:#6a28f0">Principios básicos:</strong></p>
+                <ol>
+                    <li>Todo es un recurso.</li>
+                    <li>Los recursos están identificados por URIs.</li>
+                    <li>Se utilizan los verbos HTTP estándar.</li>
+                    <li>Un recurso puede representarse de múltiples formas.</li>
+                    <li>La comunicación con los servicios web no tiene estado.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h3>Recursos y <span style="text-transform:none">URIs</span></h3>
+                <p>Cada recurso tiene una URI que lo identifica.</p>
+                <p>Ejemplos:</p>
+                <ul>
+                    <li><code>/contactos/elisa</code></li>
+                    <li><code>/contactos/elisa/telefonos/casa</code></li>
+                    <li><code>/contactos</code></li>
+                    <li><code>/calculadora/factorial</code></li>
+                </ul>
+                <p>Las URIs no hacen referencia necesariamente a un fichero físico en el servidor, sino a un recurso &laquo;abstracto&raquo;</p>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Métodos HTTP</h3>
+                    <p>Suelen utilizarse las acciones <code>GET</code>, <code>POST</code>, <code>PUT</code> y <code>DELETE</code>, que se corresponden con las operaciones CRUD habituales.</p>
+                    <p>CRUD = <em>Create</em>, <em>Read</em>, <em>Update</em>, <em>Delete</em></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Método HTTP</th>
+                                <th>Semántica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>GET</code></td>
+                                <td>Leer un recurso</td>
+                            </tr>
+                            <tr>
+                                <td><code>POST</code></td>
+                                <td>Crear un nuevo recurso</td>
+                            </tr>
+                            <tr>
+                                <td><code>PUT</code></td>
+                                <td>Actualizar un recurso existente</td>
+                            </tr>
+                            <tr>
+                                <td><code>DELETE</code></td>
+                                <td>Eliminar un recurso</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h4>Ejemplos</h4>
+                    <ul>
+                        <li>
+                            Acceder al contacto cuyo identificador es <code>elisa</code><br>
+                            <code>GET /contactos/elisa</code>
+                        </li>
+                        <li>
+                            Calcular factorial<br>
+                            <code>GET /calculadora/factorial?num=6</code>
+                        </li>
+                        <li>
+                            Añadir un nuevo contacto<br>
+                            <code>POST /contactos</code>
+                        </li>
+                        <li>
+                            Actualizar el contacto con identificador <code>elisa</code><br>
+                            <code>PUT /contactos/elisa</code>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>La descripción semántica de estos recursos es &laquo;orientativa&raquo;</p>
+                    <p>Nada nos impide utilizar un método para realizar una acción distinta a la especificada por su semántica.</p>
+                    <p>No obstante, algunos métodos imponen de manera implícita ciertas propiedades:</p>
+                    <ul>
+                        <li>El método <code>GET</code> no altera el estado del recurso al que hace referencia.</li>
+                        <li>Los métodos <code>GET</code>, <code>PUT</code> y <code>DELETE</code> son idempotentes. Realizar una misma operación varias veces seguidas es equivalente a realizarla una única vez.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <h3>Códigos de respuesta</h3>
+                <table style="font-size:80%">
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Código de respuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td>
+                                <code>200 OK</code> - Tuvo éxito<br>
+                                <code>404 Not Found</code> - Recurso no encontrado<br>
+                                <code>500 Internal Server Error</code> - Otros errores<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td>
+                                <code>201 Created</code> - Tuvo éxito<br>
+                                <code>500 Internal Server Error</code> - Otros<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>PUT</code></td>
+                            <td>
+                                <code>200 OK</code> - Tuvo éxito<br>
+                                <code>500 Internal Server Error</code> - Otros<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>DELETE</code></td>
+                            <td>
+                                <code>200 OK</code>, <code>204 No Content</code> - Tuvo éxito<br>
+                                <code>404 Not Found</code> - Recurso no existe<br>
+                                <code>500 Internal Server Error</code> - Otros<br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Representaciones de un recurso</h3>
+                    <p>Un recurso puede ser representado de distintas formas.</p>
+                    <p>Representación JSON:</p>
+                    <pre><code data-trim class="json">
+{
+    "id": "elisa",
+    "nombre": "Elisa Trujillo",
+    "telefonos": [{"casa": "912382722"}]
+}
+                </code></pre>
+                    <p>Representación XML:</p>
+                    <pre><code data-trim class="xml">
+&lt;contacto id="elisa"&gt;
+    &lt;nombre&gt;Elisa Trujillo&lt;/nombre&gt;
+    &lt;telefonos&gt;
+        &lt;tel tipo="casa"&gt;912382722&lt;/tel&gt;
+    &lt;/telefonos&gt;
+&lt;/contacto&gt;
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>En las peticiones de tipo <code>GET</code> el cliente especifica en la <strong>cabecera</strong> el tipo de representación que desea recibir:</p>
+                    <pre><code data-trim class="no-highlight">
+Accept: application/json                
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Accept: text/xml                
+                </code></pre>
+
+                    <p>En las peticiones de tipo <code>PUT</code> o <code>DELETE</code>, el cliente especifica en la <strong>cabecera</strong> de la petición la representación del nuevo objeto.</p>
+                    <pre><code data-trim class="no-highlight">
+Content-Type: application/json                
+                </code></pre>
+                    <pre><code data-trim class="no-highlight">
+Content-Type: text/xml                
+                </code></pre>
+                </section>
+
+            </section>
+            <section>
+                <h3>Ausencia de estado</h3>
+                <p>En los servicios web de tipo REST se respeta la carencia de estado propia del protocolo HTTP.</p>
+                <p><strong>No debe hacerse uso</strong> de los mecanismos para mantener variables de estado que perviven entre peticiones: cookies, sesiones, etc.</p>
+
+            </section>
+
+            <section>
+                <h3>Implementación de servicios web de tipo REST con Express.js</h3>
+                <p>Se puede utilizar el framework <em>Express.js</em> para implementar servicios web de tipo REST.</p>
+                <p>Supongamos un objeto de la clase <code>Application</code>:</p>
+                <pre><code data-trim class="javascript">
+var app = express();                
+                </code></pre>
+                <p>Ya conocemos los métodos <code>app.get()</code> y <code>app.post()</code> para definir funciones que manejan las peticiones GET y POST.</p>
+                <ul>
+                    <li><code>app.get(<em>url</em>, <em>funcionManejadora</em>)</code></li>
+                    <li><code>app.post(<em>url</em>, <em>funcionManejadora</em>)</code></li>
+                </ul>
+            </section>
+
+            <section>
+                <p>Existen sendos métodos <code>put()</code> y <code>delete()</code> para manejar las peticiones PUT y DELETE</p>
+                <ul>
+                    <li><code>app.put(<em>url</em>, <em>funcionManejadora</em>)</code></li>
+                    <li><code>app.delete(<em>url</em>, <em>funcionManejadora</em>)</code></li>
+                </ul>
+                <p>Al igual que en los métodos <code>get()</code> y <code>post()</code>, es posible añadir middleware específico en cada petición:</p>
+                <pre><code data-trim  data-noescape class="javascript">
+app.put("/contactos/:id",
+            <span class="hl">middleware_1</span>, <span class="hl">middleware_2</span>,     <span class="arrow_box_left caja_codigo">Middleware intermedio</span>
+            function(request, response) {
+                ...
+            }
+        );
+                </code></pre>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Ejemplo: agenda de contactos</h3>
+                    <p>Supongamos que tenemos un array con objetos. Cada uno de ellos contiene un nombre y un número de teléfono:
+                    </p>
+                    <pre><code data-trim class="javascript">
+var agenda = [
+    { nombre: "Pepita", telefono: "89731982" },
+    { nombre: "Puri", telefono: "28329828" },
+    { nombre: "David", telefono: "827272728" }
+];
+                </code></pre>
+                </section>
+                <section>
+                    <p>Diseñamos un servicio web de tipo REST para que puedan realizarse las siguientes funciones:</p>
+                    <ul>
+                        <li>Obtener todos los objetos.</li>
+                        <li>Obtener un objeto a partir de su índice.</li>
+                        <li>Añadir un objeto.</li>
+                        <li>Eliminar un objeto.</li>
+                        <li>Actualizar un objeto.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>1. Obtener todos los objetos</h4>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>GET</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/contactos</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                Ninguno
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>200</code> si tuvo éxito, <code>500</code> en caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>JSON</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Lista de objetos. Cada objeto tiene dos atributos: <code>nombre</code> y <code>telefono</code>.
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>Implementación</h5>
+                    <p>El método <code>response.json()</code> permite devolver una respuesta en formato JSON.</p>
+                    <p>Recibe un objeto Javascript que transformará en JSON.</p>
+                    <p>Es una operación terminal. Llama a <code>end()</code> automáticamente y, tras realizarse, no puede escribirse nada más en el objeto <code>response</code>.</p>
+                    <p>En nuestro caso nos limitamos a devolver el array <code>agenda</code>.</p>
+                    <pre><code data-trim class="javascript">
+app.get("/contactos", function(request, response) {
+    // Por defecto se devuelve el código 200, por
+    // lo que no hace falta indicarlo mediante el
+    // método response.status().
+    response.json(agenda);
+});                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>2. Obtener un objeto a partir de su índice</h4>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>GET</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/contactos/<em>:indice</em></code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                Índice del objeto a recuperar (desde 0 hasta la longitud del array menos uno), incluido en la URL.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>200</code> si tuvo éxito, <code>404</code> si no se proporciona un índice válido, y <code>500</code> en otro caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>JSON</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Un objeto con dos atributos: <code>nombre</code> y <code>telefono</code>.
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <p>Existen varias formas de pasar información como parámetro a un servicio:</p>
+                    <ul style="font-size:90%">
+                        <li>Mediante <strong>URLs paramétricas</strong>
+                            <ul>
+                                <li>Por ejemplo: <code>/contactos/<span class="hl">:indice</span></code></li>
+                                <li>Se acceden mediante <code>request.params</code></li>
+                                <li>Por ejemplo, al acceder a la URL <code>/contactos/2</code>, la variable <code>request.params.indice</code> toma el valor <code>"2"</code>.</li>
+                            </ul>
+
+                        </li>
+                        <li>Mediante <strong><em>query strings</em></strong>
+                            <ul>
+                                <li>Por ejemplo: <code>/contactos?ind=2</code></li>
+                                <li>Se acceden mediante <code>request.query</code></li>
+                                <li>Por ejemplo <code>request.query.indice</code> vale <code>"2"</code>.</li>
+                            </ul>
+                        </li>
+                        <li>En el <strong>cuerpo</strong> de la petición.
+                            <ul>
+                                <li>Mediante el middleware <code>body-parser</code>.</li>
+                                <li>Sólo válido en peticiones <code>POST</code> y <code>PUT</code>.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>En nuestro caso hemos optado por una URL paramétrica:</p>
+                    <pre><code data-trim class="javascript">
+app.get("/contactos/:indice", function(request, response) {
+    var indice = Number(request.params.indice);
+    if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
+        // Si el número está dentro de los límites del array
+        // devolvemos el elemento correspondiente
+        var elem = agenda[indice];
+        response.json(elem);
+    } else {
+        // En caso contrario, devolvemos un error 404
+        response.status(404);
+        response.end();
+    }
+});                
+                </code></pre>
+                </section>
+
+
+                <section>
+                    <p>Si quisiéramos pasar el índice mediante <em>query strings</em> (p. ej. <code>/contacto?ind=2</code>) utilizaríamos <code>request.query</code>:</p>
+
+                    <pre><code data-trim class="javascript">
+app.get("/contacto", function(request, response) {
+    var indice = Number(request.query.ind);
+    ...
+    // igual que antes
+    ...
+});
+                
+                </code></pre>
+                    <div class="fragment">
+                        <p>¿Qué pasaría si en lugar de la URL <code>/contacto</code> utilizásemos <code>/contactos</code> para este tipo de peticiones?</p>
+                        <pre><code data-trim class="javascript">
+app.get("/contactos", function(request, response) {
+    var indice = Number(request.query.ind);
+    ...
+});
+                
+                </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>3. Añadir un objeto</h4>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>POST</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/contactos</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                JSON con el objeto a insertar.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>201</code> si tuvo éxito, y <code>500</code> en caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>Ninguno</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Ninguno
+                            </td>
+                        </tr>
+                    </table>
+                    <p class="fragment">¿Cómo pasamos un JSON como parámetro a la petición?</p>
+                    <p class="fragment">El JSON debe ir en el <strong>cuerpo</strong> de la misma.</p>
+                </section>
+
+                <section>
+                    <h5>Tipos de cuerpo de petición</h5>
+                    <p>Hasta ahora conocemos dos:</p>
+                    <ul>
+                        <li><code>application/x-www-form-urlencoded</code><br> Opción por defecto en formularios. El contenido podía ser accedido mediante el middleware <code>body-parser</code>.
+                            <pre><code data-trim class="javascript">
+var bodyParser = require("body-parser");
+...
+app.use(bodyParser.urlencoded({extended: false}));
+                        </code></pre>
+                        </li>
+                        <li><code>multipart/form-data</code><br> Utilizado en aquellos formularios que adjuntan ficheros. En este caso utilizábamos el middleware <code>multer</code>.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Ahora introducimos un tercer tipo:</p>
+                    <ul>
+                        <li><code>application/json</code><br> Utilizado para pasar información a servicios web que soporten JSON. En este caso también podemos utilizar el middleware <code>body-parser</code>.
+                            <pre><code data-trim class="javascript">
+var bodyParser = require("body-parser");
+...
+app.use(bodyParser.json());
+                        </code></pre> El método <code>bodyParser.json()</code> devuelve un middleware que convierte el JSON contenido en el cuerpo del mensaje en un objeto Javascript, y lo asigna al atributo <code>request.body</code>.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Con este middleware podemos implementar la operación de inserción de elementos al final del array:</p>
+                    <pre><code data-trim class="javascript">
+app.use(bodyParser.json());
+// ...
+
+// Áñadir contactos
+app.post("/contactos", function(request, response) {
+    var nuevoElemento = request.body;
+    agenda.push(nuevoElemento);
+    response.status(201);
+    response.end();
+});                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>4. Eliminar un objeto</h4>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>DELETE</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/contactos/<em>:indice</em></code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                Índice del elemento a eliminar. Viene incluido en la URL.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>200</code> si tuvo éxito, <code>404</code> si el índice no es correcto, y <code>500</code> en otro caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>Ninguno</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Ninguno
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>Implementación</h5>
+                    <pre><code data-trim class="javascript">
+app.delete("/contactos/:indice", function(request, response) {
+    var indice = Number(request.params.indice);
+    if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
+        agenda.splice(indice, 1);
+        // Código 200 = OK
+        response.status(200);
+    } else {
+        // Error 404 = Not found
+        response.status(404);
+    }
+    response.end();
+});
+                
+                </code></pre>
+                </section>
+
+
+                <section>
+                    <h4>5. Actualizar un objeto</h4>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>PUT</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/contactos/<em>:indice</em></code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                Índice del elemento a actualizar. Viene incluido en la URL. Nuevo valor del elemento (objeto con atributos <code>nombre</code> y <code>telefono</code>) dentro del cuerpo del mensaje, en formato JSON.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>200</code> si tuvo éxito, <code>404</code> si el índice no es correcto, y <code>500</code> en otro caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>Ninguno</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Ninguno
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>Implementación</h5>
+                    <pre><code data-trim class="javascript">
+app.put("/contactos/:indice", function(request, response) {
+    var indice = Number(request.params.indice);
+    if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
+        agenda[indice] = request.body;
+    } else {
+        // Error 404 = Not Found
+        response.status(404);
+    }
+    response.end();
+});
+                
+                </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Comprobar el funcionamiento de un servicio web</h3>
+                    <p>
+                        Existen varias herramientas que permiten al usuario realizar cualquier tipo de peticiones HTTP a un servidor.
+                    </p>
+                    <p>Una de las más básicas es <code>curl</code> en GNU/Linux.</p>
+                    <pre><code data-trim class="no-highlight">
+# curl -i -X GET "http://localhost:3000/contactos/1"
+                </code></pre>
+                    <p>devuelve:</p>
+                    <pre><code data-trim class="no-highlight">
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 39
+ETag: W/"27-QvXARR27S+g6IfKZZLdKUQ"
+Date: Wed, 28 Dec 2016 17:16:10 GMT
+Connection: keep-alive
+
+{"nombre":"Puri","telefono":"28329828"}                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>No obstante, hay aplicaciones más completas y más intuitivas. Algunas de ellas se instalan como extensiones (<em>plug-ins</em>) en el navegador web.</p>
+                    <ul>
+                        <li>En Firefox: <strong>RESTClient</strong><br>
+                            <a href="http://restclient.net/">http://restclient.net/</a>
+                        </li>
+                        <li>En Chrome: <strong>Advanced REST Client</strong><br>
+                            <a href="https://advancedrestclient.com/">https://advancedrestclient.com/</a>
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h4>Peticiones GET en Advanced REST Client</h4>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/_iD9yCPBHIQ" frameborder="0" allowfullscreen></iframe>
+                </section>
+
+                <section>
+                    <h4>Peticiones POST en Advanced REST Client</h4>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/jDgMkRjtzlA" frameborder="0" allowfullscreen></iframe>
+                </section>
+
+            </section>
+
+            <section>
+                <section>
+                    <h3>Envío de ficheros binarios</h3>
+                    <p>Cuando se quiere realizar una petición <code>POST</code> o <code>PUT</code> adjuntando un fichero binario (no de texto) en el cuerpo de la petición, el formato JSON resulta inadecuado.</p>
+
+                    <p>En este caso, es mejor adjuntar a la petición un cuerpo con el tipo <code>multipart/form-data</code>.</p>
+
+                    <p>Los detalles de implementación son los mismos que en las aplicaciones vistas en el Tema 6. Para ello es necesario el uso del middleware <code>multer</code>.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <p>Servicio para subir una imagen:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var multer = require("multer");
+var upload = multer({ storage: multer.memoryStorage() });
+...
+
+app.put("/contactos/:indice/imagen", <span class="hl">upload.single("imagen")</span>, 
+    function(request, response) {
+        var indice = Number(request.params.indice);
+        if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
+            // Creamos un nuevo atributo llamado 'imagen' al objeto
+            // correspondiente.
+            agenda[indice].imagen = request.file.buffer;
+        } else {
+            response.status(404);
+        }
+        response.end(); 
+    });
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Servicio para obtener la imagen de un contacto:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.get("/contactos/:indice/imagen", function(request, response) {
+    var indice = Number(request.params.indice);
+    if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined 
+                       &amp;&amp; agenda[indice].imagen !== undefined) {
+        response.end(agenda[indice].imagen, 'binary');
+    } else {
+        response.status(404);
+        response.end();    
+    }
+});
+                </code></pre>
+                </section>
+
+                <section>
+                    <h5>Subir un fichero binario con Advanced REST Client</h5>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Em6PL6AgrbI" frameborder="0" allowfullscreen></iframe>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline current">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <section>
+                    <h2>Peticiones AJAX</h2>
+                    <p>Hasta ahora hemos contemplado tres formas en las que el navegador realiza una petición HTTP:</p>
+                    <ul>
+                        <li>
+                            El usuario introduce una URL en la barra de direcciones del navegador. Este último envía una petición <code>GET</code> con la URL introducida.
+                        </li>
+                        <li>
+                            El usuario hace clic en un enlace. El navegador realiza una petición <code>GET</code> con la URL indicada en el atributo <code>href</code>.
+                        </li>
+                        <li>
+                            El usuario hace clic en el botón <em>Submit</em> del formulario. El navegador realiza una petición <code>GET</code> o <code>POST</code> (según el atributo <code>method</code> del formulario) a la URL indicada en el atributo <code>action</code> del formulario.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Existe otro mecanismo mediante el cual es posible realizar peticiones HTTP mediante <strong>Javascript</strong> en el navegador</p>
+                    <p><strong>AJAX</strong> = <em>Asynchronous Javascript and XML</em></p>
+                    <p>Anteriormente se utilizaba el formato XML para pasar parámetros a las peticiones AJAX, y para recibir los resultados.</p>
+                    <p>Nosotros utilizaremos JSON.</p>
+                </section>
+
+                <section>
+                    <p>Existen diferencias entre los distintos navegadores sobre cómo realizar peticiones AJAX.</p>
+                    <ul>
+                        <li>Según el estándar W3C: clase <code>XMLHttpRequest</code>.</li>
+                        <li>En Internet Explorer versión &leq; 6: control ActiveX <code>Microsoft.XMLHTTP</code>.</li>
+                    </ul>
+                    <p>Nosotros realizaremos las peticiones AJAX mediante la librería <em>jQuery</em>, que abstrae todas estas diferencias en una única función: <code>$.ajax()</code></p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>La función <code>$.ajax()</code></h3>
+                    <p><code>$.ajax(<em>opciones</em>)</code></p>
+                    <p>El parámetro <code><em>opciones</em></code> es un objeto que especifica los detalles de la petición. Contiene los siguientes atributos:</p>
+                    <ul>
+                        <li><code>method</code><br> Método HTTP a utilizar: GET, POST, PUT, DELETE, etc.
+                        </li>
+                        <li><code>url</code><br> URL sobre la que realizar la petición.
+                        </li>
+                        <li><code>success</code>, <code>error</code><br> Funciones <em>callback</em> llamadas cuando la petición ha tenido éxito o ha fallado, respectivamente.
+                        </li>
+
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <code>data</code><br> Datos a adjuntar en la petición, ya sea como parámetros de la <em>query string</em> (esto es, detrás de la URL en el caso de peticiones GET), o dentro del cuerpo de la petición (en el caso de peticiones POST o PUT).
+                        </li>
+                        <li>
+                            <code>contentType</code><br> Tipo MIME del cuerpo de la petición. Por defecto es <code>application/x-www-form-urlencoded</code>.
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Función callback: <code>success</code></h4>
+                    <p>Cuando el servidor responde la petición con un código de éxito (<code>2xx</code>), se llamará a esta función con tres argumentos:</p>
+                    <pre><code data-trim class="javascript">
+$.ajax({  ...
+    success: function(data, statusText, jqXHR) {
+        ...
+    }
+});
+                </code></pre>
+                    <ul>
+                        <li><code>data</code>: Datos contenidos en el cuerpo de la respuesta HTTP. Si el formato de la respuesta es JSON, se convierte automáticamente en un objeto Javascript.</li>
+                        <li><code>statusText</code>: Cadena que describe el estado de la petición (normalmente <code>"success"</code>).</li>
+                        <li><code>jqXHR</code>: Objeto con más información sobre la respuesta (envoltorio del objeto <code>XMLHTTPRequest</code>).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Función callback: <code>error</code></h4>
+                    <p></p>
+                    <pre><code data-trim class="javascript">
+$.ajax({  ...
+    error: function(jqXHR, statusText, errorThrown) {
+        ...
+    }
+});
+                </code></pre>
+                    <ul>
+                        <li><code>jqXHR</code>: Envoltorio del objeto <code>XMLHTTPRequest</code>.</li>
+                        <li><code>statusText</code>: Cadena que describe el estado de la petición (<code>"timeout"</code>, <code>"parseerror"</code>, <code>"abort"</code>, etc.)</li>
+                        <li><code>errorThrown</code>: Texto adjunto a la respuesta HTTP devuelta (<code>"Not Found"</code>, <code>"Internal Server Error"</code>, etc).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <p>Supongamos un servicio web para calcular el factorial de un número dado:</p>
+                    <table class="restapi">
+                        <tr>
+                            <th>
+                                Método
+                            </th>
+                            <td>
+                                <code>GET</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                URL
+                            </th>
+                            <td>
+                                <code>/factorial/<em>:num</em></code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Parám. entrada
+                            </th>
+                            <td>
+                                Número cuyo factorial se desea calcular. Viene incluido en la URL paramétrica (parámetro <code>num</code>)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Códigos respuesta
+                            </th>
+                            <td>
+                                <code>200</code> si tuvo éxito, <code>400</code> (<em>Bad Request</em>) si no se ha introducido un número, y <code>500</code> en otro caso de error.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tipos resultado</th>
+                            <td>JSON</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Resultado
+                            </th>
+                            <td>
+                                Un objeto <code>{"result": <em>fact</em>}</code>, donde <code><em>fact</em></code> es el factorial calculado.
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <pre><code data-trim class="javascript">
+app.get("/factorial/:num", function(request, response) {
+    var numero = Number(request.params.num);
+    if (!isNaN(numero) &amp;&amp; numero >= 0) {
+        // Calculamos el factorial
+        var f = 1;
+        for (var i = 2; i &lt;= num; i++) {
+            f *= i;
+        }
+        
+        // Devolvemos el resultado
+        response.json({ resultado: f });
+    } else {
+        response.status(400);
+        response.end();
+    }
+});
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Realizamos llamadas a este servicio desde una página Web:</p>
+                    <img src="images/08/PruebaAJAX.png" width="60%">
+                    <pre><code data-trim data-noescape class="html">
+&lt;div&gt;
+    &lt;label for=&quot;cuadroTexto&quot;&gt;Introduce un n&uacute;mero: &lt;/label&gt;
+    &lt;input type=&quot;text&quot; id=&quot;cuadroTexto&quot;&gt;
+&lt;/div&gt;
+&lt;button id=&quot;botonEnviar&quot;&gt;Enviar&lt;/button&gt;
+&lt;div id=&quot;resultado&quot;&gt;&lt;/div&gt; <span class="arrow_box_left caja_codigo fragment">Aquí se mostrará el resultado</span>
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Código Javascript:</p>
+                    <pre><code data-trim class="javascript" style="font-size:80%; line-height:105%">
+$(document).ready(function() {
+    
+    // Cada vez que se pulse el botón de 'Enviar'
+    $("#botonEnviar").on("click", function() {
+        
+        // Obtenemos el valor contenido en el cuadro de texto
+        var valor = $("#cuadroTexto").val();
+        
+        // Realizamos la petición al servidor
+        $.ajax({
+            type: "GET",
+            url: "/factorial/ " + valor,
+            
+            // En caso de éxito, colocamos el texto con el resultado
+            // en el documento HTML
+            success: function (data, textStatus, jqXHR) {
+                console.log(textStatus);
+                $("#resultado").text(
+                    "El resultado es " + data.resultado);
+            },
+            
+            // En caso de error, mostramos el error producido
+            error: function (jqXHR, textStatus, errorThrown) {
+                 alert("Se ha producido un error: " + errorThrown);
+            }
+        });
+    });
+});                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Peticiones <code>GET</code> con parámetros</h4>
+                    <p>En este ejemplo hemos considerado que la URL era parámetrica:</p>
+                    <p>Por ejemplo: <code>/factorial/5</code></p>
+                    <p>Ahora supongamos que el número viene dado como parámetro en la petición GET:</p>
+                    <p>Por ejemplo: <code>/factorial?num=5</code></p>
+                </section>
+
+                <section>
+                    <p>Código del servidor:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.get("/factorial", function(request, response) {
+    var numero = Number(<span class="hl">request.query.num</span>);
+    // ...
+    // igual que antes
+    // ...
+});
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Código en el navegador:</p>
+                    <pre><code data-trim class="javascript">
+$.ajax({
+    type: "GET",
+    url: "/factorial",
+
+    // Parámetros de la petición. Como la petición es de tipo GET,
+    // se pasarán como cadena al final de la URL. Por ejemplo:
+    // /factorial?num=5
+    data: {
+        num: valor
+    },
+
+    // ... igual que antes ...
+});
+                </code></pre>
+                    <p>Cuando se pasa un objeto Javascript a la opción <code>data</code>, este se transforma en una <em>query string</em>.</p>
+                    <p>Por ejemplo, <code>{key1: val1, ..., keyn: valn}</code> se transforma en <code>key1=val1&amp;key2=val2&amp;...&amp;keyn=valn</code></p>
+                </section>
+
+                <section>
+                    <h4>Peticiones con JSON</h4>
+                    <p>Ahora suponemos que el número cuyo factorial se desea calcular viene dado en el <strong>cuerpo</strong> de la petición, en forma de un JSON:</p>
+                    <p><code>{ "num": 6 }</code></p>
+                    <p>Con una petición de tipo GET no podemos adjuntar un cuerpo, por lo que utilizamos una petición POST.</p>
+                </section>
+
+                <section>
+                    <p>En el lado del servidor necesitamos utilizar el middleware <code>body-parser</code>, que interpreta el JSON contenido en el cuerpo del mensaje y añade el objeto correspondiente a la propiedad <code>request.body</code>:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+app.use(bodyParser.json());
+// ...
+
+app.post("/factorial", function(request, response) {
+    var numero = Number(<span class="hl">request.body.num</span>);
+    // ... igual que antes ...
+});
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>En el lado del cliente, debemos adjuntar la cadena JSON en la propiedad <code>data</code>. Para ello utilizamos el método <code>JSON.stringify()</code>.</p>
+                    <p>Por otro lado, indicamos mediante <code>contentType</code> el tipo MIME de la información enviada en el cuerpo del mensaje.</p>
+                    <pre><code data-trim class="javascript">
+$.ajax({
+    type: "POST",
+    url: "/factorial",
+    contentType: "application/json",
+    data: JSON.stringify({ num: valor }),
+    // ...
+});
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline current">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+                <h2>Autenticación básica</h2>
+                <p>A menudo es necesario restringir el uso de un servicio web a un determinado conjunto de usuarios.</p>
+                <p>Mediante un sistema de autenticación, cualquier usuario que quiera acceder deberá proporcionar su identidad, generalmente mediante un nombre de usuario y contraseña.</p>
+                <p>El protocolo HTTP incorpora mecanismos de control de acceso autenticado.</p>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Esquema de autenticación HTTP</h3>
+                    <p>Supongamos que un navegador web quiere acceder a un recurso que requiere autenticación.</p>
+                    <p><strong>Paso 1</strong>. El servidor devuelve un código 401 (<code>Unauthorized</code>) indicando, en las cabeceras de la respuesta, el <strong>reino de autenticación</strong>.</p>
+                    <pre><code data-trim class="no-highlight">
+HTTP/1.1 401 Unauthorized
+...
+WWW-Authenticate: Basic realm="Pagina protegida por contrasena"
+...
+                </code></pre>
+                    <p>Todos los recursos pertenecientes al mismo reino comparten el mismo sistema de autenticación.</p>
+                </section>
+
+                <section>
+                    <p><strong>Paso 2</strong>. El navegador, cuando recibe un error 401, muestra una ventana al usuario invitándole a introducir los datos de identificación: nombre de usuario y contraseña.</p>
+                    <img src="images/08/Autenticacion.png" width="70%">
+                </section>
+
+                <section>
+                    <p><strong>Paso 3</strong>. El navegador construye una cadena con el usuario y contraseña proporcionados, utilizando <code>:</code> como separador.</p>
+                    <p>En nuestro ejemplo, <code>"manuel:123456"</code></p>
+                    <p>La cadena se codifica en base 64: <code>bWFudWVsOjEyMzQ1Ng==</code></p>
+                    <p><strong>Paso 4</strong>. El navegador vuelve a realizar la misma petición al recurso protegido, pero añadiendo una cabecera adicional con la cadena de autenticación codificada:</p>
+                    <pre><code data-trim class="no-highlight">
+Authorization: Basic bWFudWVsOjEyMzQ1Ng==
+                </code></pre>
+                </section>
+
+                <section>
+                    <p><strong>Paso 4.1</strong>. Si la autenticación tiene éxito, se procesa la petición y se devuelve un código 200 (<code>OK</code>) con el recurso correspondiente.
+                    </p>
+                    <p><strong>Paso 4.2</strong>. Si la autenticación es fallida, se vuelve a devolver un error 401 (<code>Unauthorized</code>).
+                    </p>
+                </section>
+
+                <section>
+                    <p>Hemos presentado la cabecera <code>Authentication</code>. ¿Qué hacemos con ella?</p>
+                    <p>Si queremos incorporar un sistema de autenticación en nuestros servicios web:</p>
+                    <ul>
+                        <li><strong>En el servidor</strong>: debemos reconocer y procesar la cabecera <code>Authorization</code> de las peticiones HTTP.</li>
+                        <li><strong>En el cliente</strong>: debemos incluir la cabecera <code>Authorization</code> en las peticiones AJAX.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Autenticación básica en el servidor</h3>
+                    <p>Existe un paquete en Node (llamado <code>passport</code>) que permite gestionar la autenticación utilizando distintos mecanismos.</p>
+                    <p>Nosotros utilizaremos el mecanismo de autenticación básico, que se encuentra en el paquete <code>passport-http</code>.</p>
+                    <pre><code data-trim class="no-highlight">
+npm install --save passport 
+npm install --save passport-http
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Importamos los módulos <code>passport</code> y <code>passport-http</code>:</p>
+                    <pre><code data-trim class="javascript">
+var passport = require("passport");
+var passportHTTP = require("passport-http");
+                </code></pre>
+
+                    <p>El método <code>passport.initialize()</code> devuelve un middleware que debe incluirse en la cadena de middlewares antes de realizar algún tipo de autenticación.</p>
+                    <pre><code data-trim class="javascript">
+app.use(passport.initialize());
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Se denomina <strong>estrategia</strong> a cada mecanismo de autenticación incorporado a una aplicación web.</p>
+                    <p>El método <code>passport.use()</code> permite incorporar una estrategia nueva al catálogo de estrategias utilizadas por la aplicación.</p>
+                    <p>Nosotros incorporaremos una estrategia básica (clase <code>BasicStrategy</code>), definida en el módulo <code>passportHTTP</code>.</p>
+                    <pre><code data-trim class="javascript">
+var miEstrategia = 
+  new passportHTTP.BasicStrategy({ realm: "..." }, /* funcion */);
+
+passport.use(miEstrategia);
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función pasada como parámetro al constructor de <code>BasicStrategy</code> recibe tres parámetros:</p>
+                    <ul>
+                        <li>El nombre de usuario <code>user</code> proporcionado por el cliente en la autenticación.</li>
+                        <li>La contraseña <code>pass</code> proporcionada por el cliente.</li>
+                        <li>Una función callback <code>f</code>.</li>
+                    </ul>
+                    <pre><code data-trim class="javascript">
+var miEstrategia = 
+  new passportHTTP.BasicStrategy(
+        { realm: "Pagina protegida" },
+        function(user, pass, f) {
+            // Comprobar datos de autenticación
+        }
+  );
+                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>La función de autenticación, que debemos implementar nosotros, comprobará que los datos son correctos.</p>
+                    <ul>
+                        <li>Si se produce error, debe llamar a <code>f(err)</code>.</li>
+                        <li>Si no se produce error, pero los datos introducidos son incorrectos, se debe llamar a <code>f(null, false)</code>.</li>
+                        <li>Si los datos son correctos, se llamará a <code>f(null, user)</code>, donde <code>user</code> es un objeto que contendrá los datos del usuario identificado.
+                            <ul>
+                                <li>
+                                    El middleware de autenticación guadará este objeto en el atributo <code>request.user</code>.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>En nuestro ejemplo, supongamos que requerimos que el nombre de usuario sea <code>manuel</code> y la contraseña <code>123456</code>:</p>
+                    <pre><code data-trim class="javascript">
+passport.use(new passportHTTP.BasicStrategy(
+        { realm: 'Autenticacion requerida' },
+        function(user, pass, callback) {
+            if (user === "manuel" &amp;&amp; pass === "123456") {
+                callback(null, { userId: "Manuel" });
+            } else {
+                callback(null, false);
+            }
+        }
+));
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Una vez incorporado el mecanismo de identificación básico en <code>passport</code>, el método <code>passport.authenticate()</code> devuelve un middleware que realizará la comprobación correspondiente.</p>
+                    <p>Este middleware debe incorporarse en aquellos recursos en los que la autenticación sea necesaria:</p>
+
+                    <pre><code data-trim data-noescape class="javascript">
+app.get("/protegido", 
+    <span class="hl">passport.authenticate('basic', {session: false})</span>, <span class="arrow_box_left caja_codigo">Middleware</span>
+    function(request, response) {
+        response.json({permitido: true});
+    });
+                </code></pre>
+                    <p>La opción <code>{session: false}</code> indica que la autenticación no involucra ni <em>cookies</em> ni sesiones.</p>
+                </section>
+
+                <section>
+                    <h4>Acceso autenticado mediante el cliente REST</h4>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/cqqX-1I--40" frameborder="0" allowfullscreen></iframe>
+                </section>
+            </section>
+
+            <section>
+
+                <section>
+                    <h3>Autenticación básica mediante AJAX</h3>
+                    <p>Hemos de añadir la siguiente cabecera a la petición HTTP:</p>
+                    <pre><code data-trim class="no-highlight">
+Authorization: Basic bWFudWVsOjEyMzQ1Ng==
+                </code></pre>
+                    <p>Para ello:</p>
+                    <ol>
+                        <li>Codificamos la cadena <code><em>usuario</em>:<em>contraseña</em></code> en base 64, utilizando la función <code>btoa</code>.
+                            <pre><code data-trim class="javascript">
+btoa("manuel:123456") // &rarr; "bWFudWVsOjEyMzQ1Ng=="                    
+                    </code></pre>
+                        </li>
+                        <li>Añadimos la cabecera utilizando la opción <code>beforeSend</code> de la función <code>$.ajax()</code>.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="javascript">
+$(document).ready(function() {
+    var user = "manuel";
+    var pass = "123456";
+    
+    var cadenaBase64 = btoa(user + ":" + pass);
+    
+    $.ajax({
+       method: "GET",
+       url: "/protegido",
+       beforeSend: function(req) {
+           // Añadimos la cabecera 'Authorization' con los datos
+           // de autenticación.
+           req.setRequestHeader("Authorization", 
+                                "Basic " + cadenaBase64);
+       },
+       success: function(data, state, jqXHR) {
+           if (data.permitido) {
+               console.log("¡Acceso permitido!");
+           } 
+       }
+    });
+});                
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline current">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+
+
+            <section>
+                <h2>Servicios de tipo SOAP</h2>
+                <p>A diferencia de los servicios de tipo REST, los servicios SOAP no están basados en el acceso a recursos mediante el uso de métodos HTTP.</p>
+                <p>Esencialmente hacen uso de peticiones POST y GET, utilizando XML como mecanismo de comunicación.</p>
+                <p>Para cada servicio, existe un fichero (<strong>WSDL</strong>) que especifica el catálogo de operaciones ofrecidas por el servicio.</p>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Ejemplo: tabla periódica</h3>
+                    <p><a href="http://www.webservicex.net/periodictable.asmx?WSDL">http://www.webservicex.net/periodictable.asmx?WSDL</a></p>
+                    <pre><code data-trim data-noescape class="xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;wsdl:definitions ... &gt;
+  ...
+  &lt;wsdl:message name=&quot;GetAtomicNumberHttpGetIn&quot;&gt;
+    &lt;wsdl:part name=&quot;ElementName&quot; type=&quot;s:string&quot; /&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name=&quot;GetAtomicNumberHttpGetOut&quot;&gt;
+    &lt;wsdl:part name=&quot;Body&quot; element=&quot;tns:string&quot; /&gt;
+  &lt;/wsdl:message&gt;
+  ...
+  &lt;wsdl:operation name=&quot;<span class="hl">GetAtomicNumber</span>&quot;&gt;
+    &lt;wsdl:documentation&gt;
+        Get atomic Number by element name
+    &lt;/wsdl:documentation&gt;
+    &lt;wsdl:input message=&quot;tns:GetAtomicNumberHttpGetIn&quot; /&gt;
+    &lt;wsdl:output message=&quot;tns:GetAtomicNumberHttpGetOut&quot; /&gt;
+  &lt;/wsdl:operation&gt;
+  ...
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>El fichero WSDL indica, entre otras cosas, que existe un método llamado <code>GetAtomicNumber</code> que recibe una cadena con el nombre de un elemento de la tabla periódica, y devuelve una cadena con información sobre ese elemento.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Acceso a servicios SOAP desde Java</h3>
+                    <p>Java dispone de una herramienta que genera clases de acceso a servicios web a partir del fichero WSDL.</p>
+                    <pre><code data-trim class="no-highlight">
+# wsimport http://www.webservicex.net/periodictable.asmx?WSDL                
+                </code></pre>
+                    <p>Esta herramienta es accesible desde Netbeans:</p>
+                    <p><em>File</em> &rarr; <em>New File...</em> &rarr; <em>Web Service</em> &rarr; <em>Web Service Client</em> </p>
+                    <p>En este caso se genera, entre otras, una clase llamada <code>Periodictable</code>, que proporciona acceso a los servicios.</p>
+                </section>
+
+                <section>
+                    <h4>Ejemplo</h4>
+                    <pre><code data-trim class="java">
+public static void main(String[] args) {
+    Periodictable pt = new Periodictable();
+    String datos = 
+        pt.getPeriodictableSoap().getAtomicNumber("Oxygen");
+    System.out.println(datos);
+}
+                </code></pre>
+                    <p>Resultado:</p>
+                    <pre><code data-trim class="no-highlight">
+&lt;NewDataSet&gt;
+  &lt;Table&gt;
+    &lt;AtomicNumber&gt;8&lt;/AtomicNumber&gt;
+    &lt;ElementName&gt;Oxygen&lt;/ElementName&gt;
+    &lt;Symbol&gt;O&lt;/Symbol&gt;
+    &lt;AtomicWeight&gt;15.9994&lt;/AtomicWeight&gt;
+    &lt;BoilingPoint&gt;90.2&lt;/BoilingPoint&gt;
+    &lt;IonisationPotential&gt;13.61&lt;/IonisationPotential&gt;
+    &lt;EletroNegativity&gt;3.5&lt;/EletroNegativity&gt;
+    &lt;AtomicRadius&gt;0.74&lt;/AtomicRadius&gt;
+    &lt;MeltingPoint&gt;55&lt;/MeltingPoint&gt;
+    &lt;Density&gt;1.3318&lt;/Density&gt;
+  &lt;/Table&gt;
+&lt;/NewDataSet&gt;                
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Podemos utilizar las herramientas de análisis XML incorporadas en las librerías de Java para extraer los datos del texto XML devuelto.</p>
+
+                    <pre><code data-trim class="java">
+String datos = pt.getPeriodictableSoap().getAtomicNumber("Oxygen");
+
+DocumentBuilder db = DocumentBuilderFactory.newInstance()
+                                           .newDocumentBuilder();
+Document doc = db.parse(
+                    new ByteArrayInputStream(datos.getBytes())
+               );
+String numero = doc.getElementsByTagName("AtomicNumber")
+                            .item(0).getTextContent();
+System.out.println(numero); // &rarr; 8
+                </code></pre>
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p7">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline current">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline">Bibliografía</a></li>
+                </ol>
+            </section>
+
+
+            <section>
+
+                <section>
+                    <h2>El protocolo HTTPS</h2>
+                    <img src="images/08/HTTPPeligro1.svg" width="90%" style="border:none;box-shadow:none">
+                    <p>El protocolo HTTP es un protocolo <strong>inseguro</strong>.</p>
+                    <p>Toda la información que viaja a través de la red (datos de autenticación, formularios, etc.) viaja en forma de texto.</p>
+                </section>
+                <section>
+                    <img src="images/08/HTTPPeligro2.svg" width="90%" style="border:none;box-shadow:none">
+                    <p>Este esquema es proclive a <strong>ataques de intermediario</strong> (<em>man in the middle</em>), en los que un atacante puede interceptar los mensajes que se envían cliente y servidor, pudiendo acceder a su contenido y manipularlos.</p>
+                    <p>Ni el cliente ni el servidor son conscientes de la existencia del intermediario.</p>
+                </section>
+
+                <section>
+                    <p>El protocolo HTTPS pretende remediar esos problemas añadiendo <strong>encriptación</strong> en los mensajes enviados.</p>
+                    <p>Utiliza técnicas de <strong>criptografía asimétrica</strong>, en los que cada parte utiliza dos claves para el envío de mensajes:</p>
+                    <ul>
+                        <li><strong style="color:#9011ba">Clave privada</strong>, solo conocida por el propietario.</li>
+                        <li><strong style="color:#9011ba">Clave publica</strong>, conocida por todos.</li>
+                    </ul>
+                    <p style="background-color:#DFD;padding: 10px" class="fragment">Cualquier mensaje encriptado con la clave pública solo puede ser desencriptado por la clave privada, y viceversa.</p>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Contexto 1: Confidencialidad de envío.</h3>
+                    <p>Este esquema de clave pública/privada puede garantizarse la confidencialidad de envío entre dos partes.</p>
+                    <img src="images/08/CandadoYLlave.svg" width="30%" style="border:none;box-shadow:none">
+                    <p>La clave pública tiene el rol de una caja con <em>candado</em> y la clave privada tiene el rol de la <em>llave</em> que abre el candado.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/MessageCrypto1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Supongamos que Alice (izqda.) quiere enviar un mensaje a Bob (dcha.)</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/MessageCrypto2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Alice obtiene la clave pública de Bob.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/MessageCrypto3.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Alice utiliza esta clave pública para encriptar el mensaje.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade-in slide-out">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/MessageCrypto4.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Bob utiliza su clave privada (llave) para desencriptar el mensaje.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Bajo el protocolo HTTPS, el paso de mensajes funciona de manera similar. El servidor posee dos claves: pública y privada.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El cliente adquiere la clave pública del servidor.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto3.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Por otro lado, el cliente genera su propio par de claves pública y privada.</p>
+                    <p>Este par se utiliza solamente en esta petición.</p>
+                    <p>Para la siguiente petición puede generarse un par distinto.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto4.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El cliente envía su clave privada, pero encriptada utilizando la clave pública del servidor.</p>
+                    <p>Solo el servidor puede desencriptar el mensaje.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto5.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El servidor desencripta el mensaje anterior, obteniendo la clave privada que el cliente utilizará en esta petición.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto6.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El cliente pasa a enviar su petición HTTPS encriptada, utilizando su clave pública. Esta petición podrá ser desencriptada por el servidor, ya que este posee la clave privada (roja).</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade-in slide-out">
+                    <h4>Ejemplo HTTPS</h4>
+                    <img src="images/08/HTTPCrypto7.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El servidor desencripta la petición.</p>
+                    <p class="fragment"><strong>Problema:</strong> Este esquema no es inmune a los ataques de intermediario.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Supongamos que un intermediario malicioso puede acceder y modificar los mensajes que transitan por el canal de comunicación.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El intermediario genera su propio par de claves publica/privada.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM3.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Cuando el cliente solicita la clave pública del servidor, el intermediario la intercepta y envía al cliente su propia clave pública (amarilla).</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM4.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El cliente, tras generar su propio par de claves pública/privada, envía su clave privada al servidor, encriptada con la clave pública del intermediario.</p>
+                    <p>El cliente piensa que la clave pública que posee es la del servidor.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM5.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El intermediario desencripta el mensaje, obteniendo así la clave privada generada por el cliente.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM6.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Además, el intermediario vuelve a encriptar el mensaje, pero esta vez con la clave pública del servidor, y reenvía el resultado a este último.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPMiM7.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El servidor desencripta el mensaje anterior, obteniendo la clave privada del cliente.</p>
+                    <p>Ninguno de los dos extremos es consciente de que un intermediario ha manipulado los mensajes.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPCA1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El problema de fondo es que, cuando el cliente recibe la clave pública del servidor, no hay ninguna manera de comprobar la <strong>autenticidad de esta clave</strong>.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ataque de intermediario</h4>
+                    <img src="images/08/HTTPCA2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>... a menos que el cliente confíe en una <strong>autoridad externa</strong> que le asegure que dicha clave pública proviene del servidor.</p>
+                </section>
+
+                <section>
+                    <p>Esta autoridad externa recibe el nombre de <strong>Autoridad de Certificación</strong> (
+                        <en>Certification Authority</en>).</p>
+                    <p>Esta autoridad puede <strong>firmar</strong> una clave pública si tiene garantías de la procedencia de la misma.</p>
+                </section>
+            </section>
+            <section>
+
+                <section>
+                    <h3>Contexto 2: Identificación y Autentificación.</h3>
+                    <p>La criptografía de claves públicas y privadas permite garantizar la autenticidad del remitente de los mensajes.</p>
+                    <img src="images/08/GafasYPluma.svg" width="30%" style="border:none;box-shadow:none">
+                    <p>La clave privada tiene el rol de un <em>bolígrafo</em> que puede firmar, y la clave pública simula unas <em>gafas</em> que permiten comprobar la autenticidad de las firmas del bolígrafo.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/SignatureCrypto1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Supongamos que Alice (izqda.) quiere recibir un mensaje de Bob (dcha.), con la garantía de que el remitente del mensaje es, realmente, Bob.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/SignatureCrypto2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Alice obtiene la clave pública de Bob.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/SignatureCrypto3.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Alice obtiene la clave pública de Bob.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/SignatureCrypto4.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Bob <strong>firma</strong> (encripta) el mensaje con su clave privada, y lo envía a Alice.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade-in slide-out">
+                    <h4>Ejemplo</h4>
+                    <img src="images/08/SignatureCrypto5.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Alice recibe el mensaje encriptado y lo desencripta utilizando la clave pública. Esta clave solo puede desencriptar mensajes cifrados con la clave privada correspondiente, por lo que el remitente ha de ser Bob.</p>
+                    <p>Solo Bob puede encriptar los mensajes descifrables con la su clave pública.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Autoridad de certificación</h4>
+                    <img src="images/08/ServerCA1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Volvemos al contexto de cliente-servidor con autoridad certificadora autorizadora.</p>
+                    <p>El servidor quiere que la CA certifique la autenticidad de su clave privada.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Autoridad de certificación</h4>
+                    <img src="images/08/ServerCA2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El servidor genera un <strong>certificado</strong>, que contiene:</p>
+                    <ul>
+                        <li>Datos del servidor: nombre, dominio, organización, etc.</li>
+                        <li>Clave pública del servidor.</li>
+                    </ul>
+                    <p>Este certificado está sin firmar.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade">
+                    <h4>Autoridad de certificación</h4>
+                    <img src="images/08/ServerCA3.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El servidor envía el certificado sin firmar a la CA para que esta última lo firme.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade-in slide-out">
+                    <h4>Autoridad de certificación</h4>
+                    <img src="images/08/ServerCA4.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>La CA, tras comprobar (posiblemente por medios no telemáticos) que los datos del certificado concuerdan con la identidad de quién solicita su firma, procede a firmar el certificado.</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in slide-out">
+                    <h4>Autoridad de certificación</h4>
+                    <img src="images/08/HTTPClientCA.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Por otro lado, suponemos que el navegador <strong>conoce</strong> a la entidad certificadora, y que este viene instalado con la clave pública de la CA, contenida dentro de un <strong>certificado raíz</strong> (<em>CA root certificate</em>)</p>
+                </section>
+
+                <section style="height:16em" data-transition="slide-in fade-out">
+                    <h4>Comunicación certificada cliente/servidor</h4>
+                    <img src="images/08/ServerClientCert1.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>Cuando el cliente solicita la clave pública al servidor, este último le envía la clave pública metida dentro del certificado con la firma de la CA.</p>
+                </section>
+
+                <section style="height:16em" data-transition="fade-in slide-out">
+                    <h4>Comunicación certificada cliente/servidor</h4>
+                    <img src="images/08/ServerClientCert2.svg" width="80%" style="border:none; box-shadow:none">
+                    <p>El cliente recibe este certificado y comprueba (utilizando la clave pública de la CA), que la firma de la CA es auténtica.</p>
+                    <p>Como el cliente confía en la CA, tiene la certeza de que la clave pública es del servidor cuyos datos constan en el certificado.</p>
+                </section>
+
+                <section>
+                    <h3>Generación de claves, firmas y certificados</h3>
+                    <p>El protocolo HTTPS utiliza los procolos criptográficos TLS/SSL como mecanismo en la capa de transporte.</p>
+                    <p>OpenSSL es un conjunto de herramientas relacionadas con estos dos protocolos.</p>
+                    <p><a href="https://www.openssl.org/">https://www.openssl.org/</a></p>
+                    <p>Algunas de estas herramientas sirven para crear claves, certificados y firmas.</p>
+                </section>
+
+                <section>
+                    <h4>Generar claves pública y privada</h4>
+                    <pre><code data-trim class="no-highlight">
+# openssl genrsa -out mi_clave.pem 1024
+                </code></pre>
+                    <p>Se genera un fichero <code>mi_clave.pem</code> con un par de claves publica/privada.</p>
+                    <img src="images/08/MiClave.svg" width="30%" style="border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Generar certificado sin firmar</h4>
+                    <pre><code data-trim class="no-highlight">
+# openssl req -new -key mi_clave.pem -out certificado.csr
+                </code></pre>
+                    <p>Tras solicitar información que se adjuntará en el certificado (host, organización, ciudad, etc.), se genera un fichero <code>certificado.csr</code> con la clave pública.
+                    </p>
+                    <p>El certificado no tiene firma.</p>
+                    <img src="images/08/CertificadoSinFirmar.svg" width="30%" style="border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <h4>Firmar certificado</h4>
+                    <p>El certificado generado deberá enviarse a una autoridad de certificación para que sea firmado por ésta.</p>
+                    <p>Cuando la CA compruebe que el remitente del certificado es quién dice ser, firmará dicho certificado con su clave privada:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# openssl x509 -req -in certificado.csr -signkey <em><span class="hl">clave_ca.key</span></em> 
+    -out certificado_firmado.crt                   </code></pre>
+                    <p>donde <code>clave_ca.key</code> es la clave privada de CA que firma el certificado.</p>
+                </section>
+
+                <section>
+                    <h4>Certificados autofirmados</h4>
+                    <p>En entornos de desarrollo puede no ser posible o viable el acceso a una CA que firme nuestros certificados.</p>
+                    <p>Como alternativa, los certificados pueden ser firmados por la misma entidad que los genera:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# openssl x509 -req -in certificado.csr -signkey mi_clave.pem 
+    -out certificado_firmado.crt                   </code></pre>
+                    <img src="images/08/CertificadoFirmado.svg" width="35%" style="border:none; box-shadow:none">
+                </section>
+
+                <section>
+                    <p>No obstante, los navegadores web no confían (obviamente) en esta clase de certificados, por lo que muestran un mensaje de advertencia al intentar establecer una conexión HTTPS con este tipo de certificados.</p>
+                    <img src="images/08/NavegadorHTTPS1.png" width="70%">
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h3>Crear un servidor HTTPS en Node</h3>
+                    <p>Al igual que el módulo <code>http</code> (<em>ver Tema 4</em>), existe un módulo core <code>https</code> para crear servidores web HTTPS.</p>
+                    <pre><code data-trim class="javascript">
+var https = require("https");
+var fs = require("fs");
+
+var clavePrivada = fs.readFileSync("./miclave.key");
+var certificado = fs.readFileSync("./certificado_firmado.crt");
+
+var servidor = https.createServer(
+        { key: clavePrivada, cert: certificado },
+        function(request, response) {
+            // Cada vez que se reciba una petición
+            // se llamará a esta función callback
+        });
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>El puerto por defecto para el protocolo HTTPS es el 443.</p>
+                    <p>No obstante, en desarrollo suele utilizarse un puerto distinto (por ejemplo, el 5555).</p>
+                    <pre><code data-trim class="javascript">
+        
+servidor.listen(5555, function(err) {
+    console.log("Escuchando en puerto 5555");
+});
+                                
+                </code></pre>
+                </section>
+
+                <section>
+                    <h4>Integrar <code>https</code> con Express.js</h4>
+                    <p>A la hora de crear un servidor, puede utilizarse una aplicación Express.js como callback de peticiones.</p>
+                    <pre><code data-trim data-noescape class="javascript">
+var express = require("express");
+var https = require("https");
+var fs = require("fs");
+// ...
+var app = express();
+
+app.get("/", function(request, response) {
+   response.end("Bienvenido!"); 
+});
+
+var servidor = https.createServer(
+        { key: clavePrivada, cert: certificado }, <span class="hl">app</span>);
+        
+servidor.listen(5555, function(err) {  ...  });
+                </code></pre>
+                </section>
+
+                <section>
+                    <p>Al acceder a <code>https://localhost:5555/</code> en el navegador se nos mostrará un mensaje advirtiéndonos de que el certificado está autofirmado.</p>
+                    <p>Si el usuario acepta el certificado, se accede al recurso solicitado:</p>
+                    <img src="images/08/NavegadorHTTPS2.png" width="70%">
+                </section>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p8">
+                <ol class="contenidos" style="width:13em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Formatos XML y JSON</a></li>
+                    <li><a href="#/p3" class="outline">Servicios REST</a></li>
+                    <li><a href="#/p4" class="outline">Peticiones AJAX</li>
+                    <li><a href="#/p5" class="outline">Autenticación básica</a></li>
+                    <li><a href="#/p6" class="outline">Introducción a SOAP</a></li>
+                    <li><a href="#/p7" class="outline">El protocolo HTTPS</a></li>
+                    <li><a href="#/p8" class="outline current">Bibliografía</a></li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Bibliografía</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>V. Bojinov
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3590101~S6*spi">RESTful Web API Design with Node.js, 2<sup style="font-size:60%">nd</sup> edition</a>
+                            <br> Packt Publishing, 2016
+                        </li>
+                        <li>B. Bibeault, Y. Katz, A. De Rosa
+                            <br>
+                            <a href="http://cisne.sim.ucm.es/record=b3549757~S6*spi">jQuery in Action, 3<sup style="font-size:60%">rd</sup> edition</a>
+                            <br> Manning Publications, 2015
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width:30%">
+                    <img src="https://d1ldz4te4covpm.cloudfront.net/sites/default/files/imagecache/ppv4_main_book_cover/5869OS_2899_RESTful%20Web%20API%20Design%20with%20Node.jpg" style="width:50%; border:none">
+                    <img src="https://images-na.ssl-images-amazon.com/images/I/51XOg1baCBL._SX396_BO1,204,203,200_.jpg" style="width:50%; border:none">
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+
+        </div>
+
+
+    </div>
+
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }]
+        });
+    </script>
+</body>
+
+</html>
