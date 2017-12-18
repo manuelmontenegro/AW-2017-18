@@ -1,0 +1,19 @@
+{
+  "name": "servicioweb-ajax",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "manuel",
+  "contributors": [],
+  "dependencies": {
+    "express": "^4.14.0",
+    "underscore": "^1.8.3",
+    "body-parser": "^1.15.2",
+    "multer": "^1.2.1"
+  }
+}

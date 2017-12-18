@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Conversor de divisas</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="jquery/jquery-3.1.1.min.js"></script>
+        <script src="js/conversor.js"></script>
+    </head>
+    <body>
+        <p>
+            Convertir la cantidad de 
+            <input type="text" id="cantidad" style="width:5em">
+            <select id="from">
+                <option value="none">Seleccionar</option>
+            </select>
+            a
+            <select id="to">
+                <option value="none">Seleccionar</option>
+            </select>
+            <button id="convertir">Convertir</button>
+        </p>
+        <p id="resultado">
+            Resultado: <span id="resultadoFrom"></span> = <span id="resultadoTo"></span>
+        </p>
+    </body>
+</html>
