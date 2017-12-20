@@ -16,7 +16,7 @@
 
     <!-- Printing and PDF exports -->
     <script>
-        var link = document.createElement('link');
+        let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
@@ -370,7 +370,7 @@
                             </li>
                     </ul>
                     <pre><code data-trim class="javascript">
-var obj = [ {x: 13, y: 12}, {x: 0, y: 0} ];
+let obj = [ {x: 13, y: 12}, {x: 0, y: 0} ];
 JSON.stringify(obj);
     // &rarr; Devuelve la cadena '[{"x":13,"y":12},{"x":0,"y":0}]'
     
@@ -599,7 +599,7 @@ Content-Type: text/xml
                 <p>Se puede utilizar el framework <em>Express.js</em> para implementar servicios web de tipo REST.</p>
                 <p>Supongamos un objeto de la clase <code>Application</code>:</p>
                 <pre><code data-trim class="javascript">
-var app = express();                
+let app = express();                
                 </code></pre>
                 <p>Ya conocemos los métodos <code>app.get()</code> y <code>app.post()</code> para definir funciones que manejan las peticiones GET y POST.</p>
                 <ul>
@@ -618,7 +618,7 @@ var app = express();
                 <pre><code data-trim  data-noescape class="javascript">
 app.put("/contactos/:id",
             <span class="hl">middleware_1</span>, <span class="hl">middleware_2</span>,     <span class="arrow_box_left caja_codigo">Middleware intermedio</span>
-            function(request, response) {
+            (request, response) => {
                 ...
             }
         );
@@ -631,7 +631,7 @@ app.put("/contactos/:id",
                     <p>Supongamos que tenemos un array con objetos. Cada uno de ellos contiene un nombre y un número de teléfono:
                     </p>
                     <pre><code data-trim class="javascript">
-var agenda = [
+let agenda = [
     { nombre: "Pepita", telefono: "89731982" },
     { nombre: "Puri", telefono: "28329828" },
     { nombre: "David", telefono: "827272728" }
@@ -706,7 +706,7 @@ var agenda = [
                     <p>Es una operación terminal. Llama a <code>end()</code> automáticamente y, tras realizarse, no puede escribirse nada más en el objeto <code>response</code>.</p>
                     <p>En nuestro caso nos limitamos a devolver el array <code>agenda</code>.</p>
                     <pre><code data-trim class="javascript">
-app.get("/contactos", function(request, response) {
+app.get("/contactos", (request, response) => {
     // Por defecto se devuelve el código 200, por
     // lo que no hace falta indicarlo mediante el
     // método response.status().
@@ -795,12 +795,12 @@ app.get("/contactos", function(request, response) {
                 <section>
                     <p>En nuestro caso hemos optado por una URL paramétrica:</p>
                     <pre><code data-trim class="javascript">
-app.get("/contactos/:indice", function(request, response) {
-    var indice = Number(request.params.indice);
+app.get("/contactos/:indice", (request, response) => {
+    let indice = Number(request.params.indice);
     if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
         // Si el número está dentro de los límites del array
         // devolvemos el elemento correspondiente
-        var elem = agenda[indice];
+        let elem = agenda[indice];
         response.json(elem);
     } else {
         // En caso contrario, devolvemos un error 404
@@ -816,8 +816,8 @@ app.get("/contactos/:indice", function(request, response) {
                     <p>Si quisiéramos pasar el índice mediante <em>query strings</em> (p. ej. <code>/contacto?ind=2</code>) utilizaríamos <code>request.query</code>:</p>
 
                     <pre><code data-trim class="javascript">
-app.get("/contacto", function(request, response) {
-    var indice = Number(request.query.ind);
+app.get("/contacto", (request, response) => {
+    let indice = Number(request.query.ind);
     ...
     // igual que antes
     ...
@@ -827,8 +827,8 @@ app.get("/contacto", function(request, response) {
                     <div class="fragment">
                         <p>¿Qué pasaría si en lugar de la URL <code>/contacto</code> utilizásemos <code>/contactos</code> para este tipo de peticiones?</p>
                         <pre><code data-trim class="javascript">
-app.get("/contactos", function(request, response) {
-    var indice = Number(request.query.ind);
+app.get("/contactos", (request, response) => {
+    let indice = Number(request.query.ind);
     ...
 });
                 
@@ -894,7 +894,7 @@ app.get("/contactos", function(request, response) {
                     <ul>
                         <li><code>application/x-www-form-urlencoded</code><br> Opción por defecto en formularios. El contenido podía ser accedido mediante el middleware <code>body-parser</code>.
                             <pre><code data-trim class="javascript">
-var bodyParser = require("body-parser");
+let bodyParser = require("body-parser");
 ...
 app.use(bodyParser.urlencoded({extended: false}));
                         </code></pre>
@@ -909,7 +909,7 @@ app.use(bodyParser.urlencoded({extended: false}));
                     <ul>
                         <li><code>application/json</code><br> Utilizado para pasar información a servicios web que soporten JSON. En este caso también podemos utilizar el middleware <code>body-parser</code>.
                             <pre><code data-trim class="javascript">
-var bodyParser = require("body-parser");
+let bodyParser = require("body-parser");
 ...
 app.use(bodyParser.json());
                         </code></pre> El método <code>bodyParser.json()</code> devuelve un middleware que convierte el JSON contenido en el cuerpo del mensaje en un objeto Javascript, y lo asigna al atributo <code>request.body</code>.
@@ -924,8 +924,8 @@ app.use(bodyParser.json());
 // ...
 
 // Áñadir contactos
-app.post("/contactos", function(request, response) {
-    var nuevoElemento = request.body;
+app.post("/contactos", (request, response) => {
+    let nuevoElemento = request.body;
     agenda.push(nuevoElemento);
     response.status(201);
     response.end();
@@ -986,8 +986,8 @@ app.post("/contactos", function(request, response) {
                 <section>
                     <h5>Implementación</h5>
                     <pre><code data-trim class="javascript">
-app.delete("/contactos/:indice", function(request, response) {
-    var indice = Number(request.params.indice);
+app.delete("/contactos/:indice", (request, response) => {
+    let indice = Number(request.params.indice);
     if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
         agenda.splice(indice, 1);
         // Código 200 = OK
@@ -1056,8 +1056,8 @@ app.delete("/contactos/:indice", function(request, response) {
                 <section>
                     <h5>Implementación</h5>
                     <pre><code data-trim class="javascript">
-app.put("/contactos/:indice", function(request, response) {
-    var indice = Number(request.params.indice);
+app.put("/contactos/:indice", (request, response) => {
+    let indice = Number(request.params.indice);
     if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
         agenda[indice] = request.body;
     } else {
@@ -1134,13 +1134,13 @@ Connection: keep-alive
                     <h4>Ejemplo</h4>
                     <p>Servicio para subir una imagen:</p>
                     <pre><code data-trim data-noescape class="javascript">
-var multer = require("multer");
-var upload = multer({ storage: multer.memoryStorage() });
+let multer = require("multer");
+let upload = multer({ storage: multer.memoryStorage() });
 ...
 
 app.put("/contactos/:indice/imagen", <span class="hl">upload.single("imagen")</span>, 
-    function(request, response) {
-        var indice = Number(request.params.indice);
+    (request, response) => {
+        let indice = Number(request.params.indice);
         if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined) {
             // Creamos un nuevo atributo llamado 'imagen' al objeto
             // correspondiente.
@@ -1157,8 +1157,8 @@ app.put("/contactos/:indice/imagen", <span class="hl">upload.single("imagen")</s
                 <section>
                     <p>Servicio para obtener la imagen de un contacto:</p>
                     <pre><code data-trim data-noescape class="javascript">
-app.get("/contactos/:indice/imagen", function(request, response) {
-    var indice = Number(request.params.indice);
+app.get("/contactos/:indice/imagen", (request, response) => {
+    let indice = Number(request.params.indice);
     if (!isNaN(indice) &amp;&amp; agenda[indice] !== undefined 
                        &amp;&amp; agenda[indice].imagen !== undefined) {
         response.end(agenda[indice].imagen, 'binary');
@@ -1255,7 +1255,7 @@ app.get("/contactos/:indice/imagen", function(request, response) {
                     <p>Cuando el servidor responde la petición con un código de éxito (<code>2xx</code>), se llamará a esta función con tres argumentos:</p>
                     <pre><code data-trim class="javascript">
 $.ajax({  ...
-    success: function(data, statusText, jqXHR) {
+    success: (data, statusText, jqXHR) => {
         ...
     }
 });
@@ -1272,7 +1272,7 @@ $.ajax({  ...
                     <p></p>
                     <pre><code data-trim class="javascript">
 $.ajax({  ...
-    error: function(jqXHR, statusText, errorThrown) {
+    error: (jqXHR, statusText, errorThrown) => {
         ...
     }
 });
@@ -1337,12 +1337,12 @@ $.ajax({  ...
 
                 <section>
                     <pre><code data-trim class="javascript">
-app.get("/factorial/:num", function(request, response) {
-    var numero = Number(request.params.num);
+app.get("/factorial/:num", (request, response) => {
+    let numero = Number(request.params.num);
     if (!isNaN(numero) &amp;&amp; numero >= 0) {
         // Calculamos el factorial
-        var f = 1;
-        for (var i = 2; i &lt;= num; i++) {
+        let f = 1;
+        for (let i = 2; i &lt;= num; i++) {
             f *= i;
         }
         
@@ -1373,13 +1373,13 @@ app.get("/factorial/:num", function(request, response) {
                 <section>
                     <p>Código Javascript:</p>
                     <pre><code data-trim class="javascript" style="font-size:80%; line-height:105%">
-$(document).ready(function() {
+$(document).ready(() => {
     
     // Cada vez que se pulse el botón de 'Enviar'
-    $("#botonEnviar").on("click", function() {
+    $("#botonEnviar").on("click", () => {
         
         // Obtenemos el valor contenido en el cuadro de texto
-        var valor = $("#cuadroTexto").val();
+        let valor = $("#cuadroTexto").val();
         
         // Realizamos la petición al servidor
         $.ajax({
@@ -1415,8 +1415,8 @@ $(document).ready(function() {
                 <section>
                     <p>Código del servidor:</p>
                     <pre><code data-trim data-noescape class="javascript">
-app.get("/factorial", function(request, response) {
-    var numero = Number(<span class="hl">request.query.num</span>);
+app.get("/factorial", (request, response) => {
+    let numero = Number(<span class="hl">request.query.num</span>);
     // ...
     // igual que antes
     // ...
@@ -1459,8 +1459,8 @@ $.ajax({
 app.use(bodyParser.json());
 // ...
 
-app.post("/factorial", function(request, response) {
-    var numero = Number(<span class="hl">request.body.num</span>);
+app.post("/factorial", (request, response) => {
+    let numero = Number(<span class="hl">request.body.num</span>);
     // ... igual que antes ...
 });
                 
@@ -1563,8 +1563,8 @@ npm install --save passport-http
                 <section>
                     <p>Importamos los módulos <code>passport</code> y <code>passport-http</code>:</p>
                     <pre><code data-trim class="javascript">
-var passport = require("passport");
-var passportHTTP = require("passport-http");
+let passport = require("passport");
+let passportHTTP = require("passport-http");
                 </code></pre>
 
                     <p>El método <code>passport.initialize()</code> devuelve un middleware que debe incluirse en la cadena de middlewares antes de realizar algún tipo de autenticación.</p>
@@ -1578,7 +1578,7 @@ app.use(passport.initialize());
                     <p>El método <code>passport.use()</code> permite incorporar una estrategia nueva al catálogo de estrategias utilizadas por la aplicación.</p>
                     <p>Nosotros incorporaremos una estrategia básica (clase <code>BasicStrategy</code>), definida en el módulo <code>passportHTTP</code>.</p>
                     <pre><code data-trim class="javascript">
-var miEstrategia = 
+let miEstrategia = 
   new passportHTTP.BasicStrategy({ realm: "..." }, /* funcion */);
 
 passport.use(miEstrategia);
@@ -1593,10 +1593,10 @@ passport.use(miEstrategia);
                         <li>Una función callback <code>f</code>.</li>
                     </ul>
                     <pre><code data-trim class="javascript">
-var miEstrategia = 
+let miEstrategia = 
   new passportHTTP.BasicStrategy(
         { realm: "Pagina protegida" },
-        function(user, pass, f) {
+        (user, pass, f) => {
             // Comprobar datos de autenticación
         }
   );
@@ -1624,7 +1624,7 @@ var miEstrategia =
                     <pre><code data-trim class="javascript">
 passport.use(new passportHTTP.BasicStrategy(
         { realm: 'Autenticacion requerida' },
-        function(user, pass, callback) {
+        (user, pass, callback) => {
             if (user === "manuel" &amp;&amp; pass === "123456") {
                 callback(null, { userId: "Manuel" });
             } else {
@@ -1642,7 +1642,7 @@ passport.use(new passportHTTP.BasicStrategy(
                     <pre><code data-trim data-noescape class="javascript">
 app.get("/protegido", 
     <span class="hl">passport.authenticate('basic', {session: false})</span>, <span class="arrow_box_left caja_codigo">Middleware</span>
-    function(request, response) {
+    (request, response) => {
         response.json({permitido: true});
     });
                 </code></pre>
@@ -1677,22 +1677,22 @@ btoa("manuel:123456") // &rarr; "bWFudWVsOjEyMzQ1Ng=="
                 <section>
                     <h4>Ejemplo</h4>
                     <pre><code data-trim class="javascript">
-$(document).ready(function() {
-    var user = "manuel";
-    var pass = "123456";
+$(document).ready(() => {
+    let user = "manuel";
+    let pass = "123456";
     
-    var cadenaBase64 = btoa(user + ":" + pass);
+    let cadenaBase64 = btoa(user + ":" + pass);
     
     $.ajax({
        method: "GET",
        url: "/protegido",
-       beforeSend: function(req) {
+       beforeSend: (req) => {
            // Añadimos la cabecera 'Authorization' con los datos
            // de autenticación.
            req.setRequestHeader("Authorization", 
                                 "Basic " + cadenaBase64);
        },
-       success: function(data, state, jqXHR) {
+       success: (data, state, jqXHR) => {
            if (data.permitido) {
                console.log("¡Acceso permitido!");
            } 
@@ -2145,15 +2145,15 @@ System.out.println(numero); // &rarr; 8
                     <h3>Crear un servidor HTTPS en Node</h3>
                     <p>Al igual que el módulo <code>http</code> (<em>ver Tema 4</em>), existe un módulo core <code>https</code> para crear servidores web HTTPS.</p>
                     <pre><code data-trim class="javascript">
-var https = require("https");
-var fs = require("fs");
+let https = require("https");
+let fs = require("fs");
 
-var clavePrivada = fs.readFileSync("./miclave.key");
-var certificado = fs.readFileSync("./certificado_firmado.crt");
+let clavePrivada = fs.readFileSync("./miclave.key");
+let certificado = fs.readFileSync("./certificado_firmado.crt");
 
-var servidor = https.createServer(
+let servidor = https.createServer(
         { key: clavePrivada, cert: certificado },
-        function(request, response) {
+        (request, response) => {
             // Cada vez que se reciba una petición
             // se llamará a esta función callback
         });
@@ -2165,7 +2165,7 @@ var servidor = https.createServer(
                     <p>No obstante, en desarrollo suele utilizarse un puerto distinto (por ejemplo, el 5555).</p>
                     <pre><code data-trim class="javascript">
         
-servidor.listen(5555, function(err) {
+servidor.listen(5555, (err) => {
     console.log("Escuchando en puerto 5555");
 });
                                 
@@ -2176,20 +2176,20 @@ servidor.listen(5555, function(err) {
                     <h4>Integrar <code>https</code> con Express.js</h4>
                     <p>A la hora de crear un servidor, puede utilizarse una aplicación Express.js como callback de peticiones.</p>
                     <pre><code data-trim data-noescape class="javascript">
-var express = require("express");
-var https = require("https");
-var fs = require("fs");
+let express = require("express");
+let https = require("https");
+let fs = require("fs");
 // ...
-var app = express();
+let app = express();
 
-app.get("/", function(request, response) {
+app.get("/", (request, response) => {
    response.end("Bienvenido!"); 
 });
 
-var servidor = https.createServer(
+let servidor = https.createServer(
         { key: clavePrivada, cert: certificado }, <span class="hl">app</span>);
         
-servidor.listen(5555, function(err) {  ...  });
+servidor.listen(5555, (err) => {  ...  });
                 </code></pre>
                 </section>
 
