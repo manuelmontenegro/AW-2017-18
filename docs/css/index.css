@@ -4,6 +4,7 @@
 body {
     background-image: url(../images/RedBackground.jpg);
     background-repeat: no-repeat;
+    background-position: bottom right;
     background-color: #B71234;
     background-attachment: fixed;
     color: white;
@@ -31,15 +32,42 @@ div.titulo h1, div.titulo h2 {
     margin: 0px;
 }
 
-div.contenidos > ol > li > ol {
+div.author {
+    margin-top: 1em;
+    width: 400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 10px;    
+}
+
+
+div.contenidos ol {
     counter-reset: item;
 }
 
-div.contenidos > ol > li > ol > li {
-    display: block;
+div.contenidos li {
+    display: block
 }
 
-div.contenidos > ol > li > ol > li:before {
+div.contenidos > ol > li {
+    display: block;
+    margin-top: 1em;
+}
+
+div.contenidos li:before {
     content: counters(item, ".") ". ";
     counter-increment: item;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: yellow;
+    text-decoration: underline;
 }
