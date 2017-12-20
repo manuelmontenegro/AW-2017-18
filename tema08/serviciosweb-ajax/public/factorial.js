@@ -1,12 +1,12 @@
 "use strict";
 
-$(document).ready(function() {
+$(() => {
     
     // Cada vez que se pulse el botón de 'Enviar'
-    $("#botonEnviar").on("click", function() {
+    $("#botonEnviar").on("click", () => {
         
         // Obtenemos el valor contenido en el cuadro de texto
-        var valor = $("#cuadroTexto").val();
+        let valor = $("#cuadroTexto").val();
         
         // Llamamos al servidor
         $.ajax({
@@ -22,12 +22,12 @@ $(document).ready(function() {
             
             // En caso de éxito, colocamos el texto con el resultado
             // en el documento HTML
-            success: function (data, textStatus, jqXHR) {
+            success: (data, textStatus, jqXHR) => {
                 $("#resultado").text("El resultado es " + data.resultado);
             },
             
             // En caso de error, mostramos el error producido
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: (jqXHR, textStatus, errorThrown) => {
                  alert("Se ha producido un error: " + errorThrown);
             }
         });

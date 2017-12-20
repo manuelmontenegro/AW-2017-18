@@ -2,7 +2,7 @@
 
 "use strict";
 
-var currencyRates = {
+const currencyRates = {
     "USD": 1.00000,
     "EUR": 0.94466,
     "GBP": 0.82314,
@@ -15,14 +15,14 @@ var currencyRates = {
 };
 
 
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
 
-var app = express();
+let app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/currency", function(request, response) {
+app.get("/currency", (request, response) => {
     var from = request.query.from;
     var to = request.query.to;
     var quantity = request.query.quantity;
@@ -35,16 +35,16 @@ app.get("/currency", function(request, response) {
     }
 });
 
-app.get("/currencies", function(request, response) {
+app.get("/currencies", (request, response) => {
     response.json(Object.keys(currencyRates));
 });
 
 
-app.use(function(request, response, next) {
+app.use((request, response, next) => {
     response.status(404);
     response.end("Not found: " + request.url);
 });
 
-app.listen(3000, function() {
+app.listen(3000, () => {
     console.log("Servidor escuchando en puerto 3000");
 });

@@ -1,18 +1,18 @@
 "use strict";
 
-var express = require("express");
-var https = require("https");
-var fs = require("fs");
-var path = require("path");
+const express = require("express");
+const https = require("https");
+const fs = require("fs");
+const path = require("path");
 
 
-var clavePrivada = fs.readFileSync(path.join(__dirname, "miclave.key"));
-var certificado = fs.readFileSync(path.join(__dirname, "servidor.crt"));
+const clavePrivada = fs.readFileSync(path.join(__dirname, "miclave.key"));
+const certificado = fs.readFileSync(path.join(__dirname, "servidor.crt"));
 
 
-var app = express();
+let app = express();
 
-app.get("/", function(request, response) {
+app.get("/", (request, response) => {
    response.end("Bienvenido!"); 
 });
 
@@ -20,7 +20,7 @@ var servidor = https.createServer(
         { key: clavePrivada, cert: certificado },
         app);
         
-servidor.listen(5555, function(err) {
+servidor.listen(5555, (err) => {
     console.log("Escuchando en puerto 5555");
 });
 

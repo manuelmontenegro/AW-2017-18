@@ -1,21 +1,21 @@
-$(document).ready(function() {
-    var user = "manuel";
-    var pass = "123456";
+$(() => {
+    let user = "manuel";
+    let pass = "123456";
     
-    var cadenaBase64 = btoa(user + ":" + pass);
+    let cadenaBase64 = btoa(user + ":" + pass);
     
     $.ajax({
        method: "GET",
        url: "/protegido",
-       beforeSend: function(req) {
+       beforeSend: (req) => {
            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
        },
-       success: function(data, state, jqXHR) {
+       success: (data, state, jqXHR) => {
            if (data.permitido) {
                console.log("¡Acceso permitido!");
            } 
        },
-       error: function (jqXHR, textStatus, errorThrown) {
+       error: (jqXHR, textStatus, errorThrown) => {
            console.log(errorThrown);
        }
     });

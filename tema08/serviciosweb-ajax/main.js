@@ -1,16 +1,16 @@
 "use strict";
 
-var express = require("express");
-var bodyParser = require("body-parser");
-var _ = require("underscore");
-var path = require("path");
-var multer = require("multer");
-var app = express();
+const express = require("express");
+const bodyParser = require("body-parser");
+const _ = require("underscore");
+const path = require("path");
+const multer = require("multer");
+const app = express();
 
-var upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Nuestra base de datos inicial
-var agenda = [
+let agenda = [
     { nombre: "Pepita", telefono: "89731982" },
     { nombre: "Puri", telefono: "28329828" },
     { nombre: "David", telefono: "827272728" }
@@ -29,14 +29,14 @@ app.use(bodyParser.json());
 
 
 // Listado de contactos
-app.get("/contactos", function(request, response) {
+app.get("/contactos", (request, response) => {
     response.json(agenda);
 });
 
 
 // Acceso a un contacto
 
-app.get("/contactos/:indice", function(request, response) {
+app.get("/contactos/:indice", (request, response) => {
     var indice = Number(request.params.indice);
     if (!isNaN(indice) && agenda[indice] !== undefined) {
         var elem = agenda[indice];
@@ -48,7 +48,7 @@ app.get("/contactos/:indice", function(request, response) {
 });
 
 // Acceso a un contacto mediante querystring: /contacto?ind=2
-app.get("/contacto", function(request, response) {
+app.get("/contacto", (request, response) => {
     var indice = Number(request.query.ind);
     if (!isNaN(indice) && agenda[indice] !== undefined) {
         var elem = agenda[indice];
@@ -61,7 +61,7 @@ app.get("/contacto", function(request, response) {
 
 
 // Áñadir contactos
-app.post("/contactos", function(request, response) {
+app.post("/contactos", (request, response) => {
     var nuevoElemento = request.body;
     agenda.push(nuevoElemento);
     response.status(200);
@@ -69,7 +69,7 @@ app.post("/contactos", function(request, response) {
 });
 
 
-app.put("/contactos/:indice/imagen", upload.single("imagen"), function(request, response) {
+app.put("/contactos/:indice/imagen", upload.single("imagen"), (request, response) => {
     var indice = Number(request.params.indice);
     if (!isNaN(indice) && agenda[indice] !== undefined) {
         agenda[indice].imagen = request.file.buffer;
@@ -79,7 +79,7 @@ app.put("/contactos/:indice/imagen", upload.single("imagen"), function(request, 
     response.end();
 });
 
-app.get("/contactos/:indice/imagen", function(request, response) {
+app.get("/contactos/:indice/imagen", (request, response) => {
     var indice = Number(request.params.indice);
     if (!isNaN(indice) && agenda[indice] !== undefined 
                        && agenda[indice].imagen !== undefined) {
@@ -91,7 +91,7 @@ app.get("/contactos/:indice/imagen", function(request, response) {
 });
 
 // Actualizar contactos
-app.put("/contactos/:indice", function(request, response) {
+app.put("/contactos/:indice", (request, response) => {
     var indice = Number(request.params.indice);
     if (!isNaN(indice) && agenda[indice] !== undefined) {
         agenda[indice] = request.body;
@@ -103,7 +103,7 @@ app.put("/contactos/:indice", function(request, response) {
 });
 
 // Borrar contactos
-app.delete("/contactos/:indice", function(request, response) {
+app.delete("/contactos/:indice", (request, response) => {
     var indice = Number(request.params.indice);
     if (!isNaN(indice) && agenda[indice] !== undefined) {
         agenda.splice(indice, 1);
@@ -117,7 +117,7 @@ app.delete("/contactos/:indice", function(request, response) {
 });
 
 // Cálculo del factorial
-app.get("/factorial", function(request, response) {
+app.get("/factorial", (request, response) => {
     var numero = Number(request.query.num);
     if (!isNaN(numero)) {
         // El método _.range devuelve la lista [1, 2, 3, ..., n]
@@ -134,7 +134,7 @@ app.get("/factorial", function(request, response) {
 });
 
 // Cálculo del factorial con URL paramétrica
-app.get("/factorial/:num", function(request, response) {
+app.get("/factorial/:num", (request, response) => {
     var numero = Number(request.params.num);
     if (!isNaN(numero)) {
         // El método _.range devuelve la lista [1, 2, 3, ..., n]
@@ -151,6 +151,6 @@ app.get("/factorial/:num", function(request, response) {
 });
 
 
-app.listen(3000, function() {
+app.listen(3000, () => {
    console.log("Escuchando en 3000"); 
 });

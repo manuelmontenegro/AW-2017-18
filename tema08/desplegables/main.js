@@ -3,7 +3,7 @@
 "use strict";
 
 
-var comunidades = [
+const comunidades = [
     { nombre: "Andalucia", provincias: ["Almería", "Cádiz", "Córdoba", "Granada", "Huelva", "Jaén", "Málaga", "Sevilla"] },
     { nombre: "Aragón", provincias: ["Huesca", "Teruel", "Zaragoza"] },
     { nombre: "Asturias" },
@@ -24,22 +24,20 @@ var comunidades = [
 ];
 
 
-var express = require("express");
-var path = require("path");
-var _ = require("underscore");
+const express = require("express");
+const path = require("path");
+const _ = require("underscore");
 
-var app = express();
+let app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/comunidades", function(request, response) {
-    var nombres = comunidades.map(function(comunidad) {
-        return comunidad.nombre;
-    });
+app.get("/comunidades", (request, response) => {
+    var nombres = comunidades.map(comunidad => comunidad.nombre);
     response.json(nombres);
 });
 
-app.get("/comunidades/:num", function(request, response) {
+app.get("/comunidades/:num", (request, response) => {
     var num = Number(request.params.num);
     if (isNaN(num) || comunidades[num] === undefined) {
         response.status(400);
@@ -52,11 +50,11 @@ app.get("/comunidades/:num", function(request, response) {
 });
 
 
-app.use(function(request, response, next) {
+app.use((request, response, next) => {
     response.status(404);
     response.end("Not found: " + request.url);
 });
 
-app.listen(3000, function() {
+app.listen(3000, () => {
     console.log("Servidor escuchando en puerto 3000");
 });
