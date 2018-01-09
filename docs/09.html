@@ -1,0 +1,964 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tema 9 - Accesibilidad en la Web</title>
+
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/aw.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/magula.css">
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <link rel="stylesheet" href="css/traspas.css" />
+</head>
+
+<body>
+    <svg width="0" height="0" style="float:left">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth" style="display:float">
+                <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+    <div class="reveal">
+        <div class="slides">
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade">
+                <div class="headerlesson">Tema 9</div>
+                <h1 style="height:3em;position:relative;top:0.3em">Accesibilidad<br>en la Web</h1>
+                <div class="headerlesson">
+                    Aplicaciones Web - GIS - Curso 2017/18
+                </div>
+                <div class="author">
+                    <span class="myname">Manuel Montenegro</span> [<a href="mailto:montenegro@fdi.ucm.es" style="color:white">montenegro@fdi.ucm.es</a>]
+                    <br/> Dpto de Sistemas Informáticos y Computación
+                    <br/> Facultad de Informática
+                    <br/> Universidad Complutense de Madrid
+                </div>
+                <div class="cc">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+                    <br/> Esta obra está bajo una
+                    <br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:white">Licencia CC BY-NC-SA 4.0 Internacional</a>.
+                </div>
+                <div style="clear:left;font-size:15px"></div>
+            </section>
+            
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="fade" id="p1">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline fragment highlight-orange">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+            
+            
+            <section>
+                <h2>¿Qué es la accesibilidad web?</h2>
+                <p>Según <a href="https://en.wikipedia.org/wiki/Web_accessibility">Wikipedia</a>:</p>
+                <blockquote style="font-size:90%">
+                    La accesibilidad web denota la práctica inclusiva de eliminar barreras que impiden el acceso e interacción con los sitios web por parte de personas con discapacidades.
+                </blockquote> 
+                <p>Según <a href="https://www.w3.org/WAI/intro/accessibility.php">Web Accessibility Initiative (WAI-W3C)</a>:</p>
+                <blockquote style="font-size:90%">
+                    La accesibilidad web implica que las personas con discapacidad pueden percibir, comprender, navegar e interactuar con la Web, y que pueden participar de la misma.
+                </blockquote>
+            </section>
+            
+            <section>
+                <h3>¿Por qué es importante?</h3>
+                <ul>
+                    <li class="fragment">Principio de <strong>igualdad de oportunidades</strong>
+                        <ul style="font-size:80%">
+                            <li>La web es un recurso presente en muchos ámbitos: salud, educación, política, comercio, etc.</li>
+                            <li>Los sitios web accesibles permiten la participación activa de las personas con discapacidad en estos ámbitos.</li>
+                        </ul>
+                    </li>
+                    <li class="fragment">
+                        <strong>Legislación vigente</strong>
+                        <ul style="font-size:80%">
+                            <li>Ley 34/2002 de Servicios de la Sociedad de la Información (LSSI).</li>
+                            <li>RD 1494/2007. Especifica el grado de accesibilidad aplicable a las páginas de internet de las administraciones públicas (AA).</li>
+                            <li>Directiva UE 2016/2012 sobre accesibilidad de sitios web y aplicaciones móviles de organismos del sector público (&leq; sep. 2018 en España).</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            
+            
+            <section>
+                <p>Otras ventajas de los sitios web accesibles:</p>
+                <ul>
+                    <li>También beneficia a <strong>personas sin discapacidad</strong>: permite desarrollo de sistemas adaptables a distintos contextos (conexiones lentas, discapacidad &laquo;temporal&raquo;, edad avanzada).</li>
+                    <li>Incrementa <strong>cuota de mercado</strong> y audiencia.</li>
+                    <li>Imagen de <strong>responsabilidad social</strong>.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h3>Componentes involucrados en la accesibilidad</h3>
+                <img src="https://www.w3.org/WAI/intro/relate.png" width="70%">
+                <div style="clear:both;font-size:60%">Fuente imagen: <a href="https://www.w3.org/WAI/intro/components.php">https://www.w3.org/WAI/intro/components.php</a></div>
+            </section>
+            
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p2">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline current">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+            
+            <section>
+                <h2>Diversidad funcional</h2>
+                <p>Tipos de discapacidad:</p>
+                <ul>
+                    <li>Discapacidad sensorial.</li>
+                    <li>Discapacidad intelectual.</li>
+                    <li>Discapacidad física.</li>
+                    <li>[Discapacidad psíquica].</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h3>Discapacidad sensorial</h3>
+                <ul>
+                    <li><strong>Discapacidad visual</strong>: ceguera, visión reducida, ceguera parcial (un ojo), daltonismo.
+                    </li>
+                    <li><strong>Discapacidad auditiva</strong>: sordera, hipoacusia, unilateral o bilateral.
+                    </li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Discapacidad visual</h4>
+                <p style="color:#339;font-weight:bold">Barreras en la Web</p>
+                <ul>
+                    <li>Contenido multimedia sin contenido textual equivalente.</li>
+                    <li>Ausencia de estructura en página web y de elementos de navegación visuales o no visuales.</li>
+                    <li>Combinaciones de colores con insuficiente contraste.</li>
+                    <li>Imposibilidad de redimensionar texto e imágenes.</li>
+                </ul>
+            </section>
+
+            <section>
+                <p style="color:#339;font-weight:bold">Herramientas de acceso a la Web</p>
+                <ul>
+                    <li>Lectores de pantalla (<em>screen readers</em>).</li>
+                    <li>Magnificador de pantalla (<em>screen magnifiers</em>).</li>
+                    <li>Dispositivos Braille.</li>
+                    <li>Navegación por teclado.</li>
+                    <li>Personalización de fuentes y colores (alto contraste).</li>
+                    <li>Transcripciones textuales.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Discapacidad auditiva</h4>
+                <p style="color:#339;font-weight:bold">Barreras en la Web</p>
+                <ul>
+                    <li>Contenido de audio sin transcripción o subtítulos.</li>
+                    <li>Imposibilidad de ajuste de volumen.</li>
+                </ul>
+                <p style="color:#339;font-weight:bold">Herramientas de acceso a la Web</p>
+                <ul>
+                    <li>Subtítulos y transcripciones.</li>
+                    <li>Alertas y notificaciones visuales.</li>
+                    <li>Lenguaje de signos.</li>
+                    <li>Control de volumen.</li>
+                </ul>
+                
+            </section>
+            
+            <section>
+                <h3>Discapacidad intelectual y psíquica</h3>
+                <p>Influyen en el modo en el que se percibe la información. La discapacidad psíquica no está relacionada con la inteligencia de una persona.</p>
+                <ul>
+                    <li>Discapacidad <strong>intelectual</strong>: discapacidad de desarrollo, síndrome de Down.</li>
+                    <li>Discapacidad <strong>perceptual</strong>: dislexia, orientación espacio-temporal.</li>
+                    <li>Trastorno por déficit de atención e hiperactividad (TDAH).</li>
+                    <li>Trastorno del espectro autista (TEA).</li>
+                    <li><strong>Factores neurológicos</strong>: epilepsia, migraña, esclerosis múltiple, etc.
+                    </li>
+                    
+                </ul>
+            </section>
+
+            <section>
+                <h4>Discapacidad relacionada con condiciones neurológicas</h4>
+                <p style="color:#339;font-weight:bold">Barreras en la Web</p>
+                <ul>
+                    <li>Contenido en movimiento o parpadeante.</li>
+                    <li>Algunos tipos de animaciones y contenido audio.</li>
+                </ul>
+                <p style="color:#339;font-weight:bold">Herramientas de acceso a la Web</p>
+                <ul>
+                    <li>Bloqueadores de animaciones y ventanas emergentes.</li>
+                    <li>&laquo;Modo lectura&raquo; en navegadores.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Discapacidad cognitiva</h4>
+                <p style="color:#339;font-weight:bold">Barreras en la Web</p>
+                <ul>
+                    <li>Sistemas complejos de navegación en la web.</li>
+                    <li>Pasajes de texto sin imágenes, gráficos, resaltado de estructura.</li>
+                </ul>
+                <p style="color:#339;font-weight:bold">Herramientas de acceso a la Web</p>
+                <ul>
+                    <li>Visualizador de esquema del documento.</li>
+                </ul>
+                
+            </section>
+            
+            <section>
+                <h3>Discapacidad física</h3>
+                <p>Incluye limitaciones del control muscular, sensibilidad,  movilidad o ausencia de extremidades. Por ejemplo:</p>
+                <ul>
+                    <li><strong>Amputación</strong>, <strong>malformación</strong> en extremidades.</li>
+                    <li><strong>Tetraplejia</strong>.</li>
+                    <li><strong>Espasmos</strong> musculares, <strong>tics</strong>.</li>
+                    <li><strong>Lesión por esfuerzo repetitivo</strong> (RSI).</li>
+                </ul>
+            </section>
+            
+            <section>
+                <p style="color:#339;font-weight:bold">Barreras en la Web</p>
+                <ul>
+                    <li>Sistemas accesibles exclusivamente mediante ratón.</li>
+                    <li>Navegación inconsistente entre distintas páginas.</li>
+                    <li>Tiempo insuficiente para rellenar formularios.</li>
+                </ul>
+                <p style="color:#339;font-weight:bold">Herramientas de acceso a la Web</p>
+                <ul>
+                    <li>Navegación mediante teclado.</li>
+                    <li>Teclado en pantalla.</li>
+                    <li>Pulsación separada de teclas (Ctrl, Alt, etc.).</li>
+                    <li>Seguimiento ocular (<em>eye tracking</em>).</li>
+                </ul>
+            </section>
+            
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p3">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline current">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+            
+            <section>
+                <h2>Web Accessibility Initiative (WAI)</h2>
+                <p>Es un subgrupo del W3C dedicado a la mejora de la accesibilidad de la Web a personas con diversidad funcional.</p>
+                
+                <p>Se compone, a su vez, de grupos de trabajo que desarrollan su labor en distintos ámbitos:</p>
+                <ul>
+                    <li>Accesibilidad de herramientas de creación de contenido.</li>
+                    <li>Accesibilidad de los clientes (agentes de usuario).</li>
+                    <li>Pautas de diseño accesible.</li>
+                    <li>Herramientas de evaluación de la accesibilidad.</li>
+                    <li>Protocolos y formatos</li>
+                    <li>Formación en accesibilidad.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h3>Pautas de accesibilidad</h3>
+                <p>Los grupos de trabajo de WAI producen informes técnicos, que evolucionan en recomendaciones del W3C.</p>
+                <p>Estas recomendaciones incluyen <strong>pautas de accesibilidad web</strong>, que involucran a las tres componentes mencionadas anteriormente:</p>
+                <img src="https://www.w3.org/WAI/intro/relate.png" width="50%"> 
+            </section>
+            
+            <section>
+                <h4>Documentos del W3C</h4>
+                <p>Para herramientas de <strong>creación</strong> de contenidos:</p>
+                <div class="referenciaw3c">
+                    <strong>Authoring Tool Accessibility Guidelines (ATAG) 2.0</strong><br>W3C Recommendation - 24 September 2015<br>
+                    <a href="https://www.w3.org/TR/ATAG20/">https://www.w3.org/TR/ATAG20/</a>
+                </div>
+                <p>Para clientes (p.ej. navegadores):</p>
+                <div class="referenciaw3c">
+                    <strong>User Agent Accessibility Guidelines (UAAG) 2.0</strong><br>W3C Working Group Note - 15 December 2015<br>
+                    <a href="https://www.w3.org/TR/UAAG20/">https://www.w3.org/TR/UAAG20/</a>
+                </div>
+            </section>
+            
+            <section>
+                <p>El documento que más concierne a los desarrolladores web es el relativo al <strong>contenido web</strong>:</p>
+                <div class="referenciaw3c">
+                    <strong>Web Content Accessibility Guidelines (WCAG) 2.0</strong><br>W3C Recommendation - 11 December 2008<br>
+                    <a href="https://www.w3.org/TR/WCAG20">https://www.w3.org/TR/WCAG20</a>
+                </div>
+                <p>Este documento se organiza en torno a las cuatro propiedades que ha de cumplir el contenido web accesible:</p>
+                <ul>
+                    <li>Perceptible</li>
+                    <li>Operable</li>
+                    <li>Comprensible</li>
+                    <li>Robusto</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Contenido perceptible</h4>
+                <p>El contenido debe mostrarse de un modo en el que pueda ser percibido por un usuario.</p>
+                <p style="color:#33A; font-weight:bold">Pautas a seguir (resumen):</p>
+                <ol>
+                    <li>Proporcionar texto alternativo al contenido no textual (imágenes, vídeos, etc).</li>
+                    <li>Proporcionar subtítulos y medios de apoyo al contenido multimedia. </li>
+                    <li>Crear contenido que pueda ser representado en distintos medios, sin alterar su significado.</li>
+                    <li>El contenido debe ser fácilmente visible y/o audible.</li>
+                </ol>
+                
+            </section>
+            
+            <section>
+                <h4>Contenido operable</h4>
+                <p>La propiedad de operabilidad involucra la <strong>interacción</strong> del usuario con el sitio web.</p>
+                <p style="color:#33A; font-weight:bold">Pautas a seguir (resumen):</p>
+                <ol start="5">
+                    <li>La funcionalidad ha de ser accesible desde el teclado.</li>
+                    <li>Los usuarios han de tener el tiempo suficiente para leer y hacer uso del contenido del sitio web.</li>
+                    <li>No hacer uso de contenido que pueda causar ataques de epilepsia o convulsiones.</li>
+                    <li>Proporcionar facilidades de búsqueda y navegación por el contenido.</li>
+                </ol>
+            </section>
+            
+            <section>
+                <h4>Contenido comprensible</h4>
+                <p></p>
+                <p style="color:#33A; font-weight:bold">Pautas a seguir (resumen):</p>
+                <ol start="9">
+                    <li>El texto debe ser legible y comprensible.</li>
+                    <li>La interacción con el contenido debe hacerse de manera comprensible y predecible.</li>
+                    <li>Se debe ayudar al usuario a que evite cometer errores y, en su caso, a corregirlos.</li>
+                </ol>
+            </section>
+            
+            <section>
+                <h4>Robusto</h4>
+                <p>Esta cualidad implica que el contenido puede ser interpretado por distintos agentes de usuario, incluyendo tecnologías de apoyo a personas con discapacidad.</p>
+                <p style="color:#33A; font-weight:bold">Pautas a seguir (resumen):</p>
+                <ol start="12">
+                    <li>Se debe maximizar la compatibilidad con las herramientas actuales y futuras.</li>
+                </ol>
+            </section>
+            
+            <section>
+                <p>Cada una de estas doce pautas generales se compone de un conjunto de <strong>criterios de éxito</strong>.</p>
+                <p>Estos criterios describen, de un modo más concreto, cómo se materializa la pauta correspondiente a la hora de diseñar una web.</p>
+                <p>Los criterios se describen de tal modo que sean <strong>testeables</strong>, bien automática o manualmente. De este modo puede determinarse si un diseño satisface un criterio o no.</p>
+            </section>
+            
+            <section>
+                <p>Por ejemplo, la pauta nº8 (facilitar navegación) se compone de diez criterios. Entre ellos:</p>
+                <ul>
+                    <li><strong>Título de página</strong>. Las páginas tienen títulos que describen su contenido o propósito.</li>
+                    <li><strong>Múltiples alternativas</strong>. Existe más de una manera de localizar una página de entre un conjunto de páginas (salvo que ésta corresponda  un paso intermedio dentro de un proceso).</li>
+                    <li><strong>Situación</strong>. Se proporciona al usuario información sobre la posición de la página actual dentro de un conjunto de páginas.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Niveles de conformidad: A, AA, AAA</h4>
+                <p>Cada uno de los criterios lleva asociado un nivel de conformidad, que puede ser A, AA o AAA.</p>
+                <p>Este nivel está determinado en función de la importancia del criterio en la accesibilidad, la facilidad de satisfacer el criterio, y de la medida en la que el cumplimiento del criterio afecte a otros aspectos de usabilidad.</p>
+            </section>
+            <section>
+                <ul>
+                    <li>El <strong>nivel A</strong> incluye los criterios esenciales, cuyo incumplimiento llevaría a la <strong>imposibilidad</strong> de acceso a la web por parte de determinados usuarios.</li>
+                    <li>El <strong>nivel AA</strong> incluye los criterios cuyo incumplimiento haría <strong>muy difícil</strong> el acceso a la información.</li>
+                    <li>El <strong>nivel AAA</strong> contiene los criterios cuyo incumplimiento conllevaría <strong>ciertas dificultades</strong> para el acceso a la información.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <p>Por ejemplo, en los tres criterios mostrados anteriormente:</p>
+                <ul>
+                    <li><strong>Título de página</strong> es un criterio de nivel A.</li>
+                    <li><strong>Múltiples alternativas</strong> es un criterio de nivel AA.</li>
+                    <li><strong>Situación</strong> es un criterio de nivel AAA.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <p>De este modo, hay tres niveles de adecuación al WCAG 2.0:</p>
+                <ul>
+                    <li><strong>Nivel A</strong>: si el contenido de las páginas de un sitio satisface todos los criterios que tienen nivel A.</li>
+                    <li><strong>Nivel AA</strong>: si el contenido satisface todos los criterios que tienen nivel A o AA.</li>
+                    <li><strong>Nivel AAA</strong>: si el contenido satisface todos los criterios del WCAG.</li>
+                </ul>
+                <p>(Existen requisitos adicionales no comentados aquí)</p>
+            </section>
+
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p4">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline current">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline">Referencias</a></li>
+                </ol>
+            </section>
+
+            
+            <section>
+                <h2>Pautas básicas de accesibilidad</h2>
+                <p>En este apartado se muestran algunas buenas prácticas a tener en cuenta cuando se planifica la <strong>interacción con el usuario</strong> y el <strong>aspecto gráfico</strong> de una aplicación web.</p>
+                
+                
+                <p>Tomadas de: <a href="https://www.w3.org/WAI/gettingstarted/tips/designing.html">https://www.w3.org/WAI/gettingstarted/tips/designing.html</a><br>
+                    <a href="https://www.w3.org/WAI/gettingstarted/tips/writing.html">https://www.w3.org/WAI/gettingstarted/tips/writing.html</a><br>
+                    <a href="https://www.w3.org/WAI/gettingstarted/tips/developing.html">https://www.w3.org/WAI/gettingstarted/tips/developing.html</a>
+                </p>
+            </section>
+            
+            <section>
+                <h3>Contenido audiovisual</h3>
+                <p>Imágenes, <em>podcasts</em>, vídeos, etc.</p>
+                <p>Deben ir acompañados de <strong>contenido alternativo</strong> para personas con discapacidades visuales y auditivas.</p>
+                <ul>
+                    <li>En videos: transcripciones/subtítulos y audiodescripción. </li>
+                    <li>En podcasts: transcripciones en texto.</li>
+                    <li>Figuras o tablas complejas: descripción textual.</li>
+                    <li>Botones con iconos: descripción textual.
+                    </li>
+                </ul>
+                <p>
+                        <img src="images/09/Toolbar.png" width="60%" style="border:none">
+                </p>
+            </section>
+            
+            <section>
+                <h4>El atributo <code>alt</code></h4>
+                <p>El atributo <code>alt</code> sirve para introducir una breve descripción que muestre la información esencial de la imagen.</p>
+                <pre><code data-trim class="html">
+&lt;img src="Munster.png" alt="Foto de la calle principal de Münster"&gt;
+                </code></pre>
+                <ul>
+                    <li>En imágenes decorativas (bordes, marcos, etc) se coloca la etiqueta vacía: <code>alt=""</code>, o se declaran en el CSS.</li>
+                    <li>En imágenes funcionales (iconos en botones y enlaces) se describe la funcionalidad.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>El atributo <code>longdesc</code></h4>
+                <p>Se utiliza para gráficos complejos. Por ejemplo, diagramas de barras.</p>
+                <p>Este atributo lleva asociada una URL donde se ofrece una descripción <strong>detallada</strong> de la imagen.</p>
+                <div style="float:left; width:35%">
+                <img src="images/09/BarDiagram.png" width="100%">
+                </div>
+                <div style="float:right; width:65%">
+                <pre><code data-trim class="html">
+&lt;img src="BarDiagram.png" 
+    alt="Cumulative incidence..."
+    longdesc="descripcion.html">
+                </code></pre>
+                    <p>En <code>descripcion.html</code> se describen los datos contenidos en el gráfico.
+                    </p>
+                </div>
+                <div style="clear:both;font-size:60%">Fuente imagen: <a href="https://commons.wikimedia.org/wiki/File:PTE_bar_graph_by_severity.svg">https://commons.wikimedia.org/wiki/File:PTE_bar_graph_by_severity.svg</a></div>
+            </section>
+            
+            <section>
+                <h3>Aspecto visual</h3>
+                <p>Si se utiliza el color para transmitir significado, deben proporcionarse otras alternativas.</p>
+                <img src="images/09/Color.png" width="60%">
+                <div style="clear:both;font-size:60%">Fuente imagen: <a href="https://www.w3.org/WAI/gettingstarted/tips/designing.html">https://www.w3.org/WAI/gettingstarted/tips/designing.html</a></div>
+            </section>
+            
+            <section>
+                <h4>Contraste</h4>
+                <p>Procurar mantener suficiente contraste entre el texto de una página y el color de fondo.</p>
+                <p>Correcto:</p>
+                <div style="background-color:#344; color: #EEF">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut orci enim, tempus a sem in, auctor elementum ligula ....
+                </div>
+                <p>Incorrecto:</p>
+                <div style="background-color:#344; color: #66F">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut orci enim, tempus a sem in, auctor elementum ligula ....
+                </div>
+            </section>
+            
+            <section>
+                <h4>Elementos de navegación</h4>
+                <ul>
+                    <li>Consistentes a lo largo de las páginas.</li>
+                    <li>Proporcionar más de un método de navegación (p.ej. mapa del sitio, búsqueda)</li>
+                    <li>Mostrar información sobre la página actual (p.ej. <em>breadcrumbs</em>, título de la página actual), etc.
+                    </li>
+                </ul>
+                <p>Ejemplo de <em>breadcrumb</em>:</p>
+                <div style="background-color:#FEF; margin-top:1em; padding-left: 10px; text-align:left">
+                    Estudiantes &raquo; Grados &raquo; Asignaturas por curso
+                </div>
+            </section>
+            
+            <section>
+                <h4>Agrupación de contenidos</h4>
+                <p>Utilizar espacios para agrupar los elementos relacionados lógicamente.</p>
+                <img src="images/09/Espaciado.png" width="80%">
+                <div style="clear:both;font-size:60%">Fuente imagen: <a href="https://www.w3.org/WAI/gettingstarted/tips/designing.html">https://www.w3.org/WAI/gettingstarted/tips/designing.html</a></div>
+            </section>
+            
+            <section>
+                <h4>Diseño adaptable</h4>
+                <p>Tener en cuenta los distintos tamaños de pantalla a la hora de presentar el contenido:</p>
+                <ul>
+                    <li>Dispositivos móviles: teléfonos, tablets, etc.</li>
+                    <li>Zoom de páginas web en navegador.</li>
+                </ul>
+                
+                <p>Los frameworks de diseño adaptable (<em>responsive design</em>), como <a href="http://getbootstrap.com/">Bootstrap</a>, facilitan esta tarea.</p>
+            </section>
+            
+            <section>
+                <h3>Estructura de la página</h3>
+                <p>HTML5 proporciona elementos para especificar la semántica de algunos de los elementos de una página web.</p>
+                <p><code>&lt;h1&gt;</code>, ... <code>&lt;h6&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;ins&gt;</code>, <code>&lt;del&gt;</code>,<br>
+                <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;figure&gt;</code>, etc.</p>
+                
+                <p>Deben evitarse los elementos obsoletos de HTML, más centrados en el estilo visual de la página:</p>
+                <p><code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;s&gt;</code>, <code>&lt;big&gt;</code>, <code>&lt;font&gt;</code>, <code>&lt;tt&gt;</code>, etc.</p>
+                <p>El estilo visual debe definirse en el CSS.</p>
+            </section>
+            
+            <section>
+                <h4>Etiqueta <code>&lt;title&gt;</code></h4>
+                <p>El contenido de esta etiqueta suele mostrarse en la barra de título de la ventana o pestaña del navegador.</p>
+                <p>Se identifica con el encabezado principal (etiqueta <code>&lt;h1&gt;</code>).</p>
+                <p>Ejemplos de títulos significativos:</p>
+                <ul>
+                    <li>Página principal:<br>
+                        <em style="background-color:#44D;color:white;padding:0px 10px">Universidad Complutense de Madrid.</em></li>
+                    <li>Sección actual: <br><em style="background-color:#44D;color:white;padding:0px 10px">Últimas noticias - Universidad Complutense de Madrid.</em></li>
+                    <li>Paso actual de un proceso: <br><em style="background-color:#44D;color:white;padding:0px 10px">Pago (Paso 1 de 3) - Universidad Complutense de Madrid.</em></li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>El atributo <code>role</code></h4>
+                <p>Pese a que HTML5 define etiquetas para estructurar semánticamente el contenido,</p>
+                <p><code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>, etc.</p>
+                <p>a veces quiere insertarse un tipo de contenido que no se corresponde con ninguna de estas etiquetas, o bien es más adecuado utilizar otro elemento con semántica distinta.</p>
+                <p>(por ejemplo, utilizar <code>&lt;a&gt;</code> para representar un botón)</p>
+            </section>
+            
+            <section>
+                <p>El atributo <code>role</code> permite especificar el papel semántico que juega un determinado elemento en la página.</p>
+                <pre><code data-trim class="html">
+&lt;a href="#" role="button"&gt;Eliminar&lt;a&gt;
+                </code></pre>
+                <p>También se utiliza para aquellos elementos HTML5 relativamente nuevos que podrían no ser reconocidos por otros navegadores.</p>
+                <p>Lista de roles:</p>
+                <a href="http://w3c.github.io/html/dom.html#allowed-aria-roles-states-and-properties" style="font-size:70%">http://w3c.github.io/html/dom.html#allowed-aria-roles-states-and-properties</a>
+            </section>
+            
+            <section>
+                <h5>Ejemplos</h5>
+                <pre><code data-trim class="html">
+&lt;div role="dialog"&gt;
+... Cuadro de diálogo ...
+&lt;/div&gt;
+                </code></pre>
+                <pre><code data-trim class="html">
+&lt;ul role="menubar"&gt;
+    &lt;li role="menuitem"&gt;...&lt;/li&gt;
+    &lt;li role="menuitem"&gt;...&lt;/li&gt;
+    ...
+&lt;/ul&gt;
+                </code></pre>
+                <pre><code data-trim class="html">
+&lt;input type="text" role="searchbar"&gt;                
+                </code></pre>
+                <p>Los elementos que contengan un determinado valor de <code>role</code> pueden ser tratados de manera especial  por navegadores, lectores de pantalla, etc.</p>
+            </section>
+            
+            <section>
+                <h4>Los atributos <code>aria-*</code></h4>
+                <p>Mientras que el atributo <code>role</code> describe, en términos generales, el tipo de un objeto, los atributos <code>aria-*</code> especifican otras propiedades útiles de un elemento.</p>
+                <p>Por ejemplo:</p>
+                <ul>
+                    <li><code>aria-checked</code>: indica si un <em>checkbox</em> está activado.</li>
+                    <li><code>aria-disabled</code>: indica si un control está habilitado.</li>
+                    <li><code>aria-hidden</code>: indica si un control está oculto.</li>
+                    <li><code>aria-expanded</code>: indica si un elemento con rol <code>menu</code>, <code>combobox</code>, etc. está desplegado.  </li>
+                </ul>
+            </section>
+            
+            
+            <section>
+                <p>Los atributos <code>role</code> y <code>aria</code> dentro de los documentos HTML se definen en un estándar W3C:</p>
+                <div class="referenciaw3c">
+                    <strong>ARIA in HTML</strong><br>W3C Working Draft - 13 October 2017<br>
+                    <a href="https://www.w3.org/TR/html-aria/">https://www.w3.org/TR/html-aria/</a>
+                </div>
+                <p>Existe un estándar más general sobre accesibilidad en RIAs:</p>
+                
+                <div class="referenciaw3c" style="margin-top:20px">
+                    <strong>Accesible Rich Internet Applications (WAI-ARIA) 1.1</strong><br>W3C Recommendation - 14 December 2017<br>
+                    <a href="https://www.w3.org/TR/wai-aria-1.1/">https://www.w3.org/TR/wai-aria-1.1/</a>
+                </div>
+                
+                
+            </section>
+            
+            <section>
+                <h5>Ejemplo</h5>
+                <p>Suponemos el siguiente cuadro de texto con una ayuda emergente (<em>tooltip</em>):</p>
+                <img src="images/09/Tooltip.png" width="80%">
+                <p>El siguiente código HTML no indica nada sobre la semántica de cada uno de los componentes:</p>
+                <pre><code data-trim data-noescape class="html">
+&lt;label id=&quot;etiqueta&quot; for=&quot;dirCorreo&quot;&gt;
+    Direcci&oacute;n de correo (*):
+&lt;/label&gt;
+&lt;input type=&quot;text&quot; id=&quot;dirCorreo&quot; name=&quot;dirCorreo&quot;&gt;
+&lt;div id=&quot;descripCorreo&quot; class=&quot;emergente&quot;&gt;
+    Introduce una direcci&oacute;n de correo v&aacute;lida    <span class="arrow_box_left caja_codigo">¿Ayuda emergente?</span>
+&lt;/div&gt;                
+                
+                </code></pre>
+            </section>
+            
+            <section>
+                <img src="images/09/Tooltip.png" width="80%">
+                <p>Mediante las etiquetas <code>aria-*</code> se le proporciona al software de apoyo (por ejemplo, lector de pantalla) más información sobre la relación entre los distintos elementos:</p>
+                
+                <pre><code data-trim data-noescape class="html">
+&lt;label id=&quot;etiqueta&quot; for=&quot;dirCorreo&quot;&gt;
+    Direcci&oacute;n de correo (*):
+&lt;/label&gt;
+&lt;input type=&quot;text&quot; id=&quot;dirCorreo&quot; name=&quot;dirCorreo&quot;
+    <span class="hl">aria-required=&quot;true&quot;</span>
+    <span class="hl">aria-labelledby=&quot;etiqueta&quot;</span>
+    <span class="hl">aria-describedby=&quot;descripCorreo&quot;&gt;</span>
+&lt;div id=&quot;descripCorreo&quot; role=&quot;tooltip&quot; class=&quot;emergente&quot;
+    <span class="hl">aria-hidden=&quot;true&quot;</span>&gt;Introduce una direcci&oacute;n de correo v&aacute;lida
+&lt;/div&gt;                
+                </code></pre>
+            </section>
+            
+            <section>
+                <h4>El atributo <code>lang</code></h4>
+                <p>Se utiliza dentro de la etiqueta <code>&lt;html&gt;</code> para especificar el lenguaje de la página web:</p>
+                <pre><code data-trim class="html">
+&lt;html lang="es"&gt;
+    ...
+&lt;/html&gt;
+                </code></pre>
+                <p>Las normas de accesibilidad del W3C recomiendan el uso de este atributo.</p>
+                <p>Si una parte del contenido HTML está en un idioma distinto al de la página principal, debe utilizarse <code>lang</code> en la etiqueta correspondiente.</p>
+                <pre><code data-trim class="html">
+&lt;li lang="en"&gt;English website&lt;/li&gt;
+                </code></pre>
+            </section>
+            
+            <section>
+                <h4>Orden de elementos en una página</h4>
+                <p>El orden de elementos en el código HTML debe representar la estructura lógica del documento.</p>
+                <img src="images/09/OrdenHTML.png" width="90%">
+                <div style="clear:both;font-size:60%">Fuente imagen: <a href="https://www.w3.org/WAI/gettingstarted/tips/developing.html">https://www.w3.org/WAI/gettingstarted/tips/developing.html</a></div>
+            </section>
+            
+            <section>
+                <h3>Interacción con el sitio web</h3>
+                <p>Los elementos que involucren interacción con el usuario (enlaces, botones, etc.) deben ser fácilmente reconocibles.</p>
+                <p>Las pseudoclases <code>:hover</code>, <code>:focus</code>, etc. ayudan al usuario a identificar los enlaces.</p>
+                <img src="images/09/Nohover.png" width="80%">
+                <img src="images/09/Hover.png" width="80%">
+                
+            </section>
+            
+            <section>
+                <h4>Etiquetas en formularios</h4>
+                <p>Cada control de un formulario (cuadro de texto, caja de selección, etc.) debe ir acompañado de una etiqueta descriptiva, que se encuentre próxima al mismo.</p>
+                <img src="images/09/Formulario.png" width="80%">
+            </section>
+            
+            <section>
+                <p>Los elementos <code>&lt;label&gt;</code> permiten asociar un texto a cada elemento de un formulario.</p>
+                <pre><code data-trim data-noescape class="html">
+&lt;label for="<span class="hl">cuadroNombre</span>">Nombre:&lt;/label&gt;
+&lt;input type="text" id="<span class="hl">cuadroNombre</span>" name="nombre"&gt;
+                </code></pre>
+                <p>En aquellos casos en los que no haya una etiqueta visible, debe utilizarse el atributo <code>aria-label</code> que indique el propósito del componente del formulario</p>
+                <pre><code data-trim data-noescape class="html">
+&lt;input type="text" <span class="hl">aria-label="Nombre"</span> name="nombre"&gt;
+                </code></pre>
+            </section>
+            
+            <section>
+                <h4>Retroalimentación visual</h4>
+                <p>Los resultados de la interacción del usuario también deben ser visualmente notificados:</p>
+                <ul>
+                    <li>Confirmación de envío de formularios.</li>
+                    <li>Mensajes de error.</li>
+                    <li>Mensajes de notificación de operaciones realizadas.</li>
+                    <li>Cambios en la página.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <img src="images/09/FormularioFeedback.png" width="80%">
+                <p>Los elementos que requieran la interacción del usuario deben ser resaltados sobre el resto de la página.</p>
+            </section>
+            
+            <section>
+                <h5>Ejemplo: Material Design (Android)</h5>
+                <p>El estilo de diseño <em>Material Design</em> se basa en el uso de transiciones y animaciones para reflejar los resultados de la interacción del usuario en la página.</p>
+                <p><a href="https://material.io">https://material.io</a></p>
+                <ul>
+                    <li><a href="https://material.io/guidelines/motion/choreography.html#choreography-radial-reaction">Acción radial</a></li>
+                    
+                    <li><a href="https://material.io/guidelines/motion/choreography.html#choreography-creation">Animación de superficies</a></li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Texto de enlaces (<code>&lt;a&gt;</code>)</h4>
+                <p>Debe describir el contenido apuntado por el enlace.</p>
+                <p>Correcto:</p>
+                <div style="border:1px solid black">
+                    <ul>
+                        <li><a href="#">Horarios del curso (PDF)</a></li>
+                        <li>Lea nuestra <a href="#">política de privacidad</a>.</li>
+                    </ul> 
+                </div>
+                <p>Incorrecto:</p>
+                <div style="border:1px solid black">
+                    <ul>
+                        <li>Para acceder a la política de privacidad haga clic <a href="#">aquí</a>.</li>
+                    </ul> 
+                </div>
+            </section>
+            
+            <section>
+                <h4>Claridad y precisión en instrucciones</h4>
+                <p>Incorrecto:</p>
+                <img src="images/09/FechaNoInfo.png" style="border:1px solid black">
+                <p>Correcto:</p>
+                <img src="images/09/FechaInfo.png" style="border:1px solid black">
+            </section>
+            
+            <section>
+                <p>Incorrecto:</p>
+                <img src="images/09/Precision1.png" style="border:1px solid black">
+                <p>Correcto:</p>
+                <img src="images/09/Precision2.png" style="border:1px solid black" width="80%">
+            </section>
+            
+            <section>
+                <h4>Uso de CAPTCHA</h4>
+                <p>CAPTCHA = <em>Completely Automated Public Turing test to Tell Computers and Humans Apart</em></p>
+                <p>Se trata de una prueba automatizable para determinar si el usuario es humano o no.
+                La prueba consiste en mostrar una serie de caracteres distorsionados de tal forma que solo un humano puede reconocerlos.</p>
+                <img src="images/09/Captcha.jpg" width="30%">
+                <p><strong>Objetivo</strong>: evitar el uso de la aplicación por parte de robots. </p>
+            </section>
+            
+            <section>
+                <h4>No Captcha-ReCAPTCHA</h4>
+                <p>El uso de los captchas tradicionales conlleva una importante barrera de acceso para las personas con discapacidad visual.</p>
+                
+                <p>Existe una alternativa más accesible: <a href="https://www.google.com/recaptcha/">https://www.google.com/recaptcha/</a></p>
+                
+                <p>Utiliza los parámetros de interacción con el ratón y teclado para distinguir si el usuario es humano.</p>
+                
+                <img src="images/09/Recaptcha.png">
+            </section>
+            
+            <section>
+                <h4>Navegación mediante teclado</h4>
+                <p>La navegación exclusiva mediante ratón supone una barrera para los usuarios que no pueden utilizarlo.</p>
+                <p>Las páginas web deben estar preparadas para su navegación mediante el teclado.</p>
+                <p>Por defecto, los navegadores permiten utilizar la tecla <code>TAB</code> para que el usuario se desplace entre los distintos elementos activables de la página web (enlaces, cuadros de texto, botones, etc).</p>
+            </section>
+            
+            <section>
+                <p>En aquellos elementos que no sean activables por defecto (por ejemplo, <code>&lt;div&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;span&gt;</code> puede añadirse el atributo <code>tabindex="0"</code> para  que puedan adquirir el foco de entrada.</p>
+                <pre><code data-trim class="html">
+&lt;ul id=&quot;menu&quot;&gt;
+  &lt;li tabindex=&quot;0&quot;&gt;Elemento 1&lt;/li&gt;
+  &lt;li tabindex=&quot;0&quot;&gt;Elemento 2&lt;/li&gt;
+  &lt;li tabindex=&quot;0&quot;&gt;Elemento 3&lt;/li&gt;
+&lt;/ul&gt;                
+                </code></pre>
+            </section>
+            <section>
+                <p>Al hacer un elemento activable, es conveniente asociarle, además, un estilo CSS a la pseudoclase <code>:focus</code>, para que el usuario pueda identificar qué elemento tiene el foco de entrada.</p>
+                <pre><code data-trim class="css">
+#menu li:focus {
+  background-color: #FDD;
+}                
+                </code></pre>
+                <img src="images/09/Focus.png">
+            </section>
+            
+            <section>
+                <p>Mediante <em>jQuery</em> puede detectarse la pulsación de la tecla <em>Intro</em> cuando se selecciona un elemento.</p>
+                <pre><code data-trim data-noescape class="javascript">
+$(document).ready(function() {
+  $("#menu li").on("keydown", function(evt) {
+    if (evt.which === 13) {  
+    
+      alert("Se ha pulsado la opción " + $(this).text());
+      evt.preventDefault();
+      
+    }
+  })
+});                
+                </code></pre>
+                <span class="caja_codigo arrow_box_left" style="font-size:60%; position:relative; top:-10.5em; left:3em">Código 13 = Tecla Intro</span>
+            </section>
+            
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p5">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline current">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline">Referencias</a></li>
+                </ol>
+            </section>            
+            
+            <section>
+                <h2>Herramientas de apoyo</h2>
+                <ul>
+                    <li>Herramientas de evaluación.</li>
+                    <li>Herramientas de diseño y desarrollo.</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h3>Herramientas de evaluación</h3>
+                <p>Analizan automáticamente un sitio web y proporcionan indicaciones sobre aquellos elementos que pueden hacer que el sitio no sea accesible. </p>
+                <p>Ejemplos:</p>
+                <ul>
+                    <li>TAW (<a href="http://www.tawdis.net">http://www.tawdis.net</a>)</li>
+                    <li>AChecker (<a href="http://www.atutor.ca/achecker/">http://www.atutor.ca/achecker/</a>)</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h4>Ejemplo: TAW</h4>
+                <p><img src="images/09/TAW1.png" width="40%" style="border:none;box-shadow:none"></p>
+                <p><img src="images/09/TAW2.png" width="90%"></p>
+            </section>
+            
+            <section>
+                <p><img src="images/09/TAW3.png" width="95%"></p>
+                <p><img src="images/09/TAW4.png" width="80%"></p>
+            </section>
+            
+            <section>
+                <h4>Herramientas de diseño y desarrollo</h4>
+                <p style="float:left;width:35%">
+                    <img src="images/09/AInspector.png" width="90%">
+                </p>
+                <div style="float:right; width:60%">
+                    <p>AInspector Sidebar (Firefox)</p>
+                    <a href="http://ainspector.github.io/">http://ainspector.github.io/</a>
+                    <p>Evalúa la accesibilidad (con respecto a WCAG 2.0) de la página actual desde Firefox.</p>
+                    <p>En Chrome: <a href="https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb">Accesibility Developer Tools</a></p>
+                </div>
+                <div style="clear:both"></div>
+            </section>
+            
+            <section>
+                <p>Accessibility color Wheel</p>
+                <a href="http://gmazzocato.altervista.org/colorwheel/wheel.php">http://gmazzocato.altervista.org/colorwheel/wheel.php</a>
+                <p>Determina la adecuación de una determinada combinación de colores de texto y fondo.</p>
+                <img src="images/09/ColorWheel.png" style="border:none;box-shadow:none">
+            </section>
+            
+            <section data-background-image="images/RedBackground.jpg" data-background-transition="zoom" id="p6">
+                <ol class="contenidos" style="width:16em">
+                    <li><a href="#/p1" class="outline">Introducción</a></li>
+                    <li><a href="#/p2" class="outline">Diversidad funcional</a></li>
+                    <li><a href="#/p3" class="outline">Web Accessibility Initiative (WAI)</a></li>
+                    <li><a href="#/p4" class="outline">Pautas básicas de accesibilidad</li>
+                    <li><a href="#/p5" class="outline">Herramientas de apoyo</a></li>
+                    <li><a href="#/p6" class="outline current">Referencias</a></li>
+                </ol>
+            </section>            
+            
+            
+            <section>
+                <h2>Referencias</h2>
+                <div style="float:left; width:70%">
+                    <ul>
+                        <li>
+                            <a href="https://www.w3.org/WAI/">Web Accesibility Initiative</a>
+                            <span style="font-size:70%">https://www.w3.org/WAI/</span>
+                        </li>
+                        <li>
+                            <a href="https://www.w3.org/TR/WCAG20/">Web Content Accessibility Guidelines (WCAG) 2.0</a><br>
+                            W3C Recommendation
+                            <span style="font-size:70%">https://www.w3.org/TR/WCAG20/</span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="float:right; width: 30%">
+                    <a href="https://www.w3.org/">
+                        <img src="images/09/W3CLogo.svg" style="width:60%; border:none"></a>
+                </div>
+                <div style="clear:both"></div>
+
+            </section>
+            
+        </div>
+        
+
+    </div>
+
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }]
+        });
+    </script>
+</body>
+
+</html>
