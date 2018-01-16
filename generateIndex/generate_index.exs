@@ -17,17 +17,18 @@ defmodule GenerateIndex do
         {[], [s2 + 1 | stack]}
     end
 
-    def transform_header([_, number, text], path) do
-        {String.to_integer(number), text, path}
-    end
-
-
     def handle_piece(text, [_ | rest] = stack) do
         headers = Regex.scan(@headers, text) |> Enum.map(&(transform_header(&1, rest)))
         
         {headers, stack}
     end
 
+    def transform_header([_, number, text], path) do
+        {String.to_integer(number), text, path}
+    end
+
+
+    
 
     def build_tree([], [elems], _) do
         Enum.reverse elems
